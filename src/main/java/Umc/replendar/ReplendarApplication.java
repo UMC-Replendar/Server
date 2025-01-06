@@ -1,4 +1,4 @@
-package Umc._th.Replendar;
+package Umc.replendar;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
