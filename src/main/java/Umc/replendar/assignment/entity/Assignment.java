@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Table(name = "assignment")
 public class Assignment extends BaseEntity {
 
     @Id

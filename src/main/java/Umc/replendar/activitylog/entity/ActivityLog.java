@@ -1,12 +1,12 @@
 package Umc.replendar.activitylog.entity;
 
+import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.global.BaseEntity;
 import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.sql.ast.tree.update.Assignment;
 
 @Entity
 @AllArgsConstructor
@@ -22,7 +22,7 @@ public class ActivityLog extends BaseEntity {
     private Action action;
 
     @Enumerated(EnumType.STRING)
-    private Check check;
+    private Check isCheck;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

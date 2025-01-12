@@ -17,11 +17,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "user")
 public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @Column
     @NotEmpty
@@ -40,7 +41,7 @@ public class User extends BaseEntity {
     @Column(length = 10, unique = true)
     private String nickname;
 
-    @Column(length = 255)
+    @Column(length = 254)
     private String profile_image;
 
     @Column(length = 50)
@@ -49,7 +50,7 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Friend> user_id = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.REMOVE)
     private List<Friend> friend_id = new ArrayList<>();
 
     @ManyToOne

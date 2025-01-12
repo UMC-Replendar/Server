@@ -32,10 +32,10 @@ public class Friend extends BaseEntity {
     private String friend_note;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user_id;
+    @JoinColumn(name = "user_id") // Friend를 생성한 사용자
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name = "friend_id")
-    private User friend_id;
+    @JoinColumn(name = "friend_id") // Friend가 가리키는 친구 사용자
+    private User friend;
 }
