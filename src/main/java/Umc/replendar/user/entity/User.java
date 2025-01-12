@@ -52,5 +52,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Friend> friend_id = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "school_id")
+    private School school;
+
 
 }
