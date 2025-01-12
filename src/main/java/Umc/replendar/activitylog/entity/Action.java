@@ -1,4 +1,4 @@
-package Umc.replendar.assignment.entity;
+package Umc.replendar.activitylog.entity;
 
 public enum Action {
     ADD, COMPLETE, SHARE

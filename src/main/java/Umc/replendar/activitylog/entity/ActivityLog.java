@@ -1,9 +1,8 @@
-package Umc.replendar.assignment.entity;
+package Umc.replendar.activitylog.entity;
 
 import Umc.replendar.global.BaseEntity;
 import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ import org.hibernate.sql.ast.tree.update.Assignment;
 public class ActivityLog extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
