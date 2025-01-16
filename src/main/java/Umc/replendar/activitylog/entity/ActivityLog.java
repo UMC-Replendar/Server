@@ -5,6 +5,7 @@ import Umc.replendar.global.BaseEntity;
 import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class ActivityLog extends BaseEntity {
 
     @Id
@@ -25,8 +27,12 @@ public class ActivityLog extends BaseEntity {
     private Check isCheck;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id2")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "friend_id2")
+    private User friend;
 
     @ManyToOne
     @JoinColumn(name = "assignment_id")

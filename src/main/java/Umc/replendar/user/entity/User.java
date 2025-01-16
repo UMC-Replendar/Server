@@ -1,5 +1,6 @@
 package Umc.replendar.user.entity;
 
+import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.global.BaseEntity;
 import jakarta.persistence.*;
@@ -52,6 +53,12 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "friend", cascade = CascadeType.REMOVE)
     private List<Friend> friend_id = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<ActivityLog> user_id2 = new ArrayList<>();
+
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.REMOVE)
+    private List<ActivityLog> friend_id2 = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "school_id")
