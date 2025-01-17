@@ -6,6 +6,7 @@ import Umc.replendar.activitylog.entity.Check;
 import Umc.replendar.activitylog.repository.ActivityRepository;
 import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.assignment.dto.reqDto.AssignmentReq;
+import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.assignment.entity.GeneralSettings;
 import Umc.replendar.assignment.entity.Status;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static Umc.replendar.assignment.converter.AssToDto.toMainTopDto;
 
 
 @Service
@@ -42,21 +45,20 @@ public class AssignmentServiceImpl implements AssignmentService {
         //본인 과제 등록
         User user = userRepository.findById(reqDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        Assignment assignment = Assignment.builder()
+        Assignment assignment = Assignment.builder() //과제등록
                 .user(user)
                 .title(reqDto.getTitle())
                 .due_date(reqDto.getEndDate())
                 .notification("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF)
                 .visibility("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF)
                 .memo(reqDto.getMemo())
-                .completion_time(reqDto.getEndDate())
                 .status(Status.ONGOING)
                 .build();
         assignmentRepository.save(assignment);
 
-        //과제 등록한 사용자의 친구들 찾기
-        List<User> userFriend = friendRepository.findAllByUserId(user.getId()).stream()
-                .map(Friend::getFriend)
+        //과제 등록한 사용자의 친구들 찾기, 찾을때 friend나 user에 자기아이디가 있는지 확인하기
+        List<User> userFriend = friendRepository.findAllByUserIdOrFriendId(user.getId(), user.getId()).stream()
+                .map(friend -> friend.getFriend().getId().equals(user.getId()) ? friend.getUser() : friend.getFriend())
                 .toList();
 
         for(User friend : userFriend){
@@ -80,7 +82,6 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .notification(GeneralSettings.OFF)
                     .visibility(GeneralSettings.OFF)
                     .memo(reqDto.getMemo())
-                    .completion_time(reqDto.getEndDate())
                     .status(Status.WAIT) //대기상태
                     .build();
             assignmentRepository.save(frAssignment);
@@ -96,6 +97,22 @@ public class AssignmentServiceImpl implements AssignmentService {
             activityRepository.save(activityLog);
         }
         return ApiResponse.onSuccess("과제가 등록되었습니다.");
+    }
+
+    //과제 조회 api
+    //탑 10개 까지 조회하면 됨
+    //진행중인 과제는 status가 ONGOING
+    //과제의 마감시간 - 현재시간을 해서 갖다주기
+    @Override
+    public ApiResponse<List<AssignmentRes.assMainTopRes>> getAssMainTopAssignment(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
+        System.out.println(user.getId());
+        List<Assignment> assignments = assignmentRepository.findTop10ByUserAndStatusOrderByDueDate(user, Status.ONGOING);
+        for (Assignment assignment : assignments) {
+            System.out.println(assignment.getTitle());
+        }
+        //과제의 마감시간 - 현재시간을 해서 갖다주기
+        return ApiResponse.onSuccess(toMainTopDto(assignments));
     }
 
 }

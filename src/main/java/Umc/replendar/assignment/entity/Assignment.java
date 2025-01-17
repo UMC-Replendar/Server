@@ -59,7 +59,6 @@ public class Assignment extends BaseEntity {
     private String memo;
 
     @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
     private LocalDateTime dueDate;
 
     @Column
