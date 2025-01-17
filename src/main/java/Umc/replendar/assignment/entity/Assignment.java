@@ -27,12 +27,12 @@ public class Assignment extends BaseEntity {
 
         this.user = user;
         this.title = title;
-        this.due_date = due_date;
+        this.dueDate = due_date;
         this.notification = notification;
         this.visibility = visibility;
         this.status = status;
         this.memo = memo;
-        this.completion_time = completion_time;
+        this.completionTime = completion_time;
         this.activityLogList = activityLogList;
     }
 
@@ -60,10 +60,10 @@ public class Assignment extends BaseEntity {
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
-    private LocalDateTime due_date;
+    private LocalDateTime dueDate;
 
     @Column
-    private LocalDateTime completion_time;
+    private LocalDateTime completionTime;
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE)
     private List<ActivityLog> activityLogList = new ArrayList<>();

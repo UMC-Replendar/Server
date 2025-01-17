@@ -31,7 +31,7 @@ public class User extends BaseEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private AcademicYear academic_year;
+    private AcademicYear academicYear;
 
     @Column(length = 10)
     private String major;
@@ -43,10 +43,10 @@ public class User extends BaseEntity {
     private String nickname;
 
     @Column(length = 254)
-    private String profile_image;
+    private String profileImage;
 
     @Column(length = 50)
-    private String status_message;
+    private String statusMessage;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Friend> user_id = new ArrayList<>();
