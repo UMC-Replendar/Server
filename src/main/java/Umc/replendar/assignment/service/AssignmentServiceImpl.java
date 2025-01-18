@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static Umc.replendar.assignment.converter.AssToDto.toMainTopDto;
@@ -146,11 +147,28 @@ public class AssignmentServiceImpl implements AssignmentService {
         return ApiResponse.onSuccess("과제가 삭제되었습니다.");
     }
 
+    //과제 상세보기
     @Override
     public ApiResponse<AssignmentRes.assDetailRes> getAssDetail(Long assId) {
         Assignment assignment = assignmentRepository.findById(assId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과제입니다."));
 
         return ApiResponse.of(SuccessStatus._OK,AssToDto.toDetailDto(assignment));
+    }
+
+    //과제 월별로 조회
+    //조회시 status ongoing 인것만 조회
+    @Override
+    public ApiResponse<List<AssignmentRes.assMonthRes>> getAssMonth(Long userId, String month) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        LocalDateTime mont = LocalDateTime.parse(month + "-01T00:00:00.000000");
+        LocalDateTime montEnd = mont.plusMonths(1);
+        montEnd = montEnd.minusSeconds(1);
+
+        List<Assignment> assignment = assignmentRepository.findAllByUserAndDueDateBetweenAndStatusOrderByDueDate(user, mont, montEnd, Status.ONGOING);
+
+        return ApiResponse.of(SuccessStatus._OK, AssToDto.toMonthDto(assignment));
     }
 
 

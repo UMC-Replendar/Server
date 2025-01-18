@@ -49,4 +49,11 @@ public class AssignmentController {
         return assignmentService.getAssDetail(assId);
     }
 
+    @Operation(summary = "과제 달별로 조회 API",description = "과제 달별로 조회 API")
+    @GetMapping("/month")
+    public ApiResponse<List<AssignmentRes.assMonthRes>> getAssignmentMonth(@RequestParam Long userId, @RequestParam String month){
+        return assignmentService.getAssMonth(userId, month);
+    }
+
+
 }

@@ -18,4 +18,6 @@ public interface AssignmentService {
     ApiResponse<String> deleteAssignment(Long assId);
 
     ApiResponse<AssignmentRes.assDetailRes> getAssDetail(Long assId);
+
+    ApiResponse<List<AssignmentRes.assMonthRes>> getAssMonth(Long userId, String month);
 }

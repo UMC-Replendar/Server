@@ -1,6 +1,8 @@
 package Umc.replendar.assignment.dto.resDto;
 
+import Umc.replendar.assignment.entity.GeneralSettings;
 import Umc.replendar.assignment.entity.NotifyCycle;
+import Umc.replendar.assignment.entity.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -31,6 +33,18 @@ public class AssignmentRes {
         private String memo;
         private String notification;
         private NotifyCycle notifyCycle;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @Builder
+    public static class assMonthRes {
+        private Long assId;
+        private String title;
+        private String due_date;
+        private String due_time;
+        private GeneralSettings notification;
+        private Status status;
     }
 
 //    @Setter
