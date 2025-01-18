@@ -3,7 +3,6 @@ package Umc.replendar.assignment.entity;
 import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.global.BaseEntity;
 import Umc.replendar.user.entity.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -49,6 +48,9 @@ public class Assignment extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Enumerated(EnumType.STRING)
+    private NotifyCycle notifyCycle;
 
 //    @Enumerated(EnumType.STRING)
 //    private GeneralSettings isActive;

@@ -5,6 +5,8 @@ import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.activitylog.entity.Check;
 import Umc.replendar.activitylog.repository.ActivityRepository;
 import Umc.replendar.apiPayload.ApiResponse;
+import Umc.replendar.apiPayload.code.status.SuccessStatus;
+import Umc.replendar.assignment.converter.AssToDto;
 import Umc.replendar.assignment.dto.reqDto.AssignmentReq;
 import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 import Umc.replendar.assignment.entity.Assignment;
@@ -140,6 +142,13 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignmentRepository.delete(assignment);
 
         return ApiResponse.onSuccess("과제가 삭제되었습니다.");
+    }
+
+    @Override
+    public ApiResponse<AssignmentRes.assDetailRes> getAssDetail(Long assId) {
+        Assignment assignment = assignmentRepository.findById(assId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과제입니다."));
+
+        return ApiResponse.of(SuccessStatus._OK,AssToDto.toDetailDto(assignment));
     }
 
 

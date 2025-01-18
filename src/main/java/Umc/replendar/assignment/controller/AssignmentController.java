@@ -43,4 +43,10 @@ public class AssignmentController {
         return assignmentService.deleteAssignment(assId);
     }
 
+    @Operation(summary = "과제 상세 조회 API",description = "과제 상세 조회 API")
+    @GetMapping("/{assId}")
+    public ApiResponse<AssignmentRes.assDetailRes> getAssignmentDetail(@PathVariable Long assId){
+        return assignmentService.getAssDetail(assId);
+    }
+
 }

@@ -24,6 +24,7 @@ public class AssignmentReq {
 
         String notification;
         String visibility;
+        String notifyCycle;
         List<Long> shareIds = new ArrayList<>();
         String memo;
     }
@@ -39,6 +40,7 @@ public class AssignmentReq {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
         LocalDateTime endDate;
         String notification;
+        String notifyCycle;
         String visibility;
         String memo;
     }

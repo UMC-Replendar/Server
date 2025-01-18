@@ -20,6 +20,18 @@ public class AssignmentRes {
         private String due_date;
     }
 
+    @Data
+    @AllArgsConstructor
+    @Builder
+    public static class assDetailRes {
+        private Long assId;
+        private String title;
+        private String due_date;
+        private String memo;
+        private String notification;
+        private String notifyCycle;
+    }
+
 //    @Setter
 //    @AllArgsConstructor
 //    @Builder
