@@ -1,5 +1,6 @@
 package Umc.replendar.assignment.dto.resDto;
 
+import Umc.replendar.assignment.entity.NotifyCycle;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -29,7 +30,7 @@ public class AssignmentRes {
         private String due_date;
         private String memo;
         private String notification;
-        private String notifyCycle;
+        private NotifyCycle notifyCycle;
     }
 
 //    @Setter

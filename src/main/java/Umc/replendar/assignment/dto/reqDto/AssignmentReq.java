@@ -1,5 +1,6 @@
 package Umc.replendar.assignment.dto.reqDto;
 
+import Umc.replendar.assignment.entity.NotifyCycle;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class AssignmentReq {
 
         String notification;
         String visibility;
-        String notifyCycle;
+        NotifyCycle notifyCycle;
         List<Long> shareIds = new ArrayList<>();
         String memo;
     }
@@ -40,8 +41,9 @@ public class AssignmentReq {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
         LocalDateTime endDate;
         String notification;
-        String notifyCycle;
+        NotifyCycle notifyCycle;
         String visibility;
+
         String memo;
     }
 

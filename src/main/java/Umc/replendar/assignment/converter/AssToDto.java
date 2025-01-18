@@ -35,6 +35,7 @@ public class AssToDto {
                 .due_date(assignment.getDueDate().format(DATE_TIME_FORMATTER))
                 .notification(String.valueOf(assignment.getNotification()))
                 .memo(assignment.getMemo())
+                .notifyCycle(assignment.getNotifyCycle())
                 .build();
     }
 }

@@ -53,6 +53,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .due_date(reqDto.getEndDate())
                 .notification("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF)
                 .visibility("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF)
+                .notifyCycle(reqDto.getNotifyCycle())
                 .memo(reqDto.getMemo())
                 .status(Status.ONGOING)
                 .build();
@@ -83,6 +84,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .due_date(reqDto.getEndDate())
                     .notification(GeneralSettings.OFF)
                     .visibility(GeneralSettings.OFF)
+                    .notifyCycle(reqDto.getNotifyCycle())
                     .memo(reqDto.getMemo())
                     .status(Status.WAIT) //대기상태
                     .build();
@@ -127,13 +129,13 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignment.setMemo(reqDto.getMemo());
         assignment.setNotification(String.valueOf("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF));
         assignment.setVisibility("ON".equalsIgnoreCase(reqDto.getVisibility()) ? GeneralSettings.ON : GeneralSettings.OFF);
-
+        assignment.setNotifyCycle(reqDto.getNotifyCycle());
         assignmentRepository.save(assignment);
 
         return ApiResponse.onSuccess("과제가 수정되었습니다.");
     }
 
-    //활동로그에서 해당 과제가 다 삭제되는지 확인해야함
+    //활동로그에서 해당 과제가 다 삭제되는지 확인해야함 - 삭제됨
     @Override
     public ApiResponse<String> deleteAssignment(Long assId) {
 
