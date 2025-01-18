@@ -28,5 +28,20 @@ public class AssignmentReq {
         String memo;
     }
 
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class updateReqDto{
+        Long assId;
+        String title;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
+        LocalDateTime endDate;
+        String notification;
+        String visibility;
+        String memo;
+    }
+
 
 }

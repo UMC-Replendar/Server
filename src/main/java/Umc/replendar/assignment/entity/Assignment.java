@@ -6,10 +6,7 @@ import Umc.replendar.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Table(name = "assignment")
 public class Assignment extends BaseEntity {
 
@@ -40,7 +38,7 @@ public class Assignment extends BaseEntity {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 35)
     private String title;
 
     @Enumerated(EnumType.STRING)

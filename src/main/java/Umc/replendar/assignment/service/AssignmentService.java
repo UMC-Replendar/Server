@@ -12,4 +12,8 @@ public interface AssignmentService {
     ApiResponse<String> createAssignment(AssignmentReq.CreateReqDto reqDto); //과제 생성
 
     ApiResponse<List<AssignmentRes.assMainTopRes>> getAssMainTopAssignment(Long userId);
+
+    ApiResponse<String> updateAssignment(AssignmentReq.updateReqDto reqDto);
+
+    ApiResponse<String> deleteAssignment(Long assId);
 }

@@ -31,5 +31,16 @@ public class AssignmentController {
         return assignmentService.getAssMainTopAssignment(userId);
     }
 
+    @Operation(summary = "과제 수정 API",description = "과제 수정 API")
+    @PatchMapping("")
+    public ApiResponse<String> patchAssignment(@RequestBody AssignmentReq.updateReqDto reqDto){
+        return assignmentService.updateAssignment(reqDto);
+    }
+
+    @Operation(summary = "과제 삭제 API",description = "과제 삭제 API")
+    @DeleteMapping("")
+    public ApiResponse<String> deleteAssignment(@RequestParam Long assId) {
+        return assignmentService.deleteAssignment(assId);
+    }
 
 }

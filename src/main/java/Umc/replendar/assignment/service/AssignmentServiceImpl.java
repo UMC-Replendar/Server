@@ -115,4 +115,32 @@ public class AssignmentServiceImpl implements AssignmentService {
         return ApiResponse.onSuccess(toMainTopDto(assignments));
     }
 
+    @Override
+    public ApiResponse<String> updateAssignment(AssignmentReq.updateReqDto reqDto) {
+
+        Assignment assignment = assignmentRepository.findById(reqDto.getAssId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과제입니다."));
+
+        assignment.setTitle(reqDto.getTitle());
+        assignment.setDueDate(reqDto.getEndDate());
+        assignment.setMemo(reqDto.getMemo());
+        assignment.setNotification(String.valueOf("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF));
+        assignment.setVisibility("ON".equalsIgnoreCase(reqDto.getVisibility()) ? GeneralSettings.ON : GeneralSettings.OFF);
+
+        assignmentRepository.save(assignment);
+
+        return ApiResponse.onSuccess("과제가 수정되었습니다.");
+    }
+
+    //활동로그에서 해당 과제가 다 삭제되는지 확인해야함
+    @Override
+    public ApiResponse<String> deleteAssignment(Long assId) {
+
+        Assignment assignment = assignmentRepository.findById(assId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과제입니다."));
+
+        assignmentRepository.delete(assignment);
+
+        return ApiResponse.onSuccess("과제가 삭제되었습니다.");
+    }
+
+
 }
