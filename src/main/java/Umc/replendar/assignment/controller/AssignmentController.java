@@ -55,5 +55,11 @@ public class AssignmentController {
         return assignmentService.getAssMonth(userId, month);
     }
 
+    @Operation(summary = "과제 공유할 친구 조회",description = "과제 공유할 친구 조회")
+    @GetMapping("/share")
+    public ApiResponse<List<AssignmentRes.assShareRes>> getAssignmentShare(@RequestParam Long userId){
+        return assignmentService.getAssShareFriendList(userId);
+    }
+
 
 }

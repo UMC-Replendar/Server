@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static Umc.replendar.assignment.converter.AssToDto.toMainTopDto;
+import static Umc.replendar.assignment.converter.AssToDto.toShareUserDto;
 
 
 @Service
@@ -169,6 +170,23 @@ public class AssignmentServiceImpl implements AssignmentService {
         List<Assignment> assignment = assignmentRepository.findAllByUserAndDueDateBetweenAndStatusOrderByDueDate(user, mont, montEnd, Status.ONGOING);
 
         return ApiResponse.of(SuccessStatus._OK, AssToDto.toMonthDto(assignment));
+    }
+
+    //과제 공유할 친구 리스트 조회
+    //리스트 조회할 때 user와 friend중 어디에 자기아이디가 있는지 확인하기
+    //확인하고 메모 던져주기
+    @Override
+    public ApiResponse<List<AssignmentRes.assShareRes>> getAssShareFriendList(Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        List<AssignmentRes.assShareRes> resList = friendRepository.findAllByUserIdOrFriendId(user.getId(), user.getId()).stream()
+
+                                                    //friend.friend의 id가 user의 id와 같으면 friend의 user를 반환, 아니면 friend를 반환
+                .map(friend -> friend.getFriend().getId().equals(user.getId()) ? toShareUserDto(true, friend) : toShareUserDto(false, friend))
+                .toList();
+
+        return ApiResponse.of(SuccessStatus._OK, resList);
     }
 
 

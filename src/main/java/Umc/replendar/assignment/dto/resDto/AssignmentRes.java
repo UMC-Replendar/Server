@@ -46,6 +46,15 @@ public class AssignmentRes {
         private GeneralSettings notification;
         private Status status;
     }
+    @Data
+    @AllArgsConstructor
+    @Builder
+    public static class assShareRes {
+        private Long userId;
+        private String nickName;
+        private String name;
+        private String friendNote;
+    }
 
 //    @Setter
 //    @AllArgsConstructor

@@ -20,4 +20,6 @@ public interface AssignmentService {
     ApiResponse<AssignmentRes.assDetailRes> getAssDetail(Long assId);
 
     ApiResponse<List<AssignmentRes.assMonthRes>> getAssMonth(Long userId, String month);
+
+    ApiResponse<List<AssignmentRes.assShareRes>> getAssShareFriendList(Long userId);
 }

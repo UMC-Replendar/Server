@@ -2,6 +2,7 @@ package Umc.replendar.assignment.converter;
 
 import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 import Umc.replendar.assignment.entity.Assignment;
+import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.global.function.TaskTimer;
 
 import java.time.format.DateTimeFormatter;
@@ -52,5 +53,26 @@ public class AssToDto {
                         .status(assignment1.getStatus())
                         .build()
                 ).toList();
+    }
+
+    public static AssignmentRes.assShareRes toShareUserDto(Boolean isFriend, Friend friend){
+
+        //UserId가 친구 Id일경우
+        if(isFriend){
+            return AssignmentRes.assShareRes.builder()
+                    .userId(friend.getUser().getId())
+                    .nickName(friend.getUser().getNickname())
+                    .name(friend.getUser().getName())
+                    .friendNote(friend.getFriendNote())
+                    .build();
+        }
+
+        //friendId가 친구 id일경우
+        return AssignmentRes.assShareRes.builder()
+                .userId(friend.getFriend().getId())
+                .nickName(friend.getFriend().getNickname())
+                .name(friend.getFriend().getName())
+                .friendNote(friend.getUserNote())
+                .build();
     }
 }
