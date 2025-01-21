@@ -27,11 +27,11 @@ public class ActivityLog extends BaseEntity {
     private Check isCheck;
 
     @ManyToOne
-    @JoinColumn(name = "user_id2")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "friend_id2")
+    @JoinColumn(name = "friend_id")
     private User friend;
 
     @ManyToOne

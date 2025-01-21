@@ -68,6 +68,9 @@ public class Assignment extends BaseEntity {
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE)
     private List<ActivityLog> activityLogList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE)
+    private List<Share> shareList = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
