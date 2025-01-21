@@ -19,17 +19,17 @@ public class Friend extends BaseEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private Buddy user_buddy;
+    private Buddy userBuddy;
 
     @Column
-    private String user_note;
+    private String userNote;
 
     @Column
     @Enumerated(EnumType.STRING)
-    private Buddy friend_buddy;
+    private Buddy friendBuddy;
 
     @Column
-    private String friend_note;
+    private String friendNote;
 
     @ManyToOne
     @JoinColumn(name = "user_id") // Friend를 생성한 사용자

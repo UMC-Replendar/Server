@@ -1,6 +1,7 @@
 package Umc.replendar.user.entity;
 
 import Umc.replendar.activitylog.entity.ActivityLog;
+import Umc.replendar.assignment.entity.Share;
 import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.global.BaseEntity;
 import jakarta.persistence.*;
@@ -31,7 +32,7 @@ public class User extends BaseEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private AcademicYear academic_year;
+    private AcademicYear academicYear;
 
     @Column(length = 10)
     private String major;
@@ -43,22 +44,25 @@ public class User extends BaseEntity {
     private String nickname;
 
     @Column(length = 254)
-    private String profile_image;
+    private String profileImage;
 
     @Column(length = 50)
-    private String status_message;
+    private String statusMessage;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Friend> user_id = new ArrayList<>();
+    private List<Friend> friendUserList = new ArrayList<>();
 
     @OneToMany(mappedBy = "friend", cascade = CascadeType.REMOVE)
-    private List<Friend> friend_id = new ArrayList<>();
+    private List<Friend> friendFriendList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<ActivityLog> user_id2 = new ArrayList<>();
+    private List<ActivityLog> activityLogList = new ArrayList<>();
 
     @OneToMany(mappedBy = "friend", cascade = CascadeType.REMOVE)
-    private List<ActivityLog> friend_id2 = new ArrayList<>();
+    private List<ActivityLog> acitivtyLogList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Share> shareLogList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "school_id")

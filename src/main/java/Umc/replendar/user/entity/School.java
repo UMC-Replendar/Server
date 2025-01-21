@@ -19,7 +19,7 @@ public class School {
     private Long id;
 
     @Column(length = 30)
-    private String school_name;
+    private String schoolName;
 
     @OneToMany(mappedBy = "school", cascade = CascadeType.REMOVE)
     private List<User> userList = new ArrayList<>();

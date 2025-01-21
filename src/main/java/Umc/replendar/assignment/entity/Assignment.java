@@ -3,13 +3,9 @@ package Umc.replendar.assignment.entity;
 import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.global.BaseEntity;
 import Umc.replendar.user.entity.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,28 +15,30 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Table(name = "assignment")
 public class Assignment extends BaseEntity {
 
     @Builder
-    public Assignment(String title, GeneralSettings visibility, Status status,  String memo, LocalDateTime due_date, LocalDateTime completion_time, List<ActivityLog> activityLogList, User user, GeneralSettings notification) {
+    public Assignment(String title, GeneralSettings visibility, Status status,  String memo, LocalDateTime due_date, LocalDateTime completion_time, List<ActivityLog> activityLogList, User user, GeneralSettings notification, NotifyCycle notifyCycle) {
 
         this.user = user;
         this.title = title;
-        this.due_date = due_date;
+        this.dueDate = due_date;
         this.notification = notification;
         this.visibility = visibility;
         this.status = status;
         this.memo = memo;
-        this.completion_time = completion_time;
+        this.completionTime = completion_time;
         this.activityLogList = activityLogList;
+        this.notifyCycle = notifyCycle;
     }
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 35)
     private String title;
 
     @Enumerated(EnumType.STRING)
@@ -52,6 +50,9 @@ public class Assignment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Enumerated(EnumType.STRING)
+    private NotifyCycle notifyCycle;
+
 //    @Enumerated(EnumType.STRING)
 //    private GeneralSettings isActive;
 
@@ -59,14 +60,16 @@ public class Assignment extends BaseEntity {
     private String memo;
 
     @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
-    private LocalDateTime due_date;
+    private LocalDateTime dueDate;
 
     @Column
-    private LocalDateTime completion_time;
+    private LocalDateTime completionTime;
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE)
     private List<ActivityLog> activityLogList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE)
+    private List<Share> shareList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
