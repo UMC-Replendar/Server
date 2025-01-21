@@ -28,6 +28,7 @@ public class AssignmentReq {
         NotifyCycle notifyCycle;
         List<Long> shareIds = new ArrayList<>();
         String memo;
+        SaveType saveType;
     }
 
     @Getter
@@ -44,6 +45,25 @@ public class AssignmentReq {
         NotifyCycle notifyCycle;
         String visibility;
 
+        String memo;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class StoreReqDto{
+        Long userId;
+        String title;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
+        LocalDateTime endDate;
+
+        String notification;
+        String visibility;
+        NotifyCycle notifyCycle;
+        List<Long> shareIds = new ArrayList<>();
         String memo;
     }
 

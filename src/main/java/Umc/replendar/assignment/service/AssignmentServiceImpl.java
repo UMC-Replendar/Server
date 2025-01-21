@@ -8,6 +8,7 @@ import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.apiPayload.code.status.SuccessStatus;
 import Umc.replendar.assignment.converter.AssToDto;
 import Umc.replendar.assignment.dto.reqDto.AssignmentReq;
+import Umc.replendar.assignment.dto.reqDto.SaveType;
 import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.assignment.entity.GeneralSettings;
@@ -45,6 +46,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     //공유할 친구 수 만큼 반복문을 돌려서 과제를 추가해준다. - 이 때 진행상태 WAIT
     //과제를 추가할 때마다 친구 ID의 활동 로그를 추가한다. - 이 때 액션 과제 공유 SHARE, 확인여부 UNCHECK
     public ApiResponse<String> createAssignment(AssignmentReq.CreateReqDto reqDto){
+
         System.out.println(reqDto.getUserId());
         //본인 과제 등록
         User user = userRepository.findById(reqDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
@@ -182,7 +184,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         List<AssignmentRes.assShareRes> resList = friendRepository.findAllByUserIdOrFriendId(user.getId(), user.getId()).stream()
 
-                                                    //friend.friend의 id가 user의 id와 같으면 friend의 user를 반환, 아니면 friend를 반환
+                //friend.friend의 id가 user의 id와 같으면 friend의 user를 반환, 아니면 friend를 반환
                 .map(friend -> friend.getFriend().getId().equals(user.getId()) ? toShareUserDto(true, friend) : toShareUserDto(false, friend))
                 .toList();
 

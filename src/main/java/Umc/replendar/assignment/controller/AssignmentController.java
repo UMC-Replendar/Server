@@ -61,5 +61,13 @@ public class AssignmentController {
         return assignmentService.getAssShareFriendList(userId);
     }
 
+//    @Operation(summary = "과제 보관할 때 API",description = "과제 보관할 때 API")
+//    @PostMapping("/store")
+//    public ApiResponse<String> storeAssignment(@RequestBody AssignmentReq.StoreReqDto reqDto){
+//        System.out.println(reqDto.getUserId());
+//        return assignmentService.storeAssignment(reqDto);
+//    }
+
+
 
 }
