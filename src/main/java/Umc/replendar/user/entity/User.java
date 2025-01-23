@@ -49,6 +49,13 @@ public class User extends BaseEntity {
     @Column(length = 50)
     private String statusMessage;
 
+    @Column
+    private String password;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Type type; // 회원 타입
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Friend> friendUserList = new ArrayList<>();
 
