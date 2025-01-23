@@ -13,7 +13,6 @@ public class AssignmentReq {
 
     @Getter
     @Setter
-    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CreateReqDto{
@@ -26,14 +25,13 @@ public class AssignmentReq {
         String notification;
         String visibility;
         NotifyCycle notifyCycle;
-        List<Long> shareIds = new ArrayList<>();
+        List<Long> shareIds;
         String memo;
         SaveType saveType;
     }
 
     @Getter
     @Setter
-    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class updateReqDto{
@@ -50,7 +48,6 @@ public class AssignmentReq {
 
     @Getter
     @Setter
-    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class StoreReqDto{
@@ -63,7 +60,7 @@ public class AssignmentReq {
         String notification;
         String visibility;
         NotifyCycle notifyCycle;
-        List<Long> shareIds = new ArrayList<>();
+        List<Long> shareIds;
         String memo;
     }
 
