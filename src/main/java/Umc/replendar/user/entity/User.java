@@ -43,9 +43,6 @@ public class User extends BaseEntity {
     @Column(length = 10, unique = true)
     private String nickname;
 
-    @Column(length = 254)
-    private String profileImage;
-
     @Column(length = 50)
     private String statusMessage;
 
@@ -55,6 +52,9 @@ public class User extends BaseEntity {
     @Column
     @Enumerated(EnumType.STRING)
     private Type type; // 회원 타입
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private ProfileImage profileImage;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Friend> friendUserList = new ArrayList<>();
@@ -74,6 +74,5 @@ public class User extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "school_id")
     private School school;
-
 
 }
