@@ -1,11 +1,7 @@
 package Umc.replendar.user.controller;
 
 import Umc.replendar.apiPayload.ApiResponse;
-import Umc.replendar.common.AmazonConfig;
-import Umc.replendar.common.AmazonS3Manager;
 import Umc.replendar.global.util.AmazonS3Util;
-import Umc.replendar.user.dto.req.res.TestRes;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/s3")

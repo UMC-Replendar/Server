@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -86,13 +88,14 @@ public class JwtTokenProvider {
     }
 
     // Request 의 Header 에서 token 값을 가져옵니다. "Authorization" : "TOKEN 값'
-    public String resolveAccessToken(HttpServletRequest request) {
+    public String resolveAccessToken() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         return request.getHeader("Authorization");
     }
 
     // UserId 추출
-    public Long getUserIdFromToken(HttpServletRequest request) {
-        String accessToken = resolveAccessToken(request);
+    public Long getUserIdFromToken() {
+        String accessToken = resolveAccessToken();
         return getUserIdInToken(accessToken);
     }
 

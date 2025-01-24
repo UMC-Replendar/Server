@@ -41,7 +41,11 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	testImplementation 'org.springframework.security:spring-security-test'
 
+	//Webflux
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+	//thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
 tasks.named('test') {

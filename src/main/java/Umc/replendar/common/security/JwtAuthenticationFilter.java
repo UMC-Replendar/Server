@@ -31,8 +31,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
         // 요청 헤더에서 JWT 를 받아옵니다.
-        log.info("dofilter 토큰 : " + jwtTokenProvider.resolveAccessToken(httpRequest));
-        String token = jwtTokenProvider.resolveAccessToken(httpRequest);
+        log.info("dofilter 토큰 : " + jwtTokenProvider.resolveAccessToken());
+        String token = jwtTokenProvider.resolveAccessToken();
         log.info("token : " + token);
 
 
