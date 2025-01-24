@@ -35,6 +35,10 @@ file:
 jwt:
   secret: ${JWT_SECRET_KEY}
 
+kakao:
+  client_id: ${KAKAO_ID}
+  redirect_uri: http://localhost:8080/oauth/kakao
+
 cloud:
   aws:
     s3:

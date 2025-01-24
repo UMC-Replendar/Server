@@ -4,6 +4,7 @@ import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.assignment.dto.reqDto.AssignmentReq;
 import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 import Umc.replendar.assignment.service.AssignmentService;
+import Umc.replendar.common.security.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,14 @@ import java.util.List;
 public class AssignmentController {
 
     private final AssignmentService assignmentService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(summary = "과제 등록 API",description = "과제 등록 API")
     @PostMapping("")
     public ApiResponse<String> createAssignment(@RequestBody AssignmentReq.CreateReqDto reqDto){
+        Long userId = jwtTokenProvider.getUserIdFromToken();
         System.out.println(reqDto.getUserId());
-        return assignmentService.createAssignment(reqDto);
+        return assignmentService.createAssignment(userId,reqDto);
     }
 
     @Operation(summary = "메인화면 상단 과제 조회 API",description = "메인화면 상단 과제 조회 API")

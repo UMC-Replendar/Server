@@ -7,10 +7,7 @@ import Umc.replendar.global.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "user")
 public class User extends BaseEntity {
 
@@ -45,6 +43,13 @@ public class User extends BaseEntity {
 
     @Column(length = 50)
     private String statusMessage;
+
+    @Column
+    private String password;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Type type; // 회원 타입
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private ProfileImage profileImage;
