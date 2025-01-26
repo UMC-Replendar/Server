@@ -32,7 +32,7 @@ public class AssignmentRes {
         private String due_date;
         private String memo;
         private String notification;
-        private NotifyCycle notifyCycle;
+//        private NotifyCycle notifyCycle;
     }
 
     @Data

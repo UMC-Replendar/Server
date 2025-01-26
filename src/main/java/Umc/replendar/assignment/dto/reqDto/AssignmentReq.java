@@ -25,7 +25,7 @@ public class AssignmentReq {
 
         String notification;
         String visibility;
-        NotifyCycle notifyCycle;
+        List<NotifyCycle> notifyCycle;
         List<Long> shareIds;
         String memo;
         SaveType saveType;

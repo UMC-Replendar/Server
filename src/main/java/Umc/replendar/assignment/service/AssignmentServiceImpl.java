@@ -10,12 +10,12 @@ import Umc.replendar.assignment.converter.AssToDto;
 import Umc.replendar.assignment.dto.reqDto.AssignmentReq;
 import Umc.replendar.assignment.dto.reqDto.SaveType;
 import Umc.replendar.assignment.dto.resDto.AssignmentRes;
-import Umc.replendar.assignment.entity.Assignment;
-import Umc.replendar.assignment.entity.GeneralSettings;
-import Umc.replendar.assignment.entity.Status;
+import Umc.replendar.assignment.entity.*;
+import Umc.replendar.assignment.repository.AssNotifyCycleRepository;
 import Umc.replendar.assignment.repository.AssignmentRepository;
 import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.friend.repository.FriendRepository;
+import Umc.replendar.global.function.TaskTimer;
 import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
@@ -40,6 +40,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final UserRepository userRepository;
     private final ActivityRepository activityRepository;
     private final FriendRepository friendRepository;
+    private final AssNotifyCycleRepository assNotifyCycleRepository;
 
     //과제추가 API
     //과제를 추가하면 친구들에게 알림이 가게 구현해야함
@@ -58,12 +59,23 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .due_date(reqDto.getEndDate())
                 .notification("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF)
                 .visibility("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF)
-                .notifyCycle(reqDto.getNotifyCycle())
                 .memo(reqDto.getMemo())
                 .status(Status.ONGOING)
                 .favorite(reqDto.getActive())
                 .build();
         assignmentRepository.save(assignment);
+
+        //완료시간에서 알림주기를 계산한 후
+        //과제 알림 주기 테이블에 시간과 알림주기를 저장
+        for(NotifyCycle notifyCycle : reqDto.getNotifyCycle()){
+            AssNotifyCycle assNotifyCycle = AssNotifyCycle.builder()
+                    .assignment(assignment)
+                    .notifyCycle(notifyCycle)
+                    .notifyTime(TaskTimer.notifyCycle(assignment.getDueDate(), notifyCycle))
+                    .build();
+            assNotifyCycleRepository.save(assNotifyCycle);
+        }
+
 
         //과제 등록한 사용자의 친구들 찾기, 찾을때 friend나 user에 자기아이디가 있는지 확인하기
         List<User> userFriend = friendRepository.findAllByUserIdOrFriendId(user.getId(), user.getId()).stream()
@@ -91,7 +103,6 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .due_date(reqDto.getEndDate())
                     .notification(GeneralSettings.OFF)
                     .visibility(GeneralSettings.OFF)
-                    .notifyCycle(reqDto.getNotifyCycle())
                     .memo(reqDto.getMemo())
                     .status(Status.WAIT) //대기상태
                     .favorite(Active.INACTIVE)
@@ -137,7 +148,6 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignment.setMemo(reqDto.getMemo());
         assignment.setNotification(String.valueOf("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF));
         assignment.setVisibility("ON".equalsIgnoreCase(reqDto.getVisibility()) ? GeneralSettings.ON : GeneralSettings.OFF);
-        assignment.setNotifyCycle(reqDto.getNotifyCycle());
         assignmentRepository.save(assignment);
 
         return ApiResponse.onSuccess("과제가 수정되었습니다.");
