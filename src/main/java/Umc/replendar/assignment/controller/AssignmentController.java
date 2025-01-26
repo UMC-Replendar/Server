@@ -20,7 +20,7 @@ public class AssignmentController {
     private final AssignmentService assignmentService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Operation(summary = "과제 등록 API",description = "과제 등록 API")
+    @Operation(summary = "과제 등록 API", description = "과제 등록 API")
     @PostMapping("")
     public ApiResponse<String> createAssignment(@RequestBody AssignmentReq.CreateReqDto reqDto){
         Long userId = jwtTokenProvider.getUserIdFromToken();

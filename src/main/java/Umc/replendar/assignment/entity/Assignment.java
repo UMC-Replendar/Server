@@ -2,6 +2,7 @@ package Umc.replendar.assignment.entity;
 
 import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.global.BaseEntity;
+import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
 
@@ -64,6 +65,9 @@ public class Assignment extends BaseEntity {
 
     @Column
     private LocalDateTime completionTime;
+
+    @Enumerated(EnumType.STRING)
+    private Active favorite;
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE)
     private List<ActivityLog> activityLogList = new ArrayList<>();
