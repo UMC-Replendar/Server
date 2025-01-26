@@ -1,12 +1,8 @@
 spring:
-  thymeleaf:
-    enabled: true
-    prefix: classpath:/templates/
-    suffix: .html
   datasource:
-    url: jdbc:mysql://localhost:3306/replendar?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: 1111
+    url: ${AWS_DB_URL}
+    username: ${AWS_DB_USERNAME}
+    password: ${AWS_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   servlet:
