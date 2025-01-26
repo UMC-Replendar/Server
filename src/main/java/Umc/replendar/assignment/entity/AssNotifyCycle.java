@@ -21,6 +21,7 @@ public class AssNotifyCycle {
     private LocalDateTime notifyTime;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private NotifyCycle notifyCycle;
 
     @ManyToOne

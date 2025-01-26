@@ -19,7 +19,6 @@ public class AssignmentReq {
     public static class CreateReqDto{
         Long userId;
         String title;
-
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
         LocalDateTime endDate;
 
@@ -29,7 +28,7 @@ public class AssignmentReq {
         List<Long> shareIds;
         String memo;
         SaveType saveType;
-        Active active;
+        Active favorite;
     }
 
     @Getter
@@ -42,10 +41,11 @@ public class AssignmentReq {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
         LocalDateTime endDate;
         String notification;
-        NotifyCycle notifyCycle;
         String visibility;
-
         String memo;
+        List<Long> shareIds;
+        List<NotifyCycle> notifyCycle;
+        Active favorite;
     }
 
     @Getter

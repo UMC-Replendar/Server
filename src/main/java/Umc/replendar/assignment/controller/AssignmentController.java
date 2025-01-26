@@ -28,7 +28,7 @@ public class AssignmentController {
         return assignmentService.createAssignment(userId,reqDto);
     }
 
-    @Operation(summary = "메인화면 상단 과제 조회 API",description = "메인화면 상단 과제 조회 API")
+    @Operation(summary = "메인화면 상단 진행중인 과제 조회 API",description = "메인화면 상단 진행중인 과제 조회 API")
     @GetMapping("")
     public ApiResponse<List<AssignmentRes.assMainTopRes>> getMainTopAssignment(@RequestParam Long userId){
         return assignmentService.getAssMainTopAssignment(userId);

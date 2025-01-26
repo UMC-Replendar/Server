@@ -13,6 +13,7 @@ import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 import Umc.replendar.assignment.entity.*;
 import Umc.replendar.assignment.repository.AssNotifyCycleRepository;
 import Umc.replendar.assignment.repository.AssignmentRepository;
+import Umc.replendar.assignment.repository.ShareRepository;
 import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.friend.repository.FriendRepository;
 import Umc.replendar.global.function.TaskTimer;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static Umc.replendar.assignment.converter.AssToDto.toMainTopDto;
 import static Umc.replendar.assignment.converter.AssToDto.toShareUserDto;
@@ -41,6 +43,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final ActivityRepository activityRepository;
     private final FriendRepository friendRepository;
     private final AssNotifyCycleRepository assNotifyCycleRepository;
+    private final ShareRepository shareRepository;
 
     //과제추가 API
     //과제를 추가하면 친구들에게 알림이 가게 구현해야함
@@ -61,7 +64,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .visibility("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF)
                 .memo(reqDto.getMemo())
                 .status(Status.ONGOING)
-                .favorite(reqDto.getActive())
+                .favorite(reqDto.getFavorite())
                 .build();
         assignmentRepository.save(assignment);
 
@@ -95,7 +98,17 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         //과제 등록할 때 공유했다면 반복문 돌리기
         for(Long shareId : reqDto.getShareIds()){
-            User friendUser = userRepository.findById(shareId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+            if(Objects.equals(shareId, userId)){
+                return ApiResponse.onFailure("INVALID_REQUEST", "자기 자신에게 공유할 수 없습니다.", null);
+            }
+
+            User friendUser = userRepository.findById(shareId).orElseThrow(() -> new IllegalArgumentException("과제 공유 받는 사용자가 존재하지 않는 사용자입니다."));
+            //과제 공유한 아이디 저장해야함(수정 때 사용해야하기에)
+            Share share = Share.builder()
+                    .user(friendUser)
+                    .assignment(assignment).build();
+            shareRepository.save(share);
+
             //친구 과제 등록
             Assignment frAssignment = Assignment.builder()
                     .user(friendUser)
@@ -148,7 +161,44 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignment.setMemo(reqDto.getMemo());
         assignment.setNotification(String.valueOf("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF));
         assignment.setVisibility("ON".equalsIgnoreCase(reqDto.getVisibility()) ? GeneralSettings.ON : GeneralSettings.OFF);
+        assignment.setFavorite(reqDto.getFavorite());
         assignmentRepository.save(assignment);
+
+        //수정 시 공유할 친구 삭제는 불가능함
+        //추가만 가능하기에 이전에 공유했던 친구에게 공유가 중첩되면 안되기에 중첩되는 사람을 필터 후 새로운 사람에게만 과제 공유
+        reqDto.getShareIds().removeAll(
+                shareRepository.findAllByAssignment(assignment).stream()
+                        .map(share -> share.getUser().getId()).toList());
+
+        for(Long shareId : reqDto.getShareIds()){
+            User friendUser = userRepository.findById(shareId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+            Share share = Share.builder()
+                    .user(friendUser)
+                    .assignment(assignment).build();
+            shareRepository.save(share);
+
+            Assignment frAssignment = Assignment.builder()
+                    .user(friendUser)
+                    .title(reqDto.getTitle())
+                    .due_date(reqDto.getEndDate())
+                    .notification(GeneralSettings.OFF)
+                    .visibility(GeneralSettings.OFF)
+                    .memo(reqDto.getMemo())
+                    .status(Status.WAIT)
+                    .favorite(Active.INACTIVE)
+                    .build();
+            assignmentRepository.save(frAssignment);
+
+            ActivityLog activityLog = ActivityLog.builder()
+                    .user(friendUser)
+                    .friend(assignment.getUser())
+                    .assignment(frAssignment)
+                    .action(Action.SHARE)
+                    .isCheck(Check.UNCHECK)
+                    .build();
+            activityRepository.save(activityLog);
+        }
 
         return ApiResponse.onSuccess("과제가 수정되었습니다.");
     }
