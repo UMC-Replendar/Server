@@ -20,7 +20,7 @@ public class CustomUserDetail implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return "hi";
     }
 
     @Override

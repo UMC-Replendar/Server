@@ -73,40 +73,41 @@ public class UserService {
     }
 
 
-//    public User kakaoSignup(KakaoUserInfoResponseDto userInfo) {
-//        //이미 회원가입한 이메일이 있다면 user 리턴
-//        //회원가입된게 없다면 회원가입 및 유저프로필 생성 후 유저 리턴
-//        return userRepository.findByEmail(userInfo.getKakaoAccount().getEmail())
-//                .orElseGet(() -> {
-//                    User newUser = User.builder()
-//                            .email(userInfo.getKakaoAccount().getEmail())
+    public User kakaoSignup(KakaoUserInfoResponseDto userInfo) {
+        //이미 회원가입한 이메일이 있다면 user 리턴
+        //회원가입된게 없다면 회원가입 및 유저프로필 생성 후 유저 리턴
+        return userRepository.findByEmail(userInfo.getKakaoAccount().getEmail())
+                .orElseGet(() -> {
+                    User newUser = User.builder()
+                            .email(userInfo.getKakaoAccount().getEmail())
 //                            .type(Type.KAKAO)
-//                            .build();
-//                    userRepository.save(newUser);
-//
+                            .build();
+                    userRepository.save(newUser);
+
 //                    UserProfile userProfile = UserProfile.builder()
 //                            .user(newUser)
 //                            .nickName(userInfo.getKakaoAccount().profile.getNickName())
 //                            .build();
 //                    userProfileRepository.save(userProfile);
-//
-//                    return newUser;
-//                });
-//    }
-//
-//    public UserDtoRes.UserLoginRes kakaoLogin(HttpServletRequest request, HttpServletResponse response, User user) {
-//
+
+                    return newUser;
+                });
+    }
+
+    public UserDtoRes.UserLoginRes kakaoLogin(HttpServletRequest request, HttpServletResponse response, User user) {
+
 //        UserProfile userProfile = userProfileRepository.findByUser(user).orElseThrow(() -> new IllegalArgumentException("해당 유저의 프로필이 없습니다."));
-//
-//        String accessToken = jwtTokenProvider.createAccessToken(user.getId());
-//        String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
-//
-//        log.info("login refresh token : {}", refreshToken);
-//
-//        // 쿠키 저장
-//        CookieUtil.deleteCookie(request, response, "refreshToken");
-//        CookieUtil.addCookie(response, "refreshToken", refreshToken, JwtTokenProvider.REFRESH_TOKEN_VALID_TIME_IN_COOKIE);
-//
-//        return UserConverter.signInRes(user, accessToken, userProfile.getNickName());
-//    }
+//        User user2 = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저의 프로필이 없습니다."));
+
+        String accessToken = jwtTokenProvider.createAccessToken(user.getId());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
+
+        log.info("login refresh token : {}", refreshToken);
+
+        // 쿠키 저장
+        CookieUtil.deleteCookie(request, response, "refreshToken");
+        CookieUtil.addCookie(response, "refreshToken", refreshToken, JwtTokenProvider.REFRESH_TOKEN_VALID_TIME_IN_COOKIE);
+
+        return UserConverter.signInRes(user, accessToken, user.getNickname());
+    }
 }
