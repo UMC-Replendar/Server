@@ -4,6 +4,7 @@ import Umc.replendar.global.BaseEntity;
 import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class Friend extends BaseEntity {
 
     @Id
@@ -19,17 +21,17 @@ public class Friend extends BaseEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private Buddy userBuddy;
+    private Buddy userBuddy; // 사용자 측 친구 상태
 
     @Column
-    private String userNote;
+    private String userNote; // 사용자 메모
 
     @Column
     @Enumerated(EnumType.STRING)
-    private Buddy friendBuddy;
+    private Buddy friendBuddy; // 친구 측 친구 상태
 
     @Column
-    private String friendNote;
+    private String friendNote; // 친구 메모
 
     @ManyToOne
     @JoinColumn(name = "user_id") // Friend를 생성한 사용자
