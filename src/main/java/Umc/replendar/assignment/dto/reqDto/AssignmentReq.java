@@ -27,7 +27,6 @@ public class AssignmentReq {
         List<NotifyCycle> notifyCycle;
         List<Long> shareIds;
         String memo;
-        SaveType saveType;
         Active favorite;
     }
 

@@ -20,7 +20,6 @@ public class AssNotifyCycle {
     @Column
     private LocalDateTime notifyTime;
 
-    @Column
     @Enumerated(EnumType.STRING)
     private NotifyCycle notifyCycle;
 
