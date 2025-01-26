@@ -35,7 +35,7 @@ public class User extends BaseEntity {
     @Column(length = 10)
     private String major;
 
-    @Column(length = 100)
+    @Column(length = 100, unique = true)
     private String email;
 
     @Column(length = 10, unique = true)
@@ -44,12 +44,9 @@ public class User extends BaseEntity {
     @Column(length = 50)
     private String statusMessage;
 
-    @Column
-    private String password;
+//    @Column
+//    private String password;
 
-    @Column
-    @Enumerated(EnumType.STRING)
-    private Type type; // 회원 타입
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private ProfileImage profileImage;

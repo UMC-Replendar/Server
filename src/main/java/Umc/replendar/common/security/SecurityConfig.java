@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**",
                                 "/swagger-resources/**", "/webjars/**", "/health", "/api/**", "/api/essay/**",
-                                "/callback").permitAll() // 공개 엔드포인트 설정
+                                "/callback", "/login/**" , "/oauth/**").permitAll() // 공개 엔드포인트 설정
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling

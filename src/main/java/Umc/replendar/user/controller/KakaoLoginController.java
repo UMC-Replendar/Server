@@ -25,19 +25,19 @@ public class KakaoLoginController {
     private final KakaoService kakaoService;
     private final UserService userService;
 
-//    @GetMapping("/callback")
-//    public ApiResponse<UserDtoRes.UserLoginRes> callback(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        String accessToken = kakaoService.getAccessTokenFromKakao(code);
-//
-//        KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(accessToken);
-//
-//        //회원가입, 로그인 동시진행
-//        return ApiResponse.onSuccess(userService.kakaoLogin(request,response, userService.kakaoSignup(userInfo)));
-//    }
-//
-//    @GetMapping("/oauth/kakao")
-//    public ApiResponse<String> callback(@RequestParam("code") String code) {
-//        //회원가입, 로그인 동시진행
-//        return ApiResponse.onSuccess(code);
-//    }
+    @GetMapping("/callback")
+    public ApiResponse<UserDtoRes.UserLoginRes> callback(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String accessToken = kakaoService.getAccessTokenFromKakao(code);
+
+        KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(accessToken);
+
+        //회원가입, 로그인 동시진행
+        return ApiResponse.onSuccess(userService.kakaoLogin(request,response, userService.kakaoSignup(userInfo)));
+    }
+
+    @GetMapping("/oauth/kakao")
+    public ApiResponse<String> callback(@RequestParam("code") String code) {
+        //회원가입, 로그인 동시진행
+        return ApiResponse.onSuccess(code);
+    }
 }
