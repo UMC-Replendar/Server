@@ -16,6 +16,7 @@ import Umc.replendar.assignment.entity.Status;
 import Umc.replendar.assignment.repository.AssignmentRepository;
 import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.friend.repository.FriendRepository;
+import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +61,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .notifyCycle(reqDto.getNotifyCycle())
                 .memo(reqDto.getMemo())
                 .status(Status.ONGOING)
+                .favorite(reqDto.getActive())
                 .build();
         assignmentRepository.save(assignment);
 
@@ -79,6 +81,7 @@ public class AssignmentServiceImpl implements AssignmentService {
             activityRepository.save(activityLog);
         }
 
+        //과제 등록할 때 공유했다면 반복문 돌리기
         for(Long shareId : reqDto.getShareIds()){
             User friendUser = userRepository.findById(shareId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
             //친구 과제 등록
@@ -91,6 +94,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .notifyCycle(reqDto.getNotifyCycle())
                     .memo(reqDto.getMemo())
                     .status(Status.WAIT) //대기상태
+                    .favorite(Active.INACTIVE)
                     .build();
             assignmentRepository.save(frAssignment);
 

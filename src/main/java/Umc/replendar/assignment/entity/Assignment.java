@@ -21,7 +21,7 @@ import java.util.List;
 public class Assignment extends BaseEntity {
 
     @Builder
-    public Assignment(String title, GeneralSettings visibility, Status status,  String memo, LocalDateTime due_date, LocalDateTime completion_time, List<ActivityLog> activityLogList, User user, GeneralSettings notification, NotifyCycle notifyCycle) {
+    public Assignment(String title, GeneralSettings visibility, Status status,  String memo, LocalDateTime due_date, LocalDateTime completion_time, List<ActivityLog> activityLogList, User user, GeneralSettings notification, NotifyCycle notifyCycle, Active favorite) {
 
         this.user = user;
         this.title = title;
@@ -33,6 +33,8 @@ public class Assignment extends BaseEntity {
         this.completionTime = completion_time;
         this.activityLogList = activityLogList;
         this.notifyCycle = notifyCycle;
+        this.favorite = favorite;
+
     }
 
     @Id

@@ -1,6 +1,7 @@
 package Umc.replendar.assignment.dto.reqDto;
 
 import Umc.replendar.assignment.entity.NotifyCycle;
+import Umc.replendar.user.entity.Active;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class AssignmentReq {
         List<Long> shareIds;
         String memo;
         SaveType saveType;
+        Active active;
     }
 
     @Getter
