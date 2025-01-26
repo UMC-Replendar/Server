@@ -14,6 +14,7 @@ public class FriToDto {
     }
     public static FriendRes.FriendSearchRes toFriendSearchRes(User user) {
         return FriendRes.FriendSearchRes.builder()
+                .friendId(user.getId())
                 .nickname(user.getNickname())
                 .name(user.getName())
                 .statusMessage(user.getStatusMessage())

@@ -18,10 +18,20 @@ public class FriendController {
 
     private final FriendService friendService;
 
-    @Operation(summary = "친구 등록 API", description = "친구를 등록합니다.")
-    @PostMapping("")
-    public ApiResponse<String> addFriend(@RequestBody FriendReq reqDto) {
-        return friendService.addFriend(reqDto);
+    @Operation(summary = "친구 요청 보내기 API", description = "친구 요청을 보냅니다.")
+    @PostMapping("/request")
+    public ApiResponse<Long> sendFriendRequest(@RequestBody FriendReq.FriendRequestDto reqDto) {
+        return friendService.sendFriendRequest(reqDto);
+    }
+
+    @Operation(summary = "친구 요청 응답 API", description = "친구 요청을 수락하거나 거절합니다.")
+    @PostMapping("/request/respond")
+    public ApiResponse<String> respondToFriendRequest(@RequestBody FriendReq.FriendAcceptDto reqDto) {
+        if (reqDto.getIsAccepted()) {
+            return friendService.acceptFriendRequest(reqDto.getRequestId());
+        } else {
+            return friendService.rejectFriendRequest(reqDto.getRequestId());
+        }
     }
     @Operation(summary = "친구 목록 조회 API", description = "친구 목록과 진행 중인 과제 개수를 조회합니다.")
     @GetMapping("")

@@ -23,6 +23,7 @@ public class FriendRes {
     @AllArgsConstructor
     @Builder
     public static class FriendSearchRes {
+        private Long friendId;       // 친구 요청을 받을 사용자 ID
         private String nickname;      // 닉네임
         private String name;          // 이름
         private String statusMessage; // 상태 메시지
