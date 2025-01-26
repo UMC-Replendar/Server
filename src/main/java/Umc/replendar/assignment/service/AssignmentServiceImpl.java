@@ -45,11 +45,11 @@ public class AssignmentServiceImpl implements AssignmentService {
     //공유할 친구 USERID를 따로 다 찾은 후
     //공유할 친구 수 만큼 반복문을 돌려서 과제를 추가해준다. - 이 때 진행상태 WAIT
     //과제를 추가할 때마다 친구 ID의 활동 로그를 추가한다. - 이 때 액션 과제 공유 SHARE, 확인여부 UNCHECK
-    public ApiResponse<String> createAssignment(AssignmentReq.CreateReqDto reqDto){
+    public ApiResponse<String> createAssignment(Long userId, AssignmentReq.CreateReqDto reqDto){
 
-        System.out.println(reqDto.getUserId());
+        System.out.println(userId);
         //본인 과제 등록
-        User user = userRepository.findById(reqDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
         Assignment assignment = Assignment.builder() //과제등록
                 .user(user)

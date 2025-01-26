@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface AssignmentService {
 
-    ApiResponse<String> createAssignment(AssignmentReq.CreateReqDto reqDto); //과제 생성
+    ApiResponse<String> createAssignment(Long id,AssignmentReq.CreateReqDto reqDto); //과제 생성
 
     ApiResponse<List<AssignmentRes.assMainTopRes>> getAssMainTopAssignment(Long userId);
 

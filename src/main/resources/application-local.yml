@@ -1,4 +1,8 @@
 spring:
+  thymeleaf:
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
   datasource:
     url: jdbc:mysql://localhost:3306/replendar?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
     username: root
@@ -34,6 +38,10 @@ file:
 
 jwt:
   secret: ${JWT_SECRET_KEY}
+
+kakao:
+  client_id: ${KAKAO_ID}
+  redirect_uri: http://localhost:8080/callback
 
 cloud:
   aws:
