@@ -3,6 +3,8 @@ package Umc.replendar.assignment.controller;
 import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.assignment.dto.reqDto.AssignmentReq;
 import Umc.replendar.assignment.dto.resDto.AssignmentRes;
+import Umc.replendar.assignment.entity.Assignment;
+import Umc.replendar.assignment.entity.Status;
 import Umc.replendar.assignment.service.AssignmentService;
 import Umc.replendar.common.security.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
@@ -93,13 +95,24 @@ public class AssignmentController {
 
     @Operation(summary = "보관한 과제 조회 API",description = "보관한 과제 조회 API")
     @GetMapping("/store")
-    public ApiResponse<Page<AssignmentRes.assMainTopRes>> getStoreAssignment(@RequestParam(defaultValue = "1") int page,
+    public ApiResponse<Page<AssignmentRes.assCompleteRes>> getStoreAssignment(@RequestParam(defaultValue = "1") int page,
                                                                              @PageableDefault(size = 10) Pageable pageable){
         Long userId = jwtTokenProvider.getUserIdFromToken();
         Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());
 
-        return assignmentService.getStoreAssignment(userId,adjustedPageable);
+        return assignmentService.getStoreAssignment(userId,adjustedPageable, Status.STORED);
     }
+
+    @Operation(summary = "완료한 과제 조회 API",description = "완료한 과제 조회 API")
+    @GetMapping("/complete")
+    public ApiResponse<Page<AssignmentRes.assCompleteRes>> getCompleteAssignment(@RequestParam(defaultValue = "1") int page,
+                                                                                @PageableDefault(size = 10) Pageable pageable){
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());
+
+        return assignmentService.getStoreAssignment(userId,adjustedPageable, Status.COMPLETED);
+    }
+
 
 
 

@@ -3,6 +3,7 @@ package Umc.replendar.assignment.service;
 import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.assignment.dto.reqDto.AssignmentReq;
 import Umc.replendar.assignment.dto.resDto.AssignmentRes;
+import Umc.replendar.assignment.entity.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -31,5 +32,7 @@ public interface AssignmentService {
 
     ApiResponse<String> statusStoreAssignment(Long userId, Long assId);
 
-    ApiResponse<Page<AssignmentRes.assMainTopRes>> getStoreAssignment(Long userId, Pageable adjustedPageable);
+    ApiResponse<Page<AssignmentRes.assCompleteRes>> getStoreAssignment(Long userId, Pageable adjustedPageable, Status status);
+
+    ApiResponse<Page<AssignmentRes.assCompleteRes>> getCompleteAssignment(Long userId, Pageable adjustedPageable);
 }

@@ -32,16 +32,21 @@ public class AssToDto {
                 .toList();
     }
 
-    public static Page<AssignmentRes.assMainTopRes> toMainTopDto(Page<Assignment> assignmentPage){
+    public static Page<AssignmentRes.assCompleteRes> toDetailPageDto(Page<Assignment> assignmentPage){
 
         return assignmentPage.map(assignment ->
-                AssignmentRes.assMainTopRes.builder()
-                        .assignmentId(assignment.getId())
+                AssignmentRes.assCompleteRes.builder()
+                        .assId(assignment.getId())
                         .title(assignment.getTitle())
-                        .due_time(taskTimer((assignment.getDueDate())))
+                        .due_datetime(taskTimer((assignment.getDueDate())))
                         .due_date(assignment.getDueDate().format(DATE_FORMATTER))
-                        .notification(String.valueOf(assignment.getNotification()))
-                        .visibility(String.valueOf(assignment.getVisibility()))
+                        .due_time(assignment.getDueDate().format(TIME_FORMATTER))
+                        .memo(assignment.getMemo())
+                        .notification(assignment.getNotification())
+                        .visibility(assignment.getVisibility())
+                        .favorite(assignment.getFavorite())
+                        .createdAt(assignment.getCreatedAt())
+                        .updatedAt(assignment.getUpdatedAt())
                         .build()
         );
     }

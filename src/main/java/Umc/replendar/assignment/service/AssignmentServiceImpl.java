@@ -23,6 +23,7 @@ import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -35,8 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static Umc.replendar.assignment.converter.AssToDto.toMainTopDto;
-import static Umc.replendar.assignment.converter.AssToDto.toShareUserDto;
+import static Umc.replendar.assignment.converter.AssToDto.*;
 
 
 @Service
@@ -361,11 +361,31 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public ApiResponse<Page<AssignmentRes.assMainTopRes>> getStoreAssignment(Long userId, Pageable adjustedPageable) {
+    public ApiResponse<Page<AssignmentRes.assCompleteRes>> getStoreAssignment(Long userId, Pageable adjustedPageable, Status status) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-        Page<Assignment> assignments = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.STORED,adjustedPageable);
 
-        return ApiResponse.onSuccess(toMainTopDto(assignments));
+        switch (status) {
+            case STORED:
+                Page<Assignment> storedList = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.STORED,adjustedPageable);
+                return ApiResponse.onSuccess(toDetailPageDto(storedList));
+            case COMPLETED:
+                Page<Assignment> completeList = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.COMPLETED,adjustedPageable);
+                return ApiResponse.onSuccess(toDetailPageDto(completeList));
+            case ONGOING:
+                Page<Assignment> ongoingList = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.ONGOING,adjustedPageable);
+                return ApiResponse.onSuccess(toDetailPageDto(ongoingList));
+            case WAIT:
+                Page<Assignment> waitList = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.WAIT,adjustedPageable);
+                return ApiResponse.onSuccess(toDetailPageDto(waitList));
+            default:
+                return ApiResponse.onFailure("INVALID_REQUEST", "잘못된 요청입니다.", null);
+        }
+
+    }
+
+    @Override
+    public ApiResponse<Page<AssignmentRes.assCompleteRes>> getCompleteAssignment(Long userId, Pageable adjustedPageable) {
+        return null;
     }
 
     //나의 친구 목록 조회.

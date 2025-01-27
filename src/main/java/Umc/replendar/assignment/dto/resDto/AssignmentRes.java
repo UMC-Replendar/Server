@@ -24,6 +24,8 @@ public class AssignmentRes {
         private String notification;
         private String due_time;
         private String due_date;
+        private String memo;
+        private LocalDateTime completion_time;
     }
 
     @Data
@@ -64,14 +66,20 @@ public class AssignmentRes {
         private String friendNote;
     }
 
-//    @Setter
-//    @AllArgsConstructor
-//    @Builder
-//    public static class assRes{
-//        private Long id;
-//        private String title;
-//        private String visibility;
-//        private String notification;
-//        private LocalDateTime due_date;
-//    }
+    @Data
+    @AllArgsConstructor
+    @Builder
+    public static class assCompleteRes{
+            private Long assId;
+            private String title;
+            private String due_date;
+            private String due_time;
+            private String due_datetime;
+            private String memo;
+            private Active favorite;
+            private GeneralSettings notification;
+            private GeneralSettings visibility;
+            private LocalDateTime createdAt;
+            private LocalDateTime updatedAt;
+    }
 }
