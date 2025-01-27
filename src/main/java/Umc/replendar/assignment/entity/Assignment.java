@@ -2,6 +2,7 @@ package Umc.replendar.assignment.entity;
 
 import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.global.BaseEntity;
+import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
 
@@ -20,7 +21,7 @@ import java.util.List;
 public class Assignment extends BaseEntity {
 
     @Builder
-    public Assignment(String title, GeneralSettings visibility, Status status,  String memo, LocalDateTime due_date, LocalDateTime completion_time, List<ActivityLog> activityLogList, User user, GeneralSettings notification, NotifyCycle notifyCycle) {
+    public Assignment(String title, GeneralSettings visibility, Status status,  String memo, LocalDateTime due_date, LocalDateTime completion_time, List<ActivityLog> activityLogList, User user, GeneralSettings notification, Active favorite) {
 
         this.user = user;
         this.title = title;
@@ -31,7 +32,8 @@ public class Assignment extends BaseEntity {
         this.memo = memo;
         this.completionTime = completion_time;
         this.activityLogList = activityLogList;
-        this.notifyCycle = notifyCycle;
+        this.favorite = favorite;
+
     }
 
     @Id
@@ -50,9 +52,6 @@ public class Assignment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Enumerated(EnumType.STRING)
-    private NotifyCycle notifyCycle;
-
 //    @Enumerated(EnumType.STRING)
 //    private GeneralSettings isActive;
 
@@ -65,11 +64,17 @@ public class Assignment extends BaseEntity {
     @Column
     private LocalDateTime completionTime;
 
+    @Enumerated(EnumType.STRING)
+    private Active favorite;
+
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE)
     private List<ActivityLog> activityLogList = new ArrayList<>();
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE)
     private List<Share> shareList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE)
+    private List<AssNotifyCycle> assNotifyCyclesList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")

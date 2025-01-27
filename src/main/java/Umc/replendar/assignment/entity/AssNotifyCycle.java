@@ -1,24 +1,27 @@
 package Umc.replendar.assignment.entity;
 
-import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "share")
 @Builder
-public class Share {
+public class AssNotifyCycle {
+
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column
+    private LocalDateTime notifyTime;
+
+    @Enumerated(EnumType.STRING)
+    private NotifyCycle notifyCycle;
 
     @ManyToOne
     @JoinColumn(name = "assignment_id")

@@ -4,9 +4,11 @@ import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.global.function.TaskTimer;
+import Umc.replendar.user.entity.User;
+import org.springframework.data.domain.Page;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.*;
 
 import static Umc.replendar.global.function.TaskTimer.taskTimer;
 
@@ -30,14 +32,39 @@ public class AssToDto {
                 .toList();
     }
 
-    public static AssignmentRes.assDetailRes toDetailDto(Assignment assignment){
+    public static Page<AssignmentRes.assCompleteRes> toDetailPageDto(Page<Assignment> assignmentPage){
+
+        return assignmentPage.map(assignment ->
+                AssignmentRes.assCompleteRes.builder()
+                        .assId(assignment.getId())
+                        .title(assignment.getTitle())
+                        .due_datetime(taskTimer((assignment.getDueDate())))
+                        .due_date(assignment.getDueDate().format(DATE_FORMATTER))
+                        .due_time(assignment.getDueDate().format(TIME_FORMATTER))
+                        .memo(assignment.getMemo())
+                        .notification(assignment.getNotification())
+                        .visibility(assignment.getVisibility())
+                        .favorite(assignment.getFavorite())
+                        .createdAt(assignment.getCreatedAt())
+                        .updatedAt(assignment.getUpdatedAt())
+                        .build()
+        );
+    }
+
+    public static AssignmentRes.assDetailRes toDetailDto(Assignment assignment, List<String> notifyCycleList, List<User> shareUserList){
+        List<Map<Long,String>> shareFriendList2 = shareUserList.stream().map(
+                user -> Map.of(user.getId(), user.getNickname())
+        ).toList();
         return AssignmentRes.assDetailRes.builder()
                 .assId(assignment.getId())
                 .title(assignment.getTitle())
                 .due_date(assignment.getDueDate().format(DATE_TIME_FORMATTER))
-                .notification(String.valueOf(assignment.getNotification()))
+                .notification(assignment.getNotification())
+                .visibility(assignment.getVisibility())
+                .notifyCycle(notifyCycleList)
+                .shareFriend(shareFriendList2)
                 .memo(assignment.getMemo())
-                .notifyCycle(assignment.getNotifyCycle())
+                .favorite(assignment.getFavorite())
                 .build();
     }
 

@@ -39,6 +39,7 @@ public class User extends BaseEntity {
     private String email;
 
     @Column(length = 10, unique = true)
+    @NotEmpty
     private String nickname;
 
     @Column(length = 50)
