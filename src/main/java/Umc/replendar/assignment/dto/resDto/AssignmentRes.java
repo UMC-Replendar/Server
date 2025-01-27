@@ -3,11 +3,14 @@ package Umc.replendar.assignment.dto.resDto;
 import Umc.replendar.assignment.entity.GeneralSettings;
 import Umc.replendar.assignment.entity.NotifyCycle;
 import Umc.replendar.assignment.entity.Status;
+import Umc.replendar.user.entity.Active;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AssignmentRes {
 
@@ -31,7 +34,12 @@ public class AssignmentRes {
         private String title;
         private String due_date;
         private String memo;
-        private String notification;
+        private GeneralSettings notification;
+        private GeneralSettings visibility;
+        private List<String> notifyCycle;
+        private List<Map<Long,String>> shareFriend;
+        private Active favorite;
+
 //        private NotifyCycle notifyCycle;
     }
 

@@ -4,9 +4,13 @@ import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.global.function.TaskTimer;
+import Umc.replendar.user.entity.User;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static Umc.replendar.global.function.TaskTimer.taskTimer;
 
@@ -30,14 +34,20 @@ public class AssToDto {
                 .toList();
     }
 
-    public static AssignmentRes.assDetailRes toDetailDto(Assignment assignment){
+    public static AssignmentRes.assDetailRes toDetailDto(Assignment assignment, List<String> notifyCycleList, List<User> shareUserList){
+        List<Map<Long,String>> shareFriendList2 = shareUserList.stream().map(
+                user -> Map.of(user.getId(), user.getNickname())
+        ).toList();
         return AssignmentRes.assDetailRes.builder()
                 .assId(assignment.getId())
                 .title(assignment.getTitle())
                 .due_date(assignment.getDueDate().format(DATE_TIME_FORMATTER))
-                .notification(String.valueOf(assignment.getNotification()))
+                .notification(assignment.getNotification())
+                .visibility(assignment.getVisibility())
+                .notifyCycle(notifyCycleList)
+                .shareFriend(shareFriendList2)
                 .memo(assignment.getMemo())
-//                .notifyCycle(assignment.getNotifyCycle())
+                .favorite(assignment.getFavorite())
                 .build();
     }
 

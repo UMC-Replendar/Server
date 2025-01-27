@@ -218,8 +218,17 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public ApiResponse<AssignmentRes.assDetailRes> getAssDetail(Long assId) {
         Assignment assignment = assignmentRepository.findById(assId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과제입니다."));
+        List<Long> shareFriendList = shareRepository.findAllByAssignment(assignment).stream()
+                .map(share -> share.getUser().getId()).toList();
 
-        return ApiResponse.of(SuccessStatus._OK,AssToDto.toDetailDto(assignment));
+        List<String> notifyCycleList = assNotifyCycleRepository.findAllByAssignment(assignment).stream().
+                map(assNotifyCycle -> String.valueOf(assNotifyCycle.getNotifyCycle())).toList();
+
+        List<User> shareFriendEntityList = shareFriendList.stream().
+                map(shareFriend -> userRepository.findById(shareFriend).
+                        orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."))).toList();
+
+        return ApiResponse.of(SuccessStatus._OK,AssToDto.toDetailDto(assignment, notifyCycleList, shareFriendEntityList));
     }
 
     //과제 월별로 조회
