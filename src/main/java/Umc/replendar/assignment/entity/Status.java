@@ -1,6 +1,7 @@
 package Umc.replendar.assignment.entity;
 
 public enum Status {
-    WAIT ,ONGOING, COMPLETED, DELETE, STORED,FAVORITE
-    //대기중, 진행중, 완료, 삭제, 보관
+    WAIT ,ONGOING, COMPLETED,
+    UNFINISHED, STORED,FAVORITE
+    //대기중, 진행중, 완료, 미완성, 보관, 중요
 }

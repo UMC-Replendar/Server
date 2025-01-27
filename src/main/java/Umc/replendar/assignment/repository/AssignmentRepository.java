@@ -32,4 +32,8 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     Page<Assignment> findAllByUserAndStatusOrderByDueDate(User user, Status status, Pageable pageable);
 
     Page<Assignment> findAllByUserAndFavoriteOrderByDueDate(User user, Active active, Pageable adjustedPageable);
+
+    Page<Assignment> findAllByUserAndDueDateBeforeAndStatus(User user, LocalDateTime now, Status status, Pageable pageable);
+
+
 }

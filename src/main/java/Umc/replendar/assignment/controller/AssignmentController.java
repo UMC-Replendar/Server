@@ -133,6 +133,16 @@ public class AssignmentController {
         return assignmentService.getStoreAssignment(userId,adjustedPageable, Status.FAVORITE);
     }
 
+    @Operation(summary = "완료 못한 과제 조회 API",description = "완료 못한 과제 조회 API")
+    @GetMapping("/unfinished")
+    public ApiResponse<Page<AssignmentRes.assCompleteRes>> getNotCompleteAssignment(@RequestParam(defaultValue = "1") int page,
+                                                                                @PageableDefault(size = 10) Pageable pageable){
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());
+
+        return assignmentService.getStoreAssignment(userId,adjustedPageable, Status.UNFINISHED);
+    }
+
 
 
 

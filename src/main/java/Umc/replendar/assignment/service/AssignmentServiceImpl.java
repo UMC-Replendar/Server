@@ -380,6 +380,9 @@ public class AssignmentServiceImpl implements AssignmentService {
             case FAVORITE:
                 Page<Assignment> favoriteList = assignmentRepository.findAllByUserAndFavoriteOrderByDueDate(user, Active.ACTIVE,adjustedPageable);
                 return ApiResponse.onSuccess(toDetailPageDto(favoriteList));
+            case UNFINISHED:
+                Page<Assignment> unfinishedList = assignmentRepository.findAllByUserAndDueDateBeforeAndStatus(user, LocalDateTime.now() , Status.ONGOING, adjustedPageable);
+                return ApiResponse.onSuccess(toDetailPageDto(unfinishedList));
 
             default:
                 return ApiResponse.onFailure("INVALID_REQUEST", "잘못된 요청입니다.", null);
