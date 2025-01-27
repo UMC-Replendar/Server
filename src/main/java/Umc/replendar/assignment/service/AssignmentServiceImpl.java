@@ -23,10 +23,14 @@ import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -337,6 +341,31 @@ public class AssignmentServiceImpl implements AssignmentService {
         }
 
         return ApiResponse.onSuccess("과제가 보관되었습니다.");
+    }
+
+    //등록한 과제 상태 보관하기로 변경하기
+    //알림 주기를 보관해야는 하는데 이후에 알림이 울리면 안되긴함
+    //이후에 알림을 줘야한다면 과제 상태를 먼저 조회한 후 확인해야할거 같음
+    @Override
+    public ApiResponse<String> statusStoreAssignment(Long userId, Long assId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        Assignment assignment = assignmentRepository.findById(assId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과제입니다."));
+        if(!Objects.equals(user.getId(), assignment.getUser().getId())){
+            return ApiResponse.onFailure("INVALID_REQUEST", "본인의 과제만 보관할 수 있습니다.", null);
+        }
+        assignment.setStatus(Status.STORED);
+        assignmentRepository.save(assignment);
+//        assNotifyCycleRepository.deleteAllByAssignment(assignment);
+
+        return ApiResponse.onSuccess("과제가 보관되었습니다.");
+    }
+
+    @Override
+    public ApiResponse<Page<AssignmentRes.assMainTopRes>> getStoreAssignment(Long userId, Pageable adjustedPageable) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        Page<Assignment> assignments = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.STORED,adjustedPageable);
+
+        return ApiResponse.onSuccess(toMainTopDto(assignments));
     }
 
     //나의 친구 목록 조회.

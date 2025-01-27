@@ -5,12 +5,10 @@ import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.global.function.TaskTimer;
 import Umc.replendar.user.entity.User;
+import org.springframework.data.domain.Page;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static Umc.replendar.global.function.TaskTimer.taskTimer;
 
@@ -32,6 +30,20 @@ public class AssToDto {
                         .visibility(String.valueOf(assignment.getVisibility()))
                         .build())
                 .toList();
+    }
+
+    public static Page<AssignmentRes.assMainTopRes> toMainTopDto(Page<Assignment> assignmentPage){
+
+        return assignmentPage.map(assignment ->
+                AssignmentRes.assMainTopRes.builder()
+                        .assignmentId(assignment.getId())
+                        .title(assignment.getTitle())
+                        .due_time(taskTimer((assignment.getDueDate())))
+                        .due_date(assignment.getDueDate().format(DATE_FORMATTER))
+                        .notification(String.valueOf(assignment.getNotification()))
+                        .visibility(String.valueOf(assignment.getVisibility()))
+                        .build()
+        );
     }
 
     public static AssignmentRes.assDetailRes toDetailDto(Assignment assignment, List<String> notifyCycleList, List<User> shareUserList){

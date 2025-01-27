@@ -8,6 +8,10 @@ import Umc.replendar.common.security.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -78,6 +82,23 @@ public class AssignmentController {
         System.out.println(reqDto.getUserId());
         Long userId = jwtTokenProvider.getUserIdFromToken();
         return assignmentService.storeAssignment(reqDto,userId);
+    }
+
+    @Operation(summary = "등록한 과제 보관하기 API",description = "등록한 과제 보관하기 API")
+    @PostMapping("/store/{assId}")
+    public ApiResponse<String> storeAssignment(@PathVariable Long assId){
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return assignmentService.statusStoreAssignment(userId,assId);
+    }
+
+    @Operation(summary = "보관한 과제 조회 API",description = "보관한 과제 조회 API")
+    @GetMapping("/store")
+    public ApiResponse<Page<AssignmentRes.assMainTopRes>> getStoreAssignment(@RequestParam(defaultValue = "1") int page,
+                                                                             @PageableDefault(size = 10) Pageable pageable){
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());
+
+        return assignmentService.getStoreAssignment(userId,adjustedPageable);
     }
 
 
