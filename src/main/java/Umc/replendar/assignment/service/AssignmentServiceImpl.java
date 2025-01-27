@@ -377,6 +377,10 @@ public class AssignmentServiceImpl implements AssignmentService {
             case WAIT:
                 Page<Assignment> waitList = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.WAIT,adjustedPageable);
                 return ApiResponse.onSuccess(toDetailPageDto(waitList));
+            case FAVORITE:
+                Page<Assignment> favoriteList = assignmentRepository.findAllByUserAndFavoriteOrderByDueDate(user, Active.ACTIVE,adjustedPageable);
+                return ApiResponse.onSuccess(toDetailPageDto(favoriteList));
+
             default:
                 return ApiResponse.onFailure("INVALID_REQUEST", "잘못된 요청입니다.", null);
         }

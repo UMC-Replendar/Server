@@ -3,6 +3,7 @@ package Umc.replendar.assignment.repository;
 import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.assignment.entity.GeneralSettings;
 import Umc.replendar.assignment.entity.Status;
+import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,4 +30,6 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
                                           @Param("visibility") GeneralSettings visibility);
 
     Page<Assignment> findAllByUserAndStatusOrderByDueDate(User user, Status status, Pageable pageable);
+
+    Page<Assignment> findAllByUserAndFavoriteOrderByDueDate(User user, Active active, Pageable adjustedPageable);
 }

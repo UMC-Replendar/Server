@@ -123,6 +123,16 @@ public class AssignmentController {
         return assignmentService.getStoreAssignment(userId,adjustedPageable, Status.ONGOING);
     }
 
+    @Operation(summary = "중요한 과제 조회 API",description = "중요한 과제 조회 API")
+    @GetMapping("/favorite")
+    public ApiResponse<Page<AssignmentRes.assCompleteRes>> getFavoriteAssignment(@RequestParam(defaultValue = "1") int page,
+                                                                                @PageableDefault(size = 10) Pageable pageable){
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());
+
+        return assignmentService.getStoreAssignment(userId,adjustedPageable, Status.FAVORITE);
+    }
+
 
 
 
