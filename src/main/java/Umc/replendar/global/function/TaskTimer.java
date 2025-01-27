@@ -1,11 +1,24 @@
 package Umc.replendar.global.function;
 
+import Umc.replendar.assignment.entity.NotifyCycle;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.HashMap;
 
 public class TaskTimer {
+
+    //완료시간에서 알림 주기를 계산해주는 함수
+    public static LocalDateTime notifyCycle(LocalDateTime completionTime, NotifyCycle cycle) {
+        LocalDateTime notifyTime = switch (cycle) {
+            case DAY3 -> completionTime.minusDays(3);
+            case DAY1 -> completionTime.minusDays(1);
+            case H10 -> completionTime.minusHours(10);
+            case H1 -> completionTime.minusHours(1);
+        };
+        return notifyTime;
+    }
 
     //시간 빼주는 함수
     public static String taskTimer(LocalDateTime targetTime) {
