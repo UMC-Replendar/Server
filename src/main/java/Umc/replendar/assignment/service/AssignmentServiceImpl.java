@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static Umc.replendar.assignment.converter.AssToDto.toMainTopDto;
 import static Umc.replendar.assignment.converter.AssToDto.toShareUserDto;
@@ -298,6 +299,44 @@ public class AssignmentServiceImpl implements AssignmentService {
         }
 
         return ApiResponse.onSuccess("과제가 완료되었습니다.");
+    }
+
+    //과제 보관 api
+    //알림주기 및 공유한 사람 값 보관하기
+    //다시 등록할 때 알림주기 및 공유한 사람 지우고 다시 만들어야함!
+    @Override
+    public ApiResponse<String> storeAssignment(AssignmentReq.CreateReqDto reqDto, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        Assignment assignment = Assignment.builder()
+                .user(user)
+                .title(reqDto.getTitle())
+                .due_date(reqDto.getEndDate())
+                .notification("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF)
+                .visibility("ON".equalsIgnoreCase(reqDto.getNotification()) ? GeneralSettings.ON : GeneralSettings.OFF)
+                .memo(reqDto.getMemo())
+                .status(Status.STORED)
+                .favorite(reqDto.getFavorite())
+                .build();
+        assignmentRepository.save(assignment);
+        for(Long shareUserId : reqDto.getShareIds()) {
+            Share share = Share.builder()
+                    .user(userRepository.findById(shareUserId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다.")))
+                    .assignment(assignment)
+                    .build();
+            shareRepository.save(share);
+        }
+
+        for(NotifyCycle notifyCycle : reqDto.getNotifyCycle()) {
+            AssNotifyCycle assNotifyCycle = AssNotifyCycle.builder()
+                    .assignment(assignment)
+                    .notifyCycle(notifyCycle)
+                    .notifyTime(TaskTimer.notifyCycle(assignment.getDueDate(), notifyCycle))
+                    .build();
+            assNotifyCycleRepository.save(assNotifyCycle);
+        }
+
+        return ApiResponse.onSuccess("과제가 보관되었습니다.");
     }
 
     //나의 친구 목록 조회.

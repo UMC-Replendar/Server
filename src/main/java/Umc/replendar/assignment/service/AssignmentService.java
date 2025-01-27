@@ -24,4 +24,6 @@ public interface AssignmentService {
     ApiResponse<List<AssignmentRes.assShareRes>> getAssShareFriendList(Long userId);
 
     ApiResponse<String> completeAssignment(Long userId, Long assId);
+
+    ApiResponse<String> storeAssignment(AssignmentReq.CreateReqDto reqDto, Long userId);
 }
