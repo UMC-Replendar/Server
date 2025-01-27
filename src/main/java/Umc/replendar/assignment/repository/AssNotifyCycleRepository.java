@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface AssNotifyCycleRepository extends JpaRepository<AssNotifyCycle, Long> {
     List<AssNotifyCycle> findAllByAssignment(Assignment assignment);
+
+    void deleteAllByAssignment(Assignment assignment);
 }

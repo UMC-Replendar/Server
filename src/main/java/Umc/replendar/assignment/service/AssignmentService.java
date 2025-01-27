@@ -22,4 +22,6 @@ public interface AssignmentService {
     ApiResponse<List<AssignmentRes.assMonthRes>> getAssMonth(Long userId, String month);
 
     ApiResponse<List<AssignmentRes.assShareRes>> getAssShareFriendList(Long userId);
+
+    ApiResponse<String> completeAssignment(Long userId, Long assId);
 }

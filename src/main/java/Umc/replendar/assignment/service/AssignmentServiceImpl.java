@@ -16,6 +16,7 @@ import Umc.replendar.assignment.repository.AssignmentRepository;
 import Umc.replendar.assignment.repository.ShareRepository;
 import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.friend.repository.FriendRepository;
+import Umc.replendar.friend.service.FriendServiceImpl;
 import Umc.replendar.global.function.TaskTimer;
 import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
@@ -264,5 +265,53 @@ public class AssignmentServiceImpl implements AssignmentService {
         return ApiResponse.of(SuccessStatus._OK, resList);
     }
 
+    //과제 완료하면 알림 다 지워주기
+    //친구들에게 친구가 과제를 완료했어요 로그 띄워주기
+    @Override
+    public ApiResponse<String> completeAssignment(Long userId, Long assId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        Assignment assignment = assignmentRepository.findById(assId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과제입니다."));
+
+        if(!Objects.equals(user.getId(), assignment.getUser().getId())){
+            return ApiResponse.onFailure("INVALID_REQUEST", "본인의 과제만 완료할 수 있습니다.", null);
+        }
+
+        assignment.setCompletionTime(LocalDateTime.now());
+        assignment.setStatus(Status.COMPLETED);
+        assignmentRepository.save(assignment);
+
+        assNotifyCycleRepository.deleteAllByAssignment(assignment);
+
+        //친구들에게 과제 완료 로그 띄우기
+        List<User> friendList = getMyFriends(userId);
+
+        for(User friend : friendList) {
+            ActivityLog activityLog = ActivityLog.builder()
+                    .user(friend)
+                    .friend(user)
+                    .assignment(assignment)
+                    .action(Action.COMPLETE)
+                    .isCheck(Check.UNCHECK)
+                    .build();
+            activityRepository.save(activityLog);
+        }
+
+        return ApiResponse.onSuccess("과제가 완료되었습니다.");
+    }
+
+    //나의 친구 목록 조회.
+    public List<User> getMyFriends(Long userId) {
+
+        return friendRepository.findAllByUserIdOrFriendId(userId, userId).stream()
+                .map(friend -> {
+                    if (friend.getUser().getId().equals(userId)) {
+                        return friend.getFriend();
+                    } else {
+                        return friend.getUser();
+                    }
+                })
+                .toList();
+    }
 
 }
