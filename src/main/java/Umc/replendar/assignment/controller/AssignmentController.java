@@ -113,6 +113,18 @@ public class AssignmentController {
         return assignmentService.getStoreAssignment(userId,adjustedPageable, Status.COMPLETED);
     }
 
+    @Operation(summary = "진행중인 과제 조회 API",description = "진행중인 과제 조회 API")
+    @GetMapping("/ongoing")
+    public ApiResponse<Page<AssignmentRes.assCompleteRes>> getOngoingAssignment(@RequestParam(defaultValue = "1") int page,
+                                                                                @PageableDefault(size = 10) Pageable pageable){
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());
+
+        return assignmentService.getStoreAssignment(userId,adjustedPageable, Status.ONGOING);
+    }
+
+
+
 
 
 
