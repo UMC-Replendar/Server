@@ -38,6 +38,11 @@ public class FriendController {
     public ApiResponse<List<FriendRes.FriendListRes>> getFriends(@RequestParam Long userId) {
         return friendService.getFriends(userId);
     }
+    @Operation(summary = "TOP 5 친구 조회 API", description = "TOP 5 친구 목록을 조회합니다.")
+    @GetMapping("/{userId}/top5")
+    public ApiResponse<List<FriendRes.FriendListRes>> getTop5Friends(@PathVariable Long userId) {
+        return friendService.getTop5Friends(userId);
+    }
 
     @Operation(summary = "등록할 친구 검색 API", description = "닉네임으로 등록 가능한 친구를 검색합니다.")
     @GetMapping("/search")
