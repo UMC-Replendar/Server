@@ -58,9 +58,9 @@ public class FriendController {
     }
     @Operation(summary = "친구 삭제 API", description = "친구 관계를 삭제합니다.")
     @DeleteMapping("")
-    public ApiResponse<String> deleteFriend(@RequestParam Long userId, @RequestParam Long friendId) {
+    public ApiResponse<String> deleteFriend(@RequestParam Long friendId) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
         return friendService.deleteFriend(userId, friendId);
     }
-
 }
 
