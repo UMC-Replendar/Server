@@ -4,7 +4,6 @@ import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.friend.dto.reqDto.FriendReq;
 import Umc.replendar.friend.dto.resDto.FriendRes;
 import Umc.replendar.friend.dto.resDto.FriendRes.FriendListRes;
-import Umc.replendar.user.entity.User;
 
 import java.util.List;
 

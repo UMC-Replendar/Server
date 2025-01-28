@@ -1,6 +1,5 @@
 package Umc.replendar.friend.dto.reqDto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 public class FriendReq {
