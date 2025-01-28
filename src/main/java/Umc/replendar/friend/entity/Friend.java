@@ -3,16 +3,14 @@ package Umc.replendar.friend.entity;
 import Umc.replendar.global.BaseEntity;
 import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 @Builder
+@Entity
 public class Friend extends BaseEntity {
 
     @Id
@@ -21,23 +19,44 @@ public class Friend extends BaseEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private Buddy userBuddy; // 사용자 측 친구 상태
+    private Buddy userBuddy;
 
     @Column
-    private String userNote; // 사용자 메모
+    private String userNote;
 
     @Column
     @Enumerated(EnumType.STRING)
-    private Buddy friendBuddy; // 친구 측 친구 상태
+    private Buddy friendBuddy;
 
     @Column
-    private String friendNote; // 친구 메모
+    private String friendNote;
 
     @ManyToOne
-    @JoinColumn(name = "user_id") // Friend를 생성한 사용자
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "friend_id") // Friend가 가리키는 친구 사용자
+    @JoinColumn(name = "friend_id")
     private User friend;
+
+    // 사용자 ID에 따른 Buddy 상태를 반환하는 메서드
+    public Buddy getBuddyStatusForUser(Long userId) {
+        if (this.user.getId().equals(userId)) {
+            return this.userBuddy;
+        } else if (this.friend.getId().equals(userId)) {
+            return this.friendBuddy;
+        }
+        throw new IllegalArgumentException("해당 사용자는 친구 관계에 포함되지 않습니다.");
+    }
+
+    // 사용자 ID에 따른 상대 친구 정보를 반환하는 메서드
+    public User getFriendForUser(Long userId) {
+        if (this.user.getId().equals(userId)) {
+            return this.friend;
+        } else if (this.friend.getId().equals(userId)) {
+            return this.user;
+        }
+        throw new IllegalArgumentException("해당 사용자는 친구 관계에 포함되지 않습니다.");
+    }
+
 }

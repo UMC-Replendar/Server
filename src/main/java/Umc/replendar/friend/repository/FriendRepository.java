@@ -18,9 +18,4 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     // 특정 사용자와 친구가 이미 친구인지 확인
     boolean existsByUserAndFriend(User user, User friend);
-
-    @Query("SELECT u FROM Friend f JOIN f.friend u WHERE f.user.id = :userId " +
-            "UNION " +
-            "SELECT u FROM Friend f JOIN f.user u WHERE f.friend.id = :userId")
-    List<User> findFriendsByUserId(@Param("userId") Long userId);
 }

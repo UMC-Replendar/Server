@@ -135,16 +135,15 @@ public class FriendServiceImpl implements FriendService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        List<User> friends = friendRepository.findFriendsByUserId(userId);
-        // 친구별 진행 중인 과제 개수 계산
+        List<Friend> friends = friendRepository.findAllByUserIdOrFriendId(userId, userId);
+
         List<FriendRes.FriendListRes> friendList = friends.stream()
                 .map(friend -> {
-                    // 진행 중인 과제 개수 조회(visibility가 ON인 것만.)
-                    int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend, Status.ONGOING, GeneralSettings.ON);
-                    return FriToDto.toFriendListRes(friend, ongoingAssignments);
+                    int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend.getFriendForUser(userId), Status.ONGOING, GeneralSettings.ON);
+                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments);
                 })
-                // 친구 닉네임으로 사전순 정렬
-                .sorted(Comparator.comparing(FriendRes.FriendListRes::getNickname))
+                .sorted(Comparator.comparing((FriendRes.FriendListRes f) -> f.getBuddyStatus() == Buddy.YES ? 0 : 1)
+                        .thenComparing(FriendRes.FriendListRes::getNickname))
                 .toList();
 
         return ApiResponse.onSuccess(friendList);
@@ -155,14 +154,15 @@ public class FriendServiceImpl implements FriendService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        List<User> friends = friendRepository.findFriendsByUserId(userId);
+        List<Friend> friends = friendRepository.findAllByUserIdOrFriendId(userId, userId);
 
         List<FriendRes.FriendListRes> friendList = friends.stream()
                 .map(friend -> {
-                    int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend, Status.ONGOING, GeneralSettings.ON);
-                    return FriToDto.toFriendListRes(friend, ongoingAssignments);
+                    int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend.getFriendForUser(userId), Status.ONGOING, GeneralSettings.ON);
+                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments);
                 })
-                .sorted(Comparator.comparing(FriendRes.FriendListRes::getNickname))
+                .sorted(Comparator.comparing((FriendRes.FriendListRes f) -> f.getBuddyStatus() == Buddy.YES ? 0 : 1)
+                        .thenComparing(FriendRes.FriendListRes::getNickname))
                 .limit(5)
                 .toList();
 
