@@ -3,11 +3,14 @@ package Umc.replendar.assignment.dto.resDto;
 import Umc.replendar.assignment.entity.GeneralSettings;
 import Umc.replendar.assignment.entity.NotifyCycle;
 import Umc.replendar.assignment.entity.Status;
+import Umc.replendar.user.entity.Active;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AssignmentRes {
 
@@ -21,6 +24,8 @@ public class AssignmentRes {
         private String notification;
         private String due_time;
         private String due_date;
+        private String memo;
+        private LocalDateTime completion_time;
     }
 
     @Data
@@ -31,8 +36,13 @@ public class AssignmentRes {
         private String title;
         private String due_date;
         private String memo;
-        private String notification;
-        private NotifyCycle notifyCycle;
+        private GeneralSettings notification;
+        private GeneralSettings visibility;
+        private List<String> notifyCycle;
+        private List<Map<Long,String>> shareFriend;
+        private Active favorite;
+
+//        private NotifyCycle notifyCycle;
     }
 
     @Data
@@ -56,14 +66,20 @@ public class AssignmentRes {
         private String friendNote;
     }
 
-//    @Setter
-//    @AllArgsConstructor
-//    @Builder
-//    public static class assRes{
-//        private Long id;
-//        private String title;
-//        private String visibility;
-//        private String notification;
-//        private LocalDateTime due_date;
-//    }
+    @Data
+    @AllArgsConstructor
+    @Builder
+    public static class assCompleteRes{
+            private Long assId;
+            private String title;
+            private String due_date;
+            private String due_time;
+            private String due_datetime;
+            private String memo;
+            private Active favorite;
+            private GeneralSettings notification;
+            private GeneralSettings visibility;
+            private LocalDateTime createdAt;
+            private LocalDateTime updatedAt;
+    }
 }

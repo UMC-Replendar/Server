@@ -10,6 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "share")
+@Builder
 public class Share {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
