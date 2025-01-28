@@ -192,4 +192,24 @@ public class FriendServiceImpl implements FriendService {
 
         return ApiResponse.onSuccess(friendSearchRes);
     }
+    // 친한 친구 관계 설정.
+    @Override
+    public ApiResponse<String> updateBestFriend(FriendReq.FriendBuddyReqDto reqDto) {
+        Long userId = reqDto.getUserId();
+        Long friendId = reqDto.getFriendId();
+        Buddy buddyStatus = reqDto.getBuddyStatus();
+
+        Friend friend = friendRepository.findFriendByUserAndFriend(userId, friendId)
+                .orElseThrow(() -> new IllegalArgumentException("친구 관계가 존재하지 않습니다."));
+
+        // userId가 user 컬럼이면 userBuddy 변경, friend 컬럼이면 friendBuddy 변경
+        if (friend.getUser().getId().equals(userId)) {
+            friend.setUserBuddy(buddyStatus);
+        } else {
+            friend.setFriendBuddy(buddyStatus);
+        }
+
+        friendRepository.save(friend);
+        return ApiResponse.onSuccess("친한 친구 상태가 변경되었습니다.");
+    }
 }

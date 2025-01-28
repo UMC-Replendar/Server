@@ -49,5 +49,11 @@ public class FriendController {
     public ApiResponse<FriendRes.FriendSearchRes> searchFriend(@RequestParam String nickname, @RequestParam Long userId) {
         return friendService.searchUserByNickname(nickname, userId);
     }
+    @Operation(summary = "친한 친구 설정 API", description = "친구를 친한 친구로 설정하거나 해제합니다.")
+    @PatchMapping("/best-friend")
+    public ApiResponse<String> setBestFriend(@RequestBody FriendReq.FriendBuddyReqDto reqDto) {
+        return friendService.updateBestFriend(reqDto);
+    }
+
 }
 
