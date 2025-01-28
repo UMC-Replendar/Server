@@ -212,4 +212,14 @@ public class FriendServiceImpl implements FriendService {
         friendRepository.save(friend);
         return ApiResponse.onSuccess("친한 친구 상태가 변경되었습니다.");
     }
+    //친구 관계 삭제
+    @Override
+    public ApiResponse<String> deleteFriend(Long userId, Long friendId) {
+        Friend friend = friendRepository.findFriendByUserAndFriend(userId, friendId)
+                .orElseThrow(() -> new IllegalArgumentException("친구 관계가 존재하지 않습니다."));
+
+        friendRepository.delete(friend);
+
+        return ApiResponse.onSuccess("친구 관계가 삭제되었습니다.");
+    }
 }

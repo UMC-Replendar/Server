@@ -1,6 +1,7 @@
 package Umc.replendar.friend.controller;
 
 import Umc.replendar.apiPayload.ApiResponse;
+import Umc.replendar.common.security.JwtTokenProvider;
 import Umc.replendar.friend.dto.reqDto.FriendReq;
 import Umc.replendar.friend.dto.resDto.FriendRes;
 import Umc.replendar.friend.service.FriendService;
@@ -17,6 +18,7 @@ import java.util.List;
 public class FriendController {
 
     private final FriendService friendService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(summary = "친구 요청 보내기 API", description = "친구 요청을 보냅니다.")
     @PostMapping("/request")
@@ -53,6 +55,11 @@ public class FriendController {
     @PatchMapping("/best-friend")
     public ApiResponse<String> setBestFriend(@RequestBody FriendReq.FriendBuddyReqDto reqDto) {
         return friendService.updateBestFriend(reqDto);
+    }
+    @Operation(summary = "친구 삭제 API", description = "친구 관계를 삭제합니다.")
+    @DeleteMapping("")
+    public ApiResponse<String> deleteFriend(@RequestParam Long userId, @RequestParam Long friendId) {
+        return friendService.deleteFriend(userId, friendId);
     }
 
 }
