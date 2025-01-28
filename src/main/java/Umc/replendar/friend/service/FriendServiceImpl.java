@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -55,12 +56,16 @@ public class FriendServiceImpl implements FriendService {
             return ApiResponse.onFailure("FRIEND_ALREADY_EXISTS", "이미 친구로 등록된 사용자입니다.", null);
         }
 
-        // 이미 친구 요청이 존재하는지 확인
-        boolean isRequestExists = friendRequestRepository.existsBySenderAndReceiver(sender, receiver)
-                || friendRequestRepository.existsBySenderAndReceiver(receiver, sender);
+        // 이미 친구 요청이 존재하는지 확인 및 요청 ID 반환
+        Optional<FriendRequest> existingRequest = friendRequestRepository.findBySenderAndReceiver(sender, receiver)
+                .or(() -> friendRequestRepository.findBySenderAndReceiver(receiver, sender));
 
-        if (isRequestExists) {
-            return ApiResponse.onFailure("REQUEST_ALREADY_EXISTS", "이미 친구 요청이 존재합니다.", null);
+        if (existingRequest.isPresent()) {
+            return ApiResponse.onFailure(
+                    "REQUEST_ALREADY_EXISTS",
+                    "이미 친구 요청이 존재합니다.",
+                    existingRequest.get().getId() // 기존 요청의 ID를 반환
+            );
         }
 
         // 친구 요청 생성
@@ -131,22 +136,40 @@ public class FriendServiceImpl implements FriendService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        List<User> friends = friendRepository.findFriendsByUserId(userId);
+        List<Friend> friends = friendRepository.findAllByUserIdOrFriendId(userId, userId);
 
-        // 친구별 진행 중인 과제 개수 계산
         List<FriendRes.FriendListRes> friendList = friends.stream()
                 .map(friend -> {
-                    // 진행 중인 과제 개수 조회(visibility가 ON인 것만.)
-                    int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend, Status.ONGOING, GeneralSettings.ON);
-
-                    return FriToDto.toFriendListRes(friend, ongoingAssignments);
+                    int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend.getFriendForUser(userId), Status.ONGOING, GeneralSettings.ON);
+                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments);
                 })
-                // 친구 닉네임으로 사전순 정렬
-                .sorted(Comparator.comparing(FriendRes.FriendListRes::getNickname))
+                .sorted(Comparator.comparing((FriendRes.FriendListRes f) -> f.getBuddyStatus() == Buddy.YES ? 0 : 1)
+                        .thenComparing(FriendRes.FriendListRes::getNickname))
                 .toList();
 
         return ApiResponse.onSuccess(friendList);
     }
+    //친구 목록 조회 top5
+    @Override
+    public ApiResponse<List<FriendRes.FriendListRes>> getTop5Friends(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        List<Friend> friends = friendRepository.findAllByUserIdOrFriendId(userId, userId);
+
+        List<FriendRes.FriendListRes> friendList = friends.stream()
+                .map(friend -> {
+                    int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend.getFriendForUser(userId), Status.ONGOING, GeneralSettings.ON);
+                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments);
+                })
+                .sorted(Comparator.comparing((FriendRes.FriendListRes f) -> f.getBuddyStatus() == Buddy.YES ? 0 : 1)
+                        .thenComparing(FriendRes.FriendListRes::getNickname))
+                .limit(5)
+                .toList();
+
+        return ApiResponse.onSuccess(friendList);
+    }
+
 
     //친구로 등록할 닉네임 검색.
     @Override
@@ -173,5 +196,54 @@ public class FriendServiceImpl implements FriendService {
         FriendRes.FriendSearchRes friendSearchRes = FriToDto.toFriendSearchRes(user);
 
         return ApiResponse.onSuccess(friendSearchRes);
+    }
+    // 친한 친구 관계 설정.
+    @Override
+    public ApiResponse<String> updateBestFriend(FriendReq.FriendBuddyReqDto reqDto) {
+        Long userId = reqDto.getUserId();
+        Long friendId = reqDto.getFriendId();
+        Buddy buddyStatus = reqDto.getBuddyStatus();
+
+        Friend friend = friendRepository.findFriendByUserAndFriend(userId, friendId)
+                .orElseThrow(() -> new IllegalArgumentException("친구 관계가 존재하지 않습니다."));
+
+        // userId가 user 컬럼이면 userBuddy 변경, friend 컬럼이면 friendBuddy 변경
+        if (friend.getUser().getId().equals(userId)) {
+            friend.setUserBuddy(buddyStatus);
+        } else {
+            friend.setFriendBuddy(buddyStatus);
+        }
+
+        friendRepository.save(friend);
+        return ApiResponse.onSuccess("친한 친구 상태가 변경되었습니다.");
+    }
+    //친구 관계 삭제
+    @Override
+    public ApiResponse<String> deleteFriend(Long userId, Long friendId) {
+        Friend friend = friendRepository.findFriendByUserAndFriend(userId, friendId)
+                .orElseThrow(() -> new IllegalArgumentException("친구 관계가 존재하지 않습니다."));
+
+        // 친구 요청 상태를 PENDING으로 변경
+        Optional<FriendRequest> existingRequest = friendRequestRepository.findBySenderAndReceiver(
+                        friend.getUser(), friend.getFriend())
+                .or(() -> friendRequestRepository.findBySenderAndReceiver(
+                        friend.getFriend(), friend.getUser()));
+
+        if (existingRequest.isPresent()) {
+            FriendRequest friendRequest = existingRequest.get();
+            friendRequest.setStatus(RequestStatus.PENDING);
+            friendRequestRepository.save(friendRequest);
+        } else {
+            // 새로운 PENDING 요청을 생성
+            FriendRequest newRequest = FriendRequest.builder()
+                    .sender(friend.getUser())
+                    .receiver(friend.getFriend())
+                    .status(RequestStatus.PENDING)
+                    .build();
+            friendRequestRepository.save(newRequest);
+        }
+        friendRepository.delete(friend);
+
+        return ApiResponse.onSuccess("친구 관계가 삭제되었으며, 친구 요청 상태가 PENDING으로 변경되었습니다.");
     }
 }

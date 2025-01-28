@@ -1,6 +1,7 @@
 package Umc.replendar.friend.controller;
 
 import Umc.replendar.apiPayload.ApiResponse;
+import Umc.replendar.common.security.JwtTokenProvider;
 import Umc.replendar.friend.dto.reqDto.FriendReq;
 import Umc.replendar.friend.dto.resDto.FriendRes;
 import Umc.replendar.friend.service.FriendService;
@@ -17,6 +18,7 @@ import java.util.List;
 public class FriendController {
 
     private final FriendService friendService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(summary = "친구 요청 보내기 API", description = "친구 요청을 보냅니다.")
     @PostMapping("/request")
@@ -38,11 +40,27 @@ public class FriendController {
     public ApiResponse<List<FriendRes.FriendListRes>> getFriends(@RequestParam Long userId) {
         return friendService.getFriends(userId);
     }
+    @Operation(summary = "TOP 5 친구 조회 API", description = "TOP 5 친구 목록을 조회합니다.")
+    @GetMapping("/{userId}/top5")
+    public ApiResponse<List<FriendRes.FriendListRes>> getTop5Friends(@PathVariable Long userId) {
+        return friendService.getTop5Friends(userId);
+    }
 
     @Operation(summary = "등록할 친구 검색 API", description = "닉네임으로 등록 가능한 친구를 검색합니다.")
     @GetMapping("/search")
     public ApiResponse<FriendRes.FriendSearchRes> searchFriend(@RequestParam String nickname, @RequestParam Long userId) {
         return friendService.searchUserByNickname(nickname, userId);
+    }
+    @Operation(summary = "친한 친구 설정 API", description = "친구를 친한 친구로 설정하거나 해제합니다.")
+    @PatchMapping("/best-friend")
+    public ApiResponse<String> setBestFriend(@RequestBody FriendReq.FriendBuddyReqDto reqDto) {
+        return friendService.updateBestFriend(reqDto);
+    }
+    @Operation(summary = "친구 삭제 API", description = "친구 관계를 삭제합니다.")
+    @DeleteMapping("")
+    public ApiResponse<String> deleteFriend(@RequestParam Long friendId) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return friendService.deleteFriend(userId, friendId);
     }
 }
 
