@@ -34,3 +34,21 @@ file:
 
 jwt:
   secret: ${JWT_SECRET_KEY}
+
+kakao:
+  client_id: ${KAKAO_ID}
+  redirect_uri: http://localhost:8080/callback
+
+cloud:
+  aws:
+    s3:
+      path :
+        profile : profile
+      bucket: ${AWS_S3_BUCKET}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
