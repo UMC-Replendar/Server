@@ -16,6 +16,10 @@ import Umc.replendar.friend.repository.FriendRequestRepository;
 import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -132,13 +136,11 @@ public class FriendServiceImpl implements FriendService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
         List<User> friends = friendRepository.findFriendsByUserId(userId);
-
         // 친구별 진행 중인 과제 개수 계산
         List<FriendRes.FriendListRes> friendList = friends.stream()
                 .map(friend -> {
                     // 진행 중인 과제 개수 조회(visibility가 ON인 것만.)
                     int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend, Status.ONGOING, GeneralSettings.ON);
-
                     return FriToDto.toFriendListRes(friend, ongoingAssignments);
                 })
                 // 친구 닉네임으로 사전순 정렬
@@ -147,6 +149,26 @@ public class FriendServiceImpl implements FriendService {
 
         return ApiResponse.onSuccess(friendList);
     }
+    //친구 목록 조회 top5
+    @Override
+    public ApiResponse<List<FriendRes.FriendListRes>> getTop5Friends(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        List<User> friends = friendRepository.findFriendsByUserId(userId);
+
+        List<FriendRes.FriendListRes> friendList = friends.stream()
+                .map(friend -> {
+                    int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend, Status.ONGOING, GeneralSettings.ON);
+                    return FriToDto.toFriendListRes(friend, ongoingAssignments);
+                })
+                .sorted(Comparator.comparing(FriendRes.FriendListRes::getNickname))
+                .limit(5)
+                .toList();
+
+        return ApiResponse.onSuccess(friendList);
+    }
+
 
     //친구로 등록할 닉네임 검색.
     @Override
