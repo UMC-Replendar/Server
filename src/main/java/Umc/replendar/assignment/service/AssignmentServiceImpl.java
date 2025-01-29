@@ -3,38 +3,30 @@ package Umc.replendar.assignment.service;
 import Umc.replendar.activitylog.entity.Action;
 import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.activitylog.entity.Check;
-import Umc.replendar.activitylog.repository.ActivityRepository;
+import Umc.replendar.activitylog.repository.ActivityLogRepository;
 import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.apiPayload.code.status.SuccessStatus;
 import Umc.replendar.assignment.converter.AssToDto;
 import Umc.replendar.assignment.dto.reqDto.AssignmentReq;
-import Umc.replendar.assignment.dto.reqDto.SaveType;
 import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 import Umc.replendar.assignment.entity.*;
 import Umc.replendar.assignment.repository.AssNotifyCycleRepository;
 import Umc.replendar.assignment.repository.AssignmentRepository;
 import Umc.replendar.assignment.repository.ShareRepository;
-import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.friend.repository.FriendRepository;
-import Umc.replendar.friend.service.FriendServiceImpl;
 import Umc.replendar.global.function.TaskTimer;
 import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static Umc.replendar.assignment.converter.AssToDto.*;
 
@@ -46,7 +38,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     private final AssignmentRepository assignmentRepository;
     private final UserRepository userRepository;
-    private final ActivityRepository activityRepository;
+    private final ActivityLogRepository activityLogRepository;
     private final FriendRepository friendRepository;
     private final AssNotifyCycleRepository assNotifyCycleRepository;
     private final ShareRepository shareRepository;
@@ -99,7 +91,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .action(Action.ADD_ASS) //친구가 과제를 올렸습니다.
                     .isCheck(Check.UNCHECK) //확인안함
                     .build();
-            activityRepository.save(activityLog);
+            activityLogRepository.save(activityLog);
         }
 
         //과제 등록할 때 공유했다면 반복문 돌리기
@@ -136,7 +128,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .action(Action.SHARE) //공유
                     .isCheck(Check.UNCHECK) //확인안함
                     .build();
-            activityRepository.save(activityLog);
+            activityLogRepository.save(activityLog);
         }
         return ApiResponse.onSuccess("과제가 등록되었습니다.");
     }
@@ -203,7 +195,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .action(Action.SHARE)
                     .isCheck(Check.UNCHECK)
                     .build();
-            activityRepository.save(activityLog);
+            activityLogRepository.save(activityLog);
         }
 
         return ApiResponse.onSuccess("과제가 수정되었습니다.");
@@ -299,7 +291,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .action(Action.COMPLETE)
                     .isCheck(Check.UNCHECK)
                     .build();
-            activityRepository.save(activityLog);
+            activityLogRepository.save(activityLog);
         }
 
         return ApiResponse.onSuccess("과제가 완료되었습니다.");
