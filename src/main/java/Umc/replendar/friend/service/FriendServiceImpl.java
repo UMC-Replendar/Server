@@ -223,7 +223,7 @@ public class FriendServiceImpl implements FriendService {
         Friend friend = friendRepository.findFriendByUserAndFriend(userId, friendId)
                 .orElseThrow(() -> new IllegalArgumentException("친구 관계가 존재하지 않습니다."));
 
-        // 친구 요청 상태를 PENDING으로 변경
+        // 친구 요청 삭제.
         Optional<FriendRequest> existingRequest = friendRequestRepository.findBySenderAndReceiver(
                         friend.getUser(), friend.getFriend())
                 .or(() -> friendRequestRepository.findBySenderAndReceiver(
@@ -231,19 +231,11 @@ public class FriendServiceImpl implements FriendService {
 
         if (existingRequest.isPresent()) {
             FriendRequest friendRequest = existingRequest.get();
-            friendRequest.setStatus(RequestStatus.PENDING);
-            friendRequestRepository.save(friendRequest);
-        } else {
-            // 새로운 PENDING 요청을 생성
-            FriendRequest newRequest = FriendRequest.builder()
-                    .sender(friend.getUser())
-                    .receiver(friend.getFriend())
-                    .status(RequestStatus.PENDING)
-                    .build();
-            friendRequestRepository.save(newRequest);
+            friendRequestRepository.delete(friendRequest);
         }
+
         friendRepository.delete(friend);
 
-        return ApiResponse.onSuccess("친구 관계가 삭제되었으며, 친구 요청 상태가 PENDING으로 변경되었습니다.");
+        return ApiResponse.onSuccess("친구 관계가 삭제되었습니다.");
     }
 }
