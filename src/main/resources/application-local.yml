@@ -41,7 +41,7 @@ jwt:
 
 kakao:
   client_id: ${KAKAO_ID}
-  redirect_uri: https://www.replendar.site/callback
+  redirect_uri: https://api.replendar.site/callback
 
 cloud:
   aws:
