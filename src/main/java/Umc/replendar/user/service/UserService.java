@@ -80,6 +80,7 @@ public class UserService {
                 .orElseGet(() -> {
                     User newUser = User.builder()
                             .email(userInfo.getKakaoAccount().getEmail())
+                            .name(userInfo.getKakaoAccount().getProfile().getNickName())
 //                            .type(Type.KAKAO)
                             .build();
                     userRepository.save(newUser);

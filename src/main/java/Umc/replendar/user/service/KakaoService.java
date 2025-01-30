@@ -34,17 +34,17 @@ public class KakaoService {
     //https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#request-token
     public String getAccessTokenFromKakao(String code) {
         KakaoTokenResponseDto kakaoTokenResponseDto = WebClient.create(KAUTH_TOKEN_URL_HOST).post()
-                .uri(uriBuilder -> uriBuilder
+                    .uri(uriBuilder -> uriBuilder
                         .scheme("https")
                         .path("/oauth/token")
                         .queryParam("grant_type", "authorization_code")
                         .queryParam("client_id", clientId)
-                        .queryParam("redirect_uri", "https://api.replendar.site/callback")
+                        .queryParam("redirect_uri", "https://api.replendar.com/callback")
                         .queryParam("code", code)
                         .build(true))
 //                .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer ${code}")
+//                .header(HttpHeaders.AUTHORIZATION, "Bearer ${code}")
                 .retrieve()
                 //TODO : Custom Exception
                 .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Invalid Parameter")))
@@ -81,6 +81,7 @@ public class KakaoService {
         log.info("[ Kakao Service ] Auth ID ---> {} ", userInfo.getId());
         log.info("[ Kakao Service ] NickName ---> {} ", userInfo.getKakaoAccount().getProfile().getNickName());
         log.info("[ Kakao Service ] ProfileImageUrl ---> {} ", userInfo.getKakaoAccount().getProfile().getProfileImageUrl());
+        log.info("[ Kakao Service ] Email ---> {} ", userInfo.getKakaoAccount().getEmail());
 
         return userInfo;
     }
