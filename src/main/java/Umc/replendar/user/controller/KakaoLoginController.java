@@ -37,11 +37,11 @@ public class KakaoLoginController {
         return ApiResponse.onSuccess(userService.kakaoLogin(request,response, userService.kakaoSignup(userInfo)));
     }
 
-    @GetMapping("/oauth/kakao")
-    public ApiResponse<String> callback(@RequestParam("code") String code) {
-        //회원가입, 로그인 동시진행
-        return ApiResponse.onSuccess(code);
-    }
+//    @GetMapping("/oauth/kakao")
+//    public ApiResponse<String> callback(@RequestParam("code") String code) {
+//        //회원가입, 로그인 동시진행
+//        return ApiResponse.onSuccess(code);
+//    }
 
     @PostMapping("whoami")
     public Long whoami() {

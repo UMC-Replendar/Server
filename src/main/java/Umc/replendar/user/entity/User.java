@@ -25,7 +25,6 @@ public class User extends BaseEntity {
     private Long id;
 
     @Column
-    @NotEmpty
     private String name;
 
     @Column
@@ -39,7 +38,6 @@ public class User extends BaseEntity {
     private String email;
 
     @Column(length = 10, unique = true)
-    @NotEmpty
     private String nickname;
 
     @Column(length = 50)
