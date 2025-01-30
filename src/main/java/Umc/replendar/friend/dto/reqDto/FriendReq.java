@@ -4,6 +4,8 @@ import Umc.replendar.friend.entity.Buddy;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
+import java.util.List;
+
 public class FriendReq {
 
      // 친구 요청을 생성할 때 사용하는 DTO
@@ -36,6 +38,22 @@ public class FriendReq {
         private Long userId;    // 로그인한 사용자 ID
         private Long friendId;  // 친한 친구로 설정할 대상 ID
         private Buddy buddyStatus; // 설정할 친한 친구 상태 (YES / NO)
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CreateGroupDto {
+        private String groupName;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AddFriendToGroupDto {
+        private List<Long> friendshipIds;  // 여러 명의 친구 관계 ID 리스트
     }
 
 }
