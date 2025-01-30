@@ -8,33 +8,25 @@ import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.apiPayload.code.status.SuccessStatus;
 import Umc.replendar.assignment.converter.AssToDto;
 import Umc.replendar.assignment.dto.reqDto.AssignmentReq;
-import Umc.replendar.assignment.dto.reqDto.SaveType;
 import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 import Umc.replendar.assignment.entity.*;
 import Umc.replendar.assignment.repository.AssNotifyCycleRepository;
 import Umc.replendar.assignment.repository.AssignmentRepository;
 import Umc.replendar.assignment.repository.ShareRepository;
-import Umc.replendar.friend.entity.Friend;
 import Umc.replendar.friend.repository.FriendRepository;
-import Umc.replendar.friend.service.FriendServiceImpl;
 import Umc.replendar.global.function.TaskTimer;
 import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static Umc.replendar.assignment.converter.AssToDto.*;
 

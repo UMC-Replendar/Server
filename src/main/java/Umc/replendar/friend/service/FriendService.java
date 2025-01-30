@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface FriendService {
 
-    ApiResponse<List<FriendListRes>> getFriends(Long userId); //친구 목록 조회
-    ApiResponse<List<FriendRes.FriendListRes>> getTop5Friends(Long userId); //친구 목록 조회(top5)
+    ApiResponse<List<FriendListRes>> getFriends(Long userId); //친구 목록 조회(전체)
+    ApiResponse<List<FriendRes.FriendListRes>> getTopFriends(Long userId,int limit); //친구 목록 조회(개수 조절)
     ApiResponse<FriendRes.FriendSearchRes> searchUserByNickname(String nickname, Long userId);
     ApiResponse<Long> sendFriendRequest(FriendReq.FriendRequestDto reqDto);
     ApiResponse<String> acceptFriendRequest(Long requestId);
