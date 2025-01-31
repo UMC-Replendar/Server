@@ -43,4 +43,11 @@ public class FriendRes {
         private List<FriendListRes> friends;
     }
 
+    @Data
+    @AllArgsConstructor
+    @Builder
+    public static class FriendNoteRes {
+        private String note;
+    }
+
 }

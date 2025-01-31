@@ -58,5 +58,13 @@ public class FriendReq {
     public static class AddFriendToGroupDto {
         private List<Long> friendshipIds;  // 여러 명의 친구 관계 ID 리스트
     }
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FriendNoteReqDto {
+        private Long friendId;
+        private String note;
+    }
 
 }

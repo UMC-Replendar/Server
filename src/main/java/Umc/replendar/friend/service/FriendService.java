@@ -17,5 +17,7 @@ public interface FriendService {
     ApiResponse<String> rejectFriendRequest(Long requestId);
     ApiResponse<String> updateBestFriend(FriendReq.FriendBuddyReqDto reqDto);
     public ApiResponse<String> deleteFriend(Long userId, Long friendId);
+    ApiResponse<String> updateFriendNote(Long userId, FriendReq.FriendNoteReqDto reqDto);
+    ApiResponse<FriendRes.FriendNoteRes> getFriendNote(Long userId, Long friendId);
 
 }
