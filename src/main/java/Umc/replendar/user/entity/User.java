@@ -1,6 +1,7 @@
 package Umc.replendar.user.entity;
 
 import Umc.replendar.activitylog.entity.ActivityLog;
+import Umc.replendar.assignment.entity.NotifyLog;
 import Umc.replendar.assignment.entity.Share;
 import Umc.replendar.friend.entity.friendship;
 import Umc.replendar.global.BaseEntity;
@@ -62,6 +63,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Share> shareLogList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<NotifyLog> notifyLogList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "school_id")
