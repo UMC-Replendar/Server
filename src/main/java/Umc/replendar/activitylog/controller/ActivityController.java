@@ -3,6 +3,7 @@ package Umc.replendar.activitylog.controller;
 import Umc.replendar.activitylog.dto.res.ActivityLogRes;
 import Umc.replendar.activitylog.service.ActivityService;
 import Umc.replendar.apiPayload.ApiResponse;
+import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 import Umc.replendar.common.security.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,16 @@ public class ActivityController {
 
     @Operation(summary = "과제 활동 로그 공유 수락 응답 API", description = "과제 활동 로그 공유 수락 응답 API")
     @PatchMapping("/share/{logId}")
-    public ApiResponse<ActivityLogRes.shareActivity> shareActivityLog(@PathVariable Long logId) {
+    public ApiResponse<AssignmentRes.assLogRes> shareActivityLog(@PathVariable Long logId) {
         Long userId = jwtTokenProvider.getUserIdFromToken();
         return activityService.shareActivityLog(logId, userId);
     }
+
+//    @Operation(summary = "과제 활동 로그 공유 거절 응답 API", description = "과제 활동 로그 공유 거절 응답 API")
+//    @PatchMapping("/share/{logId}")
+//    public ApiResponse<ActivityLogRes.shareActivity> shareActivityLog(@PathVariable Long logId) {
+//        Long userId = jwtTokenProvider.getUserIdFromToken();
+//        return activityService.shareActivityLog(logId, userId);
+//    }
 
 }

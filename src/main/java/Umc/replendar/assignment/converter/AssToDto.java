@@ -101,4 +101,15 @@ public class AssToDto {
                 .friendNote(friendship.getUserNote())
                 .build();
     }
+    public static AssignmentRes.assLogRes toShareOkDto(Assignment assignment){
+        return AssignmentRes.assLogRes.builder()
+                .assignmentId(assignment.getId())
+                .title(assignment.getTitle())
+                .due_date(assignment.getDueDate().format(DATE_FORMATTER))
+                .due_time(assignment.getDueDate().format(TIME_FORMATTER))
+                .memo(assignment.getMemo())
+                .notification(assignment.getNotification())
+                .visibility(assignment.getVisibility())
+                .build();
+    }
 }

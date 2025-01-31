@@ -82,4 +82,17 @@ public class AssignmentRes {
             private LocalDateTime createdAt;
             private LocalDateTime updatedAt;
     }
+
+    @Data
+    @AllArgsConstructor
+    @Builder
+    public static class assLogRes{
+        private Long assignmentId;
+        private String title;
+        private GeneralSettings visibility;
+        private GeneralSettings notification;
+        private String memo;
+        private String due_date;
+        private String due_time;
+    }
 }
