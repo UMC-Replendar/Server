@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 public class ActivityLogRes {
@@ -23,10 +24,11 @@ public class ActivityLogRes {
     public static class getHistoryRes {
         String date;
         String time;
-        String nickname;
-        String friend;
+        Check check;
+        Long friendId;
+        Long assId;
         String content;
-        Map<TypeId, Long> type;
+        LocalDateTime createdAt;
     }
 
 //    @Data

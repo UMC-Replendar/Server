@@ -21,4 +21,7 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
 
     // 특정 사용자가 보낸 친구 요청 조회
     List<FriendRequest> findAllBySender(User sender);
+
+
+    List<FriendRequest> findAllByReceiverOrderByCreatedAtDesc(User user);
 }
