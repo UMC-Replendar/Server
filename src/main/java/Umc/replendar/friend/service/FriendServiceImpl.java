@@ -238,4 +238,37 @@ public class FriendServiceImpl implements FriendService {
 
         return ApiResponse.onSuccess("친구 관계가 삭제되었습니다.");
     }
+    //친구 메모 작성(수정)
+    @Override
+    public ApiResponse<String> updateFriendNote(Long userId, FriendReq.FriendNoteReqDto reqDto) {
+        Long friendId = reqDto.getFriendId();
+        String note = reqDto.getNote();
+
+        friendship friendship = friendRepository.findFriendByUserAndFriend(userId, friendId)
+                .orElseThrow(() -> new IllegalArgumentException("친구 관계가 존재하지 않습니다."));
+
+        if (friendship.getUser().getId().equals(userId)) {
+            friendship.setUserNote(note);
+        } else {
+            friendship.setFriendNote(note);
+        }
+
+        friendRepository.save(friendship);
+        return ApiResponse.onSuccess("친구 메모가 저장되었습니다.");
+    }
+    //친구 메모 조회
+    @Override
+    public ApiResponse<FriendRes.FriendNoteRes> getFriendNote(Long userId, Long friendId) {
+        friendship friendship = friendRepository.findFriendByUserAndFriend(userId, friendId)
+                .orElseThrow(() -> new IllegalArgumentException("친구 관계가 존재하지 않습니다."));
+
+        String note;
+        if (friendship.getUser().getId().equals(userId)) {
+            note = friendship.getUserNote();
+        } else {
+            note = friendship.getFriendNote();
+        }
+
+        return ApiResponse.onSuccess(new FriendRes.FriendNoteRes(note));
+    }
 }
