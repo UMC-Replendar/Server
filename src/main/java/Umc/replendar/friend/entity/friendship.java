@@ -5,13 +5,16 @@ import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class Friend extends BaseEntity {
+public class friendship extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +41,9 @@ public class Friend extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "friend_id")
     private User friend;
+
+    @OneToMany(mappedBy = "friendship", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FriendGroupMember> groupMemberships = new ArrayList<>();
 
     // 사용자 ID에 따른 Buddy 상태를 반환하는 메서드
     public Buddy getBuddyStatusForUser(Long userId) {
