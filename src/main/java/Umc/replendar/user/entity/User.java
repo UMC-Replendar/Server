@@ -2,11 +2,9 @@ package Umc.replendar.user.entity;
 
 import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.assignment.entity.Share;
-import Umc.replendar.friend.entity.Friend;
+import Umc.replendar.friend.entity.friendship;
 import Umc.replendar.global.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -25,21 +23,19 @@ public class User extends BaseEntity {
     private Long id;
 
     @Column
-    @NotEmpty
     private String name;
 
     @Column
     @Enumerated(EnumType.STRING)
     private AcademicYear academicYear;
 
-    @Column(length = 10)
+    @Column(length = 20)
     private String major;
 
     @Column(length = 100, unique = true)
     private String email;
 
-    @Column(length = 10, unique = true)
-    @NotEmpty
+    @Column(length = 20, unique = true)
     private String nickname;
 
     @Column(length = 50)
@@ -53,10 +49,10 @@ public class User extends BaseEntity {
     private ProfileImage profileImage;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Friend> friendUserList = new ArrayList<>();
+    private List<friendship> friendshipUserList = new ArrayList<>();
 
     @OneToMany(mappedBy = "friend", cascade = CascadeType.REMOVE)
-    private List<Friend> friendFriendList = new ArrayList<>();
+    private List<friendship> friendFriendshipList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<ActivityLog> activityLogList = new ArrayList<>();

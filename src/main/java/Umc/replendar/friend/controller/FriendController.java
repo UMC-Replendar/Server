@@ -23,6 +23,8 @@ public class FriendController {
     @Operation(summary = "친구 요청 보내기 API", description = "친구 요청을 보냅니다.")
     @PostMapping("/request")
     public ApiResponse<Long> sendFriendRequest(@RequestBody FriendReq.FriendRequestDto reqDto) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        reqDto.setUserId(userId);
         return friendService.sendFriendRequest(reqDto);
     }
 
@@ -37,23 +39,22 @@ public class FriendController {
     }
     @Operation(summary = "친구 목록 조회 API", description = "친구 목록과 진행 중인 과제 개수를 조회합니다.")
     @GetMapping("")
-    public ApiResponse<List<FriendRes.FriendListRes>> getFriends(@RequestParam Long userId) {
-        return friendService.getFriends(userId);
-    }
-    @Operation(summary = "TOP 5 친구 조회 API", description = "TOP 5 친구 목록을 조회합니다.")
-    @GetMapping("/{userId}/top5")
-    public ApiResponse<List<FriendRes.FriendListRes>> getTop5Friends(@PathVariable Long userId) {
-        return friendService.getTop5Friends(userId);
+    public ApiResponse<List<FriendRes.FriendListRes>> getFriends(@RequestParam(required = false, defaultValue = "0") int limit) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return limit > 0 ? friendService.getTopFriends(userId, limit) : friendService.getFriends(userId);
     }
 
     @Operation(summary = "등록할 친구 검색 API", description = "닉네임으로 등록 가능한 친구를 검색합니다.")
     @GetMapping("/search")
-    public ApiResponse<FriendRes.FriendSearchRes> searchFriend(@RequestParam String nickname, @RequestParam Long userId) {
+    public ApiResponse<FriendRes.FriendSearchRes> searchFriend(@RequestParam String nickname) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
         return friendService.searchUserByNickname(nickname, userId);
     }
     @Operation(summary = "친한 친구 설정 API", description = "친구를 친한 친구로 설정하거나 해제합니다.")
     @PatchMapping("/best-friend")
     public ApiResponse<String> setBestFriend(@RequestBody FriendReq.FriendBuddyReqDto reqDto) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        reqDto.setUserId(userId);
         return friendService.updateBestFriend(reqDto);
     }
     @Operation(summary = "친구 삭제 API", description = "친구 관계를 삭제합니다.")
