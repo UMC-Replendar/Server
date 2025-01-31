@@ -58,4 +58,31 @@ public class ActivityServiceImpl implements ActivityService {
         return ApiResponse.onSuccess(toShareOkDto(assignmentRepository.save(beforeAss)));
 
     }
+
+    @Override
+    public ApiResponse<ActivityLogRes.shareActivity> shareRejectLog(Long logId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다."));
+
+        ActivityLog activityLog = activityLogRepository.findById(logId).orElseThrow(() -> new IllegalArgumentException("활동 로그를 찾지 못했습니다."));
+
+        if(!user.equals(activityLog.getUser())){
+            return ApiResponse.onFailure("USER_NOT_MATCH","해당 활동 로그에 대한 권한이 없습니다.",null);
+        }
+
+        if(!activityLog.getAction().equals(Action.SHARE)){
+            return ApiResponse.onFailure("ACTIVITY_TYPE_NOT_SHARE","활동유형이 공유가 아닙니다.",null);
+        }
+
+        if(activityLog.getIsCheck().equals(Check.CHECK)){
+            return ApiResponse.onFailure("ALREADY_SHARED","이미 공유된 활동입니다.",null);
+        }
+
+        activityLog.setIsCheck(Check.CHECK);
+        activityLogRepository.save(activityLog);
+        Assignment ass = assignmentRepository.findById(activityLog.getAssignment().getId()).orElseThrow(() -> new IllegalArgumentException("해당 과제를 찾지 못했습니다."));
+//        ass.setStatus(Status.DELETE);
+        assignmentRepository.delete(ass);
+
+        return ApiResponse.onSuccess(ActivityLogRes.shareActivity.builder().logId(activityLog.getId()).check(activityLog.getIsCheck()).build());
+    }
 }

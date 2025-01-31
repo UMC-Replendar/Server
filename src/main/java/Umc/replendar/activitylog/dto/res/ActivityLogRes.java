@@ -1,5 +1,6 @@
 package Umc.replendar.activitylog.dto.res;
 
+import Umc.replendar.activitylog.entity.Check;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +13,8 @@ public class ActivityLogRes {
     @Builder
     @AllArgsConstructor
     public static class shareActivity{
-        Long assId;
-
+        Long logId;
+        Check check;
     }
 
     @Data

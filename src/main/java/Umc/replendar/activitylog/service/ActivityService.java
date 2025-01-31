@@ -6,4 +6,6 @@ import Umc.replendar.assignment.dto.resDto.AssignmentRes;
 
 public interface ActivityService {
     ApiResponse<AssignmentRes.assLogRes> shareActivityLog(Long logId, Long userId);
+
+    ApiResponse<ActivityLogRes.shareActivity> shareRejectLog(Long logId, Long userId);
 }

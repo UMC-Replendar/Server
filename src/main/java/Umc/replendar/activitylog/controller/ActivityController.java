@@ -24,17 +24,19 @@ public class ActivityController {
 //    }
 
     @Operation(summary = "과제 활동 로그 공유 수락 응답 API", description = "과제 활동 로그 공유 수락 응답 API")
-    @PatchMapping("/share/{logId}")
-    public ApiResponse<AssignmentRes.assLogRes> shareActivityLog(@PathVariable Long logId) {
+    @PatchMapping("/share/accept/{logId}")
+    public ApiResponse<AssignmentRes.assLogRes> shareAcceptLog(@PathVariable Long logId) {
         Long userId = jwtTokenProvider.getUserIdFromToken();
         return activityService.shareActivityLog(logId, userId);
     }
 
-//    @Operation(summary = "과제 활동 로그 공유 거절 응답 API", description = "과제 활동 로그 공유 거절 응답 API")
-//    @PatchMapping("/share/{logId}")
-//    public ApiResponse<ActivityLogRes.shareActivity> shareActivityLog(@PathVariable Long logId) {
-//        Long userId = jwtTokenProvider.getUserIdFromToken();
-//        return activityService.shareActivityLog(logId, userId);
-//    }
+    @Operation(summary = "과제 활동 로그 공유 거절 응답 API", description = "과제 활동 로그 공유 거절 응답 API")
+    @PatchMapping("/share/reject/{logId}")
+    public ApiResponse<ActivityLogRes.shareActivity> shareRejectLog(@PathVariable Long logId) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return activityService.shareRejectLog(logId, userId);
+    }
+
+
 
 }
