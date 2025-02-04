@@ -34,7 +34,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AssignmentRepository assignmentRepository;
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-    private AmazonS3Util amazonS3Util;
+    private final AmazonS3Util amazonS3Util;
 
 //    public User signup(UserDtoReq.SignUpReq signUpDto) {
 //
