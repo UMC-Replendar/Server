@@ -4,6 +4,7 @@ import Umc.replendar.assignment.entity.Status;
 import Umc.replendar.assignment.repository.AssignmentRepository;
 import Umc.replendar.common.security.JwtTokenProvider;
 import Umc.replendar.friend.repository.FriendRepository;
+import Umc.replendar.global.util.AmazonS3Util;
 import Umc.replendar.global.util.CookieUtil;
 import Umc.replendar.user.converter.UserConverter;
 import Umc.replendar.user.dto.req.UserDtoReq;
@@ -33,6 +34,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AssignmentRepository assignmentRepository;
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private AmazonS3Util amazonS3Util;
 
 //    public User signup(UserDtoReq.SignUpReq signUpDto) {
 //
@@ -143,6 +145,8 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다."));
 
+        String profileImageUrl = amazonS3Util.getProfilePath(userId);
+        
         // 둘 다 데이터 개수가 30개 이하일 것으로 예상되어 단순 조회로 함
         int friendCount = friendRepository.findAllByUserIdOrFriendId(userId, userId).size();
         int ongoingTasks = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.ONGOING, Pageable.unpaged()).getContent().size();
@@ -152,6 +156,7 @@ public class UserService {
                 .statusMessage(user.getStatusMessage())
                 .friendCount(friendCount)
                 .ongoingTasks(ongoingTasks)
+                .profileImageUrl(profileImageUrl)
                 .build();
     }
 }
