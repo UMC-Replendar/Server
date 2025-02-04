@@ -12,6 +12,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@Table(name = "ActivityLog")
 public class ActivityLog extends BaseEntity {
 
     @Id
