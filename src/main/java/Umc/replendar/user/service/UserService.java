@@ -159,4 +159,8 @@ public class UserService {
                 .profileImageUrl(profileImageUrl)
                 .build();
     }
+    // 닉네임 중복 확인
+    public boolean isNicknameDuplicate(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
 }

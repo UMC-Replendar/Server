@@ -48,4 +48,15 @@ public class UserController {
         Long userId = jwtTokenProvider.getUserIdFromToken();
         return ApiResponse.onSuccess(userService.getUserProfile(userId));
     }
+
+    @Operation(summary = "닉네임 중복 확인 API", description = "닉네임 중복 확인")
+    @GetMapping("/check-nickname")
+    public ApiResponse<String> checkNickname(@RequestParam String nickname) {
+        boolean isDuplicate = userService.isNicknameDuplicate(nickname);
+        if (isDuplicate) {
+            return ApiResponse.onFailure("DUPLICATE_NICKNAME", "이미 사용 중인 닉네임입니다.", null);
+        } else {
+            return ApiResponse.onSuccess("사용 가능한 닉네임입니다.");
+        }
+    }
 }
