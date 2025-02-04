@@ -25,6 +25,7 @@ public class UserController {
 
         return ApiResponse.onSuccess(userService.login(request,response,loginDto));
     }
+
     @Operation(summary = "테마 변경 API", description = "사용자의 저장된 테마 정보를 변경")
     @PatchMapping("/theme")
     public ApiResponse<String> updateTheme(@RequestParam String theme) {
@@ -33,4 +34,18 @@ public class UserController {
         return ApiResponse.onSuccess("테마가 " + theme + "으로 변경되었습니다.");
     }
 
+    @Operation(summary = "상태 메시지 변경 API", description = "사용자의 상태 메시지를 변경")
+    @PatchMapping("/status")
+    public ApiResponse<String> updateStatusMessage(@RequestParam String statusMessage) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        userService.updateStatusMessage(userId, statusMessage);
+        return ApiResponse.onSuccess("상태 메시지가 변경되었습니다.");
+    }
+
+    @Operation(summary = "프로필 정보 조회 API", description = "내 정보 조회")
+    @GetMapping("/profile")
+    public ApiResponse<UserDtoRes.UserProfileRes> getUserProfile() {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return ApiResponse.onSuccess(userService.getUserProfile(userId));
+    }
 }
