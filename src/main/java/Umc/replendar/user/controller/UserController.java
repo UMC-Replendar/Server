@@ -10,7 +10,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/user")
@@ -49,6 +53,14 @@ public class UserController {
         return ApiResponse.onSuccess(userService.getUserProfile(userId));
     }
 
+    @Operation(summary = "회원가입 API", description = "회원가입")
+    @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ApiResponse<String> signup(@RequestPart("userInfo") UserDtoReq.SignUpReq userInfo, @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) throws IOException {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        userService.signup(userInfo, profileImage, userId);
+        return ApiResponse.onSuccess("회원가입이 완료되었습니다.");
+    }
+
     @Operation(summary = "닉네임 중복 확인 API", description = "닉네임 중복 확인")
     @GetMapping("/check-nickname")
     public ApiResponse<String> checkNickname(@RequestParam String nickname) {
@@ -59,4 +71,6 @@ public class UserController {
             return ApiResponse.onSuccess("사용 가능한 닉네임입니다.");
         }
     }
+
+
 }

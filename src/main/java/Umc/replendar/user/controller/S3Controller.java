@@ -14,18 +14,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/s3")
 @RequiredArgsConstructor
-public class TestS3Controller {
-    private final AmazonS3Util s3Util;
+public class S3Controller {
+
     private final AmazonS3Util amazonS3Util;
 
     @PostMapping(value = "/upload/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<List<String>> createProfileImage(@PathVariable("id") Long id, @RequestPart(required = false) MultipartFile[] files) throws IOException {
-        List<String> a = new ArrayList<>();
+        List<String> uploadedUrls = new ArrayList<>();
 
         for (MultipartFile file : files) {
-            a.add(amazonS3Util.profileImageUpload(file, id));
+            uploadedUrls.add(amazonS3Util.profileImageUpload(file, id));
         }
 
-        return ApiResponse.onSuccess(a);
+        return ApiResponse.onSuccess(uploadedUrls);
     }
 }
