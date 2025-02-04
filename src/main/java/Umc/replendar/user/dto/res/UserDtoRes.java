@@ -14,6 +14,7 @@ public class UserDtoRes {
         private String email;
         private String accessToken;
         private String nickName;
+        private String theme;
     }
 
 }
