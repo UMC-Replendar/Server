@@ -63,5 +63,19 @@ public class FriendController {
         Long userId = jwtTokenProvider.getUserIdFromToken();
         return friendService.deleteFriend(userId, friendId);
     }
+    @Operation(summary = "친구 메모 작성/수정 API", description = "친구에게 남길 메모를 작성하거나 수정합니다.")
+    @PatchMapping("/note")
+    public ApiResponse<String> updateFriendNote(@RequestBody FriendReq.FriendNoteReqDto reqDto) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return friendService.updateFriendNote(userId, reqDto);
+    }
+
+    @Operation(summary = "친구 메모 조회 API", description = "친구에게 남긴 메모를 조회합니다.")
+    @GetMapping("/note")
+    public ApiResponse<FriendRes.FriendNoteRes> getFriendNote(@RequestParam Long friendId) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return friendService.getFriendNote(userId, friendId);
+    }
+
 }
 

@@ -6,6 +6,7 @@ import Umc.replendar.user.converter.UserConverter;
 import Umc.replendar.user.dto.req.UserDtoReq;
 import Umc.replendar.user.dto.res.KakaoUserInfoResponseDto;
 import Umc.replendar.user.dto.res.UserDtoRes;
+import Umc.replendar.user.entity.Theme;
 import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -111,4 +112,18 @@ public class UserService {
 
         return UserConverter.signInRes(user, accessToken, user.getNickname());
     }
+// 테마 변경
+    public void updateTheme(Long userId, String themeName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다."));
+
+        try {
+            user.setTheme(Theme.valueOf(themeName.toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("유효하지 않은 테마입니다.");
+        }
+
+        userRepository.save(user);
+    }
+
 }

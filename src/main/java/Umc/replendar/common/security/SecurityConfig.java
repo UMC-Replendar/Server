@@ -89,12 +89,13 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:3000",
                 "https://localhost:3000",
-                "http://jasople.life",// 추가 도메인
-                "https://jasople.life"
-                ,"http://localhost:5173"
-                ,"https://localhost:5173"
-                ,"https://jasople.vercel.app"
-                ,"http://jasople.vercel.app"
+                "http://replendar.site",// 추가 도메인
+                "https://replendar.site",
+                "https://*.replendar.site",
+                "https://api.replendar.site",
+                "http://api.replendar.site" ,
+                "http://localhost:5173",
+                "https://localhost:5173"
         ));
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");

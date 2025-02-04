@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -41,6 +42,11 @@ public class User extends BaseEntity {
 
     @Column(length = 50)
     private String statusMessage;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Theme theme = Theme.DEFAULT;
+
 
 //    @Column
 //    private String password;
