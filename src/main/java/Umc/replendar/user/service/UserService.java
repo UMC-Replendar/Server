@@ -1,6 +1,9 @@
 package Umc.replendar.user.service;
 
+import Umc.replendar.assignment.entity.Status;
+import Umc.replendar.assignment.repository.AssignmentRepository;
 import Umc.replendar.common.security.JwtTokenProvider;
+import Umc.replendar.friend.repository.FriendRepository;
 import Umc.replendar.global.util.CookieUtil;
 import Umc.replendar.user.converter.UserConverter;
 import Umc.replendar.user.dto.req.UserDtoReq;
@@ -15,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +27,11 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class UserService {
 
+    private final FriendRepository friendRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AssignmentRepository assignmentRepository;
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
 //    public User signup(UserDtoReq.SignUpReq signUpDto) {
@@ -112,7 +118,7 @@ public class UserService {
 
         return UserConverter.signInRes(user, accessToken, user.getNickname());
     }
-// 테마 변경
+    // 테마 변경
     public void updateTheme(Long userId, String themeName) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다."));
@@ -125,5 +131,27 @@ public class UserService {
 
         userRepository.save(user);
     }
+    // 유저 상태 메시지 변경
+    public void updateStatusMessage(Long userId, String statusMessage) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다."));
+        user.setStatusMessage(statusMessage);
+        userRepository.save(user);
+    }
+    //프로필 정보 조회
+    public UserDtoRes.UserProfileRes getUserProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다."));
 
+        // 둘 다 데이터 개수가 30개 이하일 것으로 예상되어 단순 조회로 함
+        int friendCount = friendRepository.findAllByUserIdOrFriendId(userId, userId).size();
+        int ongoingTasks = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.ONGOING, Pageable.unpaged()).getContent().size();
+
+        return UserDtoRes.UserProfileRes.builder()
+                .nickname(user.getNickname())
+                .statusMessage(user.getStatusMessage())
+                .friendCount(friendCount)
+                .ongoingTasks(ongoingTasks)
+                .build();
+    }
 }
