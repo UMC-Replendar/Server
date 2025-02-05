@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 public class FriToDto {
     public static FriendRes.FriendListRes toFriendListRes(friendship friendship, Long userId, int ongoingAssignments) {
         return FriendRes.FriendListRes.builder()
-                .friendshipId(friendship.getFriendForUser(userId).getId())  // 친구관계 ID
+                .friendshipId(friendship.getId())  // 친구관계 ID
+                .friendId(friendship.getFriendForUser(userId).getId())  // 친구 ID
                 .nickname(friendship.getFriendForUser(userId).getNickname())  // 친구의 닉네임
                 .name(friendship.getFriendForUser(userId).getName())  // 친구의 이름
                 .ongoingAssignments(ongoingAssignments)  // 진행 중인 과제 수

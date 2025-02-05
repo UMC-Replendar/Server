@@ -12,6 +12,7 @@ public class UserConverter {
                 .email(user.getEmail())
                 .accessToken(accessToken)
                 .nickName(nickName)
+                .theme(user.getTheme().name())
                 .build();
     }
 

@@ -3,7 +3,7 @@ package Umc.replendar.assignment.service;
 import Umc.replendar.activitylog.entity.Action;
 import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.activitylog.entity.Check;
-import Umc.replendar.activitylog.repository.ActivityRepository;
+import Umc.replendar.activitylog.repository.ActivityLogRepository;
 import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.apiPayload.code.status.SuccessStatus;
 import Umc.replendar.assignment.converter.AssToDto;
@@ -38,7 +38,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     private final AssignmentRepository assignmentRepository;
     private final UserRepository userRepository;
-    private final ActivityRepository activityRepository;
+    private final ActivityLogRepository activityLogRepository;
     private final FriendRepository friendRepository;
     private final AssNotifyCycleRepository assNotifyCycleRepository;
     private final ShareRepository shareRepository;
@@ -72,7 +72,7 @@ public class AssignmentServiceImpl implements AssignmentService {
             AssNotifyCycle assNotifyCycle = AssNotifyCycle.builder()
                     .assignment(assignment)
                     .notifyCycle(notifyCycle)
-                    .notifyTime(TaskTimer.notifyCycle(assignment.getDueDate(), notifyCycle))
+                    .scheduledAt(TaskTimer.notifyCycle(assignment.getDueDate(), notifyCycle))
                     .build();
             assNotifyCycleRepository.save(assNotifyCycle);
         }
@@ -91,7 +91,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .action(Action.ADD_ASS) //친구가 과제를 올렸습니다.
                     .isCheck(Check.UNCHECK) //확인안함
                     .build();
-            activityRepository.save(activityLog);
+            activityLogRepository.save(activityLog);
         }
 
         //과제 등록할 때 공유했다면 반복문 돌리기
@@ -128,7 +128,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .action(Action.SHARE) //공유
                     .isCheck(Check.UNCHECK) //확인안함
                     .build();
-            activityRepository.save(activityLog);
+            activityLogRepository.save(activityLog);
         }
         return ApiResponse.onSuccess("과제가 등록되었습니다.");
     }
@@ -195,7 +195,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .action(Action.SHARE)
                     .isCheck(Check.UNCHECK)
                     .build();
-            activityRepository.save(activityLog);
+            activityLogRepository.save(activityLog);
         }
 
         return ApiResponse.onSuccess("과제가 수정되었습니다.");
@@ -291,7 +291,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .action(Action.COMPLETE)
                     .isCheck(Check.UNCHECK)
                     .build();
-            activityRepository.save(activityLog);
+            activityLogRepository.save(activityLog);
         }
 
         return ApiResponse.onSuccess("과제가 완료되었습니다.");
@@ -327,7 +327,7 @@ public class AssignmentServiceImpl implements AssignmentService {
             AssNotifyCycle assNotifyCycle = AssNotifyCycle.builder()
                     .assignment(assignment)
                     .notifyCycle(notifyCycle)
-                    .notifyTime(TaskTimer.notifyCycle(assignment.getDueDate(), notifyCycle))
+                    .scheduledAt(TaskTimer.notifyCycle(assignment.getDueDate(), notifyCycle))
                     .build();
             assNotifyCycleRepository.save(assNotifyCycle);
         }

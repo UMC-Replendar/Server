@@ -2,6 +2,8 @@ package Umc.replendar.friend.repository;
 
 import Umc.replendar.friend.entity.FriendRequest;
 import Umc.replendar.user.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +23,8 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
 
     // 특정 사용자가 보낸 친구 요청 조회
     List<FriendRequest> findAllBySender(User sender);
+
+
+    Page<FriendRequest> findAllByReceiverOrderByCreatedAtDesc(User user, Pageable adjustedPageable);
+
 }

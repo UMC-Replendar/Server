@@ -14,6 +14,17 @@ public class UserDtoRes {
         private String email;
         private String accessToken;
         private String nickName;
+        private String theme;
     }
 
+    @Data
+    @AllArgsConstructor
+    @Builder
+    public static class UserProfileRes {
+        private String nickname;
+        private String statusMessage;
+        private int friendCount;
+        private int ongoingTasks;
+        private String profileImageUrl;
+    }
 }

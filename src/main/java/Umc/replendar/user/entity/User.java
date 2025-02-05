@@ -1,6 +1,7 @@
 package Umc.replendar.user.entity;
 
 import Umc.replendar.activitylog.entity.ActivityLog;
+import Umc.replendar.assignment.entity.NotifyLog;
 import Umc.replendar.assignment.entity.Share;
 import Umc.replendar.friend.entity.friendship;
 import Umc.replendar.global.BaseEntity;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -29,8 +31,6 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AcademicYear academicYear;
 
-    @Column(length = 20)
-    private String major;
 
     @Column(length = 100, unique = true)
     private String email;
@@ -40,6 +40,11 @@ public class User extends BaseEntity {
 
     @Column(length = 50)
     private String statusMessage;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Theme theme = Theme.DEFAULT;
+
 
 //    @Column
 //    private String password;
@@ -62,6 +67,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Share> shareLogList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<NotifyLog> notifyLogList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "school_id")

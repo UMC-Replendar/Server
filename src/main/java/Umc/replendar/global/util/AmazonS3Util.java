@@ -43,34 +43,40 @@ public class AmazonS3Util {
     //db에 있는걸 먼저 찾고 s3를 삭제한 후 디비 데이터를 삭제해주시면 됩니다!
     @Transactional
     public String profileImageUpload(MultipartFile multipartFile, Long userId) throws IOException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
-        ProfileImage beforeProfileImage = profileImageRepository.findByUser(user);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
-        //이미지가 이미 있으면 삭제하기
-        if (beforeProfileImage != null) {
-            String previousKey = profilePath + "/" + beforeProfileImage.getUuid() + "_" + beforeProfileImage.getOriginalFilename();
-            amazonS3.deleteObject(bucket, previousKey); // S3에서 이전 이미지 삭제
+        ProfileImage existingProfileImage = profileImageRepository.findByUser(user);
+
+        // 기존 이미지 삭제
+        if (existingProfileImage != null) {
+            String existingKey = profilePath + "/" + existingProfileImage.getUuid() + "_" + existingProfileImage.getOriginalFilename();
+            amazonS3Client.deleteObject(bucket, existingKey);  // S3에서 삭제
+            profileImageRepository.delete(existingProfileImage);  // DB에서 삭제
         }
-        //uuid 생성
-        String uuid = UUID.randomUUID().toString(); //uuid 생성(랜덤값)
 
-        beforeProfileImage.setUuid(uuid);
-        beforeProfileImage.setOriginalFilename(multipartFile.getOriginalFilename());
-        beforeProfileImage.setContentType(multipartFile.getContentType());
-        beforeProfileImage.setFileSize(multipartFile.getSize());
-        profileImageRepository.save(beforeProfileImage);
-
+        // 새 이미지 업로드
+        String uuid = UUID.randomUUID().toString();
         String key = profilePath + "/" + uuid + "_" + multipartFile.getOriginalFilename();
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
+        // S3에 업로드
+        amazonS3Client.putObject(bucket, key, multipartFile.getInputStream(), metadata);
 
-        // S3에 파일 업로드
-        amazonS3.putObject(bucket, key, multipartFile.getInputStream(), metadata);
+        // DB에 새 프로필 이미지 정보 저장
+        ProfileImage newProfileImage = ProfileImage.builder()
+                .uuid(uuid)
+                .originalFilename(multipartFile.getOriginalFilename())
+                .contentType(multipartFile.getContentType())
+                .fileSize(multipartFile.getSize())
+                .user(user)
+                .build();
 
-        // 업로드된 파일의 URL 반환
-        return amazonS3.getUrl(bucket, key).toString();
+        profileImageRepository.save(newProfileImage);
+
+        return amazonS3Client.getUrl(bucket, key).toString();
     }
 
     //프로필 이미지 url 가져오기
