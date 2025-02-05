@@ -136,6 +136,15 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    public ApiResponse<Page<ActivityLogRes.getHistoryRes>> getActivityAssignmentNotifyLog(Long userId, Pageable adjustedPageable) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다"));
+        Page<NotifyLog> notifyLogs = notifyLogRepository.findAllByUserOrderByCreatedAtDesc(user,adjustedPageable);
+        Page<ActivityLogRes.getHistoryRes> notifyLogToDto = notifyLogs.map(logConverter::notifyLogHistoryDto);
+
+        return ApiResponse.onSuccess(notifyLogToDto);
+    }
+
+    @Override
     public ApiResponse<String> checkLog(Long logId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다."));
         ActivityLog activityLog = activityLogRepository.findById(logId).orElseThrow(() -> new IllegalArgumentException("활동 로그를 찾지 못했습니다."));
