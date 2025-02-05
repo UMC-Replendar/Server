@@ -10,10 +10,8 @@ import Umc.replendar.user.converter.UserConverter;
 import Umc.replendar.user.dto.req.UserDtoReq;
 import Umc.replendar.user.dto.res.KakaoUserInfoResponseDto;
 import Umc.replendar.user.dto.res.UserDtoRes;
-import Umc.replendar.user.entity.AcademicYear;
-import Umc.replendar.user.entity.School;
-import Umc.replendar.user.entity.Theme;
-import Umc.replendar.user.entity.User;
+import Umc.replendar.user.entity.*;
+import Umc.replendar.user.repository.MajorRepository;
 import Umc.replendar.user.repository.SchoolRepository;
 import Umc.replendar.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +35,7 @@ public class UserService {
 
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
-    private final SchoolRepository schoolRepository;
+    private final MajorRepository majorRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AssignmentRepository assignmentRepository;
@@ -182,23 +180,25 @@ public class UserService {
             throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
         }
 
-        // 학교 정보 저장 또는 조회
-        School school = schoolRepository.findBySchoolName(request.getSchoolName())
-                .orElseGet(() -> schoolRepository.save(new School(null, request.getSchoolName(), request.getMajor(), new ArrayList<>())));
+        // Major 조회
+        Major major = majorRepository.findById(request.getMajorId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 전공(Major)을 찾을 수 없습니다."));
 
-        // 사용자 정보 업데이트
+        // User 정보 업데이트
         user.setNickname(request.getNickname());
         user.setStatusMessage(request.getStatusMessage());
-        user.setSchool(school);
+        user.setMajor(major);
+
+        // 학년 (String → Enum 변환)
         AcademicYear academicYear = AcademicYear.fromValue(request.getAcademicYear());
         user.setAcademicYear(academicYear);
 
         // 프로필 이미지 업로드 (AWS S3)
         if (profileImage != null && !profileImage.isEmpty()) {
-            amazonS3Util.profileImageUpload(profileImage, userId);
+            amazonS3Util.profileImageUpload(profileImage, user.getId());
         }
 
-        userRepository.save(user); // 사용자 정보 저장
+        userRepository.save(user);
     }
     // 회원 탈퇴
     public void deleteUser(Long userId) {
