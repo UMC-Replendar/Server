@@ -42,10 +42,15 @@ public class User extends BaseEntity {
     private String statusMessage;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "varchar(50) default 'DEFAULT'")
+    @Column(nullable = false)
     private Theme theme;
 
-
+    @PrePersist
+    public void prePersist() {
+        if (this.theme == null) {
+            this.theme = Theme.DEFAULT;
+        }
+    }
 //    @Column
 //    private String password;
 

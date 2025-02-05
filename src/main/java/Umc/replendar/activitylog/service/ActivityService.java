@@ -16,4 +16,6 @@ public interface ActivityService {
     ApiResponse<String> checkLog(Long logId, Long userId);
 
     ApiResponse<String> checkNotifyLog(Long logId, Long userId);
+
+//    Page<ActivityLogRes.getHistoryRes> getActivityFriendLog(Long userId, Pageable adjustedPageable);
 }
