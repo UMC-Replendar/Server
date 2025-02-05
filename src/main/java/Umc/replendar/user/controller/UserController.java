@@ -72,5 +72,13 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "회원 탈퇴 API", description = "회원 탈퇴")
+    @DeleteMapping("/withdraw")
+    public ApiResponse<String> withdraw() {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        userService.deleteUser(userId);
+        return ApiResponse.onSuccess("회원 탈퇴가 완료되었습니다.");
+    }
+
 
 }
