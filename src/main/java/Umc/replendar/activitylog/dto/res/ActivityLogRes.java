@@ -29,6 +29,7 @@ public class ActivityLogRes {
         Long assId;
         String content;
         LocalDateTime createdAt;
+        String type;
     }
 
 //    @Data

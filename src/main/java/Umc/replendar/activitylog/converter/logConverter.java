@@ -38,6 +38,7 @@ public class logConverter {
                 .assId(activityLog.getAssignment().getId())
                 .content(content)
                 .createdAt(activityLog.getCreatedAt())
+                .type("과제")
                 .build();
     }
 
@@ -63,6 +64,7 @@ public class logConverter {
                 .assId(notifyLog.getAssNotifyCycle().getAssignment().getId())
                 .content(notifyLog.getAssNotifyCycle().getAssignment().getTitle() + "과제 마감까지" + content + "남았습니다.")
                 .createdAt(notifyLog.getCreatedAt())
+                .type("알림")
                 .build();
     }
 
@@ -87,6 +89,7 @@ public class logConverter {
                 .friendId(fr.getSender().getId())
                 .content(fr.getSender().getNickname()+"님이 친구 요청을 보냈습니다.")
                 .createdAt(fr.getCreatedAt())
+                .type("친구요청")
                 .build();
     }
 
