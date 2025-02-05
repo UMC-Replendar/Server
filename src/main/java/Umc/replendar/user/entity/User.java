@@ -72,7 +72,7 @@ public class User extends BaseEntity {
     private List<NotifyLog> notifyLogList = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "school_id")
-    private School school;
+    @JoinColumn(name = "major_id")
+    private Major major;
 
 }

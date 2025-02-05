@@ -14,15 +14,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class School {
-
+public class Major {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 30)
-    private String schoolName;
+    private String majorName;
 
-    @OneToMany(mappedBy = "school", cascade = CascadeType.REMOVE)
-    private List<Major> majorList = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "school_id")
+    private School school;
+
+    @OneToMany(mappedBy = "major", cascade = CascadeType.REMOVE)
+    private List<User> users = new ArrayList<>();
 }
