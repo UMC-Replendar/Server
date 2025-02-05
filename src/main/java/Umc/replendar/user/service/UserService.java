@@ -200,4 +200,11 @@ public class UserService {
 
         userRepository.save(user); // 사용자 정보 저장
     }
+    // 회원 탈퇴
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        userRepository.delete(user);
+    }
 }
