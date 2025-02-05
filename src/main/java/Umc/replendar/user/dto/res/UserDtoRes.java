@@ -27,4 +27,20 @@ public class UserDtoRes {
         private int ongoingTasks;
         private String profileImageUrl;
     }
+
+    @Data
+    @AllArgsConstructor
+    @Builder
+    public static class myPageRes {
+        private String nickname;
+        private String statusMessage;
+        private int friendCount;
+        private int ongoingTasks;
+        private String profileImageUrl;
+        int completed_TasksCount;
+        int store_TasksCount;
+        int not_completedTasksCount;
+        int important_taskCount;
+
+    }
 }

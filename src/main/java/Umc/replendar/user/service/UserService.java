@@ -12,7 +12,6 @@ import Umc.replendar.user.dto.res.KakaoUserInfoResponseDto;
 import Umc.replendar.user.dto.res.UserDtoRes;
 import Umc.replendar.user.entity.*;
 import Umc.replendar.user.repository.MajorRepository;
-import Umc.replendar.user.repository.SchoolRepository;
 import Umc.replendar.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
@@ -206,5 +205,32 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         userRepository.delete(user);
+    }
+
+    public UserDtoRes.myPageRes getMyProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        String profileImageUrl = amazonS3Util.getProfilePath(userId);
+
+        // 둘 다 데이터 개수가 30개 이하일 것으로 예상되어 단순 조회로 함
+        int friendCount = friendRepository.findAllByUserIdOrFriendId(userId, userId).size();
+        int ongoingTasks = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.ONGOING, Pageable.unpaged()).getContent().size();
+        int completedTasksCount = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.COMPLETED, Pageable.unpaged()).getContent().size();
+        int storeTasksCount = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.STORED, Pageable.unpaged()).getContent().size();
+        int notCompletedTasksCount = assignmentRepository.findAllByUserAndDueDateBeforeAndStatus(user, LocalDateTime.now() ,Status.ONGOING).size();
+        int importantTaskCount = assignmentRepository.findAllByUserAndFavoriteOrderByCreatedAtDesc(user, Active.ACTIVE, Pageable.unpaged()).getContent().size();
+
+        return UserDtoRes.myPageRes.builder()
+                .nickname(user.getNickname())
+                .statusMessage(user.getStatusMessage())
+                .friendCount(friendCount)
+                .ongoingTasks(ongoingTasks)
+                .profileImageUrl(profileImageUrl)
+                .completed_TasksCount(completedTasksCount)
+                .store_TasksCount(storeTasksCount)
+                .not_completedTasksCount(notCompletedTasksCount)
+                .important_taskCount(importantTaskCount)
+                .build();
     }
 }

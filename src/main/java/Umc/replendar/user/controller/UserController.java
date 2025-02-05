@@ -80,5 +80,11 @@ public class UserController {
         return ApiResponse.onSuccess("회원 탈퇴가 완료되었습니다.");
     }
 
+    @Operation(summary = "내 정보 조회 페이지 API", description = "내 정보 조회 페이지 API")
+    @GetMapping("/mypage")
+    public ApiResponse<UserDtoRes.myPageRes> myPage() {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return ApiResponse.onSuccess(userService.getMyProfile(userId));
+    }
 
 }
