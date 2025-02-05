@@ -44,6 +44,20 @@ public class ActivityController {
         return activityService.shareRejectLog(logId, userId);
     }
 
+    @Operation(summary = "과제 활동 로그 읽음 처리 API", description = "과제 활동 로그 읽음 처리 API")
+    @PatchMapping("/{logId}")
+    public ApiResponse<String> checkAssLog(@PathVariable Long logId) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return activityService.checkLog(logId, userId);
+    }
+
+    @Operation(summary = "과제 알림 로그 읽음 처리 API", description = "과제 알림 로그 읽음 처리 API")
+    @PatchMapping("/{logId}")
+    public ApiResponse<String> checkNotifyLog(@PathVariable Long logId) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return activityService.checkNotifyLog(logId, userId);
+    }
+
 
 
 

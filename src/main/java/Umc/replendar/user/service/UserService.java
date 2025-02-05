@@ -98,6 +98,7 @@ public class UserService {
                     User newUser = User.builder()
                             .email(userInfo.getKakaoAccount().getEmail())
                             .name(userInfo.getKakaoAccount().getProfile().getNickName())
+                            .theme(Theme.DEFAULT)
 //                            .type(Type.KAKAO)
                             .build();
                     userRepository.save(newUser);
