@@ -12,4 +12,8 @@ public interface ActivityService {
     ApiResponse<ActivityLogRes.shareActivity> shareRejectLog(Long logId, Long userId);
 
     Page<ActivityLogRes.getHistoryRes> getActivityLog(Long userId, Pageable pageable);
+
+    ApiResponse<String> checkLog(Long logId, Long userId);
+
+    ApiResponse<String> checkNotifyLog(Long logId, Long userId);
 }

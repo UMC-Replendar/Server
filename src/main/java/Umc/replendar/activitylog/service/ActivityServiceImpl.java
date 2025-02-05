@@ -124,4 +124,41 @@ public class ActivityServiceImpl implements ActivityService {
 
         return new PageImpl<>(pagedList, adjustedPageable, combinedList.size());
     }
+
+    @Override
+    public ApiResponse<String> checkLog(Long logId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다."));
+        ActivityLog activityLog = activityLogRepository.findById(logId).orElseThrow(() -> new IllegalArgumentException("활동 로그를 찾지 못했습니다."));
+
+        if(!user.equals(activityLog.getUser())){
+            return ApiResponse.onFailure("USER_NOT_MATCH","해당 활동 로그에 대한 권한이 없습니다.",null);
+        }
+
+        if(activityLog.getIsCheck().equals(Check.CHECK)){
+            return ApiResponse.onFailure("ALREADY_CHECKED","이미 읽은 활동 로그입니다.",null);
+        }
+
+        activityLog.setIsCheck(Check.CHECK);
+        activityLogRepository.save(activityLog);
+        return ApiResponse.onSuccess("활동 로그를 읽음 처리 하였습니다.");
+    }
+
+    @Override
+    public ApiResponse<String> checkNotifyLog(Long logId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다."));
+        NotifyLog notifyLog = notifyLogRepository.findById(logId).orElseThrow(() -> new IllegalArgumentException("활동 로그를 찾지 못했습니다."));
+
+        if(!user.equals(notifyLog.getUser())){
+            return ApiResponse.onFailure("USER_NOT_MATCH","해당 활동 로그에 대한 권한이 없습니다.",null);
+        }
+
+        if(notifyLog.getIsCheck().equals(Check.CHECK)){
+            return ApiResponse.onFailure("ALREADY_CHECKED","이미 읽은 활동 로그입니다.",null);
+        }
+
+        notifyLog.setIsCheck(Check.CHECK);
+        notifyLogRepository.save(notifyLog);
+        return ApiResponse.onSuccess("활동 로그를 읽음 처리 하였습니다.");
+    }
 }
+

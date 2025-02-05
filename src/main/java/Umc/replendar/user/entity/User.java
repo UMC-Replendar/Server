@@ -42,8 +42,8 @@ public class User extends BaseEntity {
     private String statusMessage;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Theme theme = Theme.DEFAULT;
+    @Column(nullable = false, columnDefinition = "varchar(50) default 'DEFAULT'")
+    private Theme theme;
 
 
 //    @Column
