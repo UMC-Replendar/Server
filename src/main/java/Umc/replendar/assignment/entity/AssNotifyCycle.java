@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -18,7 +20,7 @@ public class AssNotifyCycle {
     private Long id;
 
     @Column
-    private LocalDateTime notifyTime;
+    private LocalDateTime scheduledAt;
 
     @Enumerated(EnumType.STRING)
     private NotifyCycle notifyCycle;
@@ -26,4 +28,8 @@ public class AssNotifyCycle {
     @ManyToOne
     @JoinColumn(name = "assignment_id")
     private Assignment assignment;
+
+    @OneToMany(mappedBy = "assNotifyCycle" , cascade = CascadeType.ALL)
+    private List<NotifyLog> notifyLogList = new ArrayList<>();
+
 }
