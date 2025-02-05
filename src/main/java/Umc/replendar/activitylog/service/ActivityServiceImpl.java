@@ -125,6 +125,15 @@ public class ActivityServiceImpl implements ActivityService {
         return new PageImpl<>(pagedList, adjustedPageable, combinedList.size());
     }
 
+//    @Override
+//    public Page<ActivityLogRes.getHistoryRes> getActivityFriendLog(Long userId, Pageable adjustedPageable) {
+//        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다"));
+//
+//        Page<ActivityLog> activityLogs = activityLogRepository.findAllByUserOrderByCreatedAtDesc(user,adjustedPageable);
+//
+//        return activityLogs.map(logConverter::activityLogHistoryDto);
+//    }
+
     @Override
     public ApiResponse<String> checkLog(Long logId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다."));
