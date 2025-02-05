@@ -4,13 +4,17 @@ import Umc.replendar.assignment.entity.Status;
 import Umc.replendar.assignment.repository.AssignmentRepository;
 import Umc.replendar.common.security.JwtTokenProvider;
 import Umc.replendar.friend.repository.FriendRepository;
+import Umc.replendar.global.util.AmazonS3Util;
 import Umc.replendar.global.util.CookieUtil;
 import Umc.replendar.user.converter.UserConverter;
 import Umc.replendar.user.dto.req.UserDtoReq;
 import Umc.replendar.user.dto.res.KakaoUserInfoResponseDto;
 import Umc.replendar.user.dto.res.UserDtoRes;
+import Umc.replendar.user.entity.AcademicYear;
+import Umc.replendar.user.entity.School;
 import Umc.replendar.user.entity.Theme;
 import Umc.replendar.user.entity.User;
+import Umc.replendar.user.repository.SchoolRepository;
 import Umc.replendar.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,6 +25,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 @RequiredArgsConstructor
 @Service
@@ -29,10 +37,12 @@ public class UserService {
 
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
+    private final SchoolRepository schoolRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AssignmentRepository assignmentRepository;
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private final AmazonS3Util amazonS3Util;
 
 //    public User signup(UserDtoReq.SignUpReq signUpDto) {
 //
@@ -143,6 +153,8 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다."));
 
+        String profileImageUrl = amazonS3Util.getProfilePath(userId);
+        
         // 둘 다 데이터 개수가 30개 이하일 것으로 예상되어 단순 조회로 함
         int friendCount = friendRepository.findAllByUserIdOrFriendId(userId, userId).size();
         int ongoingTasks = assignmentRepository.findAllByUserAndStatusOrderByDueDate(user, Status.ONGOING, Pageable.unpaged()).getContent().size();
@@ -152,6 +164,39 @@ public class UserService {
                 .statusMessage(user.getStatusMessage())
                 .friendCount(friendCount)
                 .ongoingTasks(ongoingTasks)
+                .profileImageUrl(profileImageUrl)
                 .build();
+    }
+    // 닉네임 중복 확인
+    public boolean isNicknameDuplicate(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+    // 회원가입
+    public void signup(UserDtoReq.SignUpReq request, MultipartFile profileImage, Long userId) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자입니다."));
+
+        // 닉네임 중복 확인
+        if (userRepository.existsByNickname(request.getNickname())) {
+            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
+        }
+
+        // 학교 정보 저장 또는 조회
+        School school = schoolRepository.findBySchoolName(request.getSchoolName())
+                .orElseGet(() -> schoolRepository.save(new School(null, request.getSchoolName(), request.getMajor(), new ArrayList<>())));
+
+        // 사용자 정보 업데이트
+        user.setNickname(request.getNickname());
+        user.setStatusMessage(request.getStatusMessage());
+        user.setSchool(school);
+        AcademicYear academicYear = AcademicYear.fromValue(request.getAcademicYear());
+        user.setAcademicYear(academicYear);
+
+        // 프로필 이미지 업로드 (AWS S3)
+        if (profileImage != null && !profileImage.isEmpty()) {
+            amazonS3Util.profileImageUpload(profileImage, userId);
+        }
+
+        userRepository.save(user); // 사용자 정보 저장
     }
 }

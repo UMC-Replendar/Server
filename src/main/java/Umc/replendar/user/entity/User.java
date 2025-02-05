@@ -30,8 +30,6 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AcademicYear academicYear;
 
-    @Column(length = 20)
-    private String major;
 
     @Column(length = 100, unique = true)
     private String email;

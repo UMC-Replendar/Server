@@ -25,5 +25,6 @@ public class UserDtoRes {
         private String statusMessage;
         private int friendCount;
         private int ongoingTasks;
+        private String profileImageUrl;
     }
 }

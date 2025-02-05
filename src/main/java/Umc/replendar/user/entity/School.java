@@ -21,6 +21,9 @@ public class School {
     @Column(length = 30)
     private String schoolName;
 
+    @Column(length = 30)
+    private String major;
+
     @OneToMany(mappedBy = "school", cascade = CascadeType.REMOVE)
     private List<User> userList = new ArrayList<>();
 }

@@ -1,19 +1,18 @@
 package Umc.replendar.user.dto.req;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 public class UserDtoReq {
 
-    @Getter
-    @Builder
+    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SignUpReq {
-        String email;
-        String password;
+        private String nickname;          // 닉네임
+        private String statusMessage;     // 상태 메시지 (선택 사항)
+        private String schoolName;        // 학교 이름
+        private String major;             // 학과
+        private int academicYear;      // 학년
     }
 
     @Getter
