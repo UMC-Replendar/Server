@@ -35,5 +35,8 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 
     Page<Assignment> findAllByUserAndDueDateBeforeAndStatus(User user, LocalDateTime now, Status status, Pageable pageable);
 
+    // 현재시간이 목표시간을 지났다면 조회하기(미완료한 과제)
+    List<Assignment> findAllByUserAndDueDateBeforeAndStatus(User user, LocalDateTime now, Status status);
 
+    Page<Assignment> findAllByUserAndFavoriteOrderByCreatedAtDesc(User user, Active favorite, Pageable pageable);
 }

@@ -30,14 +30,24 @@ public class ActivityController {
         return activityService.getActivityLog(userId, adjustedPageable);
     }
 
-//    @Operation(summary = "히스토리 필터 - 친구소식 조회 API", description = "히스토리 필터 - 친구소식 조회 API")
-//    @GetMapping("/friend")
-//    public Page<ActivityLogRes.getHistoryRes> getActivityFriendLog(@RequestParam(defaultValue = "1") int page,
-//                                                             @PageableDefault(size = 10) Pageable pageable) {
-//        Long userId = jwtTokenProvider.getUserIdFromToken();
-//        Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());
-//        return activityService.getActivityFriendLog(userId, adjustedPageable);
-//    }
+    @Operation(summary = "히스토리 필터 - 친구소식 조회 API", description = "히스토리 필터 - 친구소식 조회 API")
+    @GetMapping("/friend")
+    public ApiResponse<Page<ActivityLogRes.getHistoryRes>> getActivityFriendLog(@RequestParam(defaultValue = "1") int page,
+                                                             @PageableDefault(size = 10) Pageable pageable) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());
+        return activityService.getActivityFriendLog(userId, adjustedPageable);
+    }
+
+    @Operation(summary = "히스토리 필터 - 과제알림 API", description = "히스토리 필터 - 과제알림 조회 API")
+    @GetMapping("/assignment/notify")
+    public ApiResponse<Page<ActivityLogRes.getHistoryRes>> getActivityAssignmentNotify(@RequestParam(defaultValue = "1") int page,
+                                                                      @PageableDefault(size = 10) Pageable pageable) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());
+        return activityService.getActivityAssignmentNotifyLog(userId, adjustedPageable);
+    }
+
 
     @Operation(summary = "과제 활동 로그 공유 수락 응답 API", description = "과제 활동 로그 공유 수락 응답 API")
     @PatchMapping("/share/accept/{logId}")
