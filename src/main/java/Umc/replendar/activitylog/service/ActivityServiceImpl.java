@@ -130,7 +130,27 @@ public class ActivityServiceImpl implements ActivityService {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다"));
 
         Page<ActivityLog> activityLogs = activityLogRepository.findAllByUserOrderByCreatedAtDesc(user,adjustedPageable);
-        Page<ActivityLogRes.getHistoryRes> activityLogToDto = activityLogs.map(logConverter::activityLogHistoryDto);
+
+        List<Assignment> userAssignments = assignmentRepository.findAllByUser(user);
+
+        Page<ActivityLogRes.getHistoryRes> activityLogToDto = activityLogs.map(log -> {
+            // 등록 여부 확인 (originAssId와 비교)
+            boolean isRegistered = userAssignments.stream()
+                    .anyMatch(assignment -> assignment.getOriginAssId() != null &&
+                            assignment.getOriginAssId().equals(log.getAssignment().getId()));
+
+            return ActivityLogRes.getHistoryRes.builder()
+                    .date(log.getCreatedAt().toLocalDate().toString())
+                    .time(log.getCreatedAt().toLocalTime().toString())
+                    .check(log.getIsCheck())
+                    .friendId(log.getFriend().getId())
+                    .assId(log.getAssignment().getId())
+                    .content(logConverter.activityLogHistoryDto(log).getContent())
+                    .createdAt(log.getCreatedAt())
+                    .type("과제")
+                    .isRegistered(isRegistered)  // 등록 여부 추가
+                    .build();
+        });
 
         return ApiResponse.onSuccess(activityLogToDto);
     }
