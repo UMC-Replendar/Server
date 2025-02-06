@@ -28,6 +28,8 @@ public class AssignmentReq {
         List<Long> shareIds;
         String memo;
         Active favorite;
+
+        Long originAssId;
     }
 
     @Getter

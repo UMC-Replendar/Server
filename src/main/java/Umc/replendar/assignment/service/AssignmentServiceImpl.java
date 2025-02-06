@@ -54,6 +54,14 @@ public class AssignmentServiceImpl implements AssignmentService {
         //본인 과제 등록
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
+        // 이미 등록된 과제인지 확인 (originAssId가 있을 경우)
+        if (reqDto.getOriginAssId() != null) {
+            boolean exists = assignmentRepository.existsByUserAndOriginAssId(user, reqDto.getOriginAssId());
+            if (exists) {
+                return ApiResponse.onFailure("ALREADY_REGISTERED", "이미 등록된 과제입니다.", null);
+            }
+        }
+
         Assignment assignment = Assignment.builder() //과제등록
                 .user(user)
                 .title(reqDto.getTitle())
@@ -63,6 +71,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .memo(reqDto.getMemo())
                 .status(Status.ONGOING)
                 .favorite(reqDto.getFavorite())
+                .originAssId(reqDto.getOriginAssId())
                 .build();
         assignmentRepository.save(assignment);
 

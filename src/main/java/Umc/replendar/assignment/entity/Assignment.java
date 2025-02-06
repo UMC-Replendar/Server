@@ -21,7 +21,7 @@ import java.util.List;
 public class Assignment extends BaseEntity {
 
     @Builder
-    public Assignment(String title, GeneralSettings visibility, Status status,  String memo, LocalDateTime due_date, LocalDateTime completion_time, List<ActivityLog> activityLogList, User user, GeneralSettings notification, Active favorite) {
+    public Assignment(String title, GeneralSettings visibility, Status status,  String memo, LocalDateTime due_date, LocalDateTime completion_time, List<ActivityLog> activityLogList, User user, GeneralSettings notification, Active favorite, Long originAssId) {
 
         this.user = user;
         this.title = title;
@@ -33,12 +33,15 @@ public class Assignment extends BaseEntity {
         this.completionTime = completion_time;
         this.activityLogList = activityLogList;
         this.favorite = favorite;
-
+        this.originAssId = originAssId;
     }
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "origin_ass_id", nullable = true)
+    private Long originAssId;  // 원본 과제 ID
 
     @Column(length = 35)
     private String title;

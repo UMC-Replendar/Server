@@ -30,6 +30,7 @@ public class ActivityLogRes {
         String content;
         LocalDateTime createdAt;
         String type;
+        private boolean isRegistered;
     }
 
 //    @Data

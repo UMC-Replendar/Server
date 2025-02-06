@@ -39,4 +39,8 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     List<Assignment> findAllByUserAndDueDateBeforeAndStatus(User user, LocalDateTime now, Status status);
 
     Page<Assignment> findAllByUserAndFavoriteOrderByCreatedAtDesc(User user, Active favorite, Pageable pageable);
+
+    boolean existsByUserAndOriginAssId(User user, Long originAssId);
+
+    List<Assignment> findAllByUser(User user);
 }
