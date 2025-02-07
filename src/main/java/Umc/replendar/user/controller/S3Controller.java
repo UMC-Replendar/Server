@@ -21,16 +21,16 @@ public class S3Controller {
     private final AmazonS3Util amazonS3Util;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping(value = "/upload/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<List<String>> createProfileImage(@PathVariable("id") Long id, @RequestPart(required = false) MultipartFile[] files) throws IOException {
-        List<String> uploadedUrls = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            uploadedUrls.add(amazonS3Util.profileImageUpload(file, id));
-        }
-
-        return ApiResponse.onSuccess(uploadedUrls);
-    }
+//    @PostMapping(value = "/upload/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ApiResponse<List<String>> createProfileImage(@PathVariable("id") Long id, @RequestPart(required = false) MultipartFile[] files) throws IOException {
+//        List<String> uploadedUrls = new ArrayList<>();
+//
+//        for (MultipartFile file : files) {
+//            uploadedUrls.add(amazonS3Util.profileImageUpload(file, id));
+//        }
+//
+//        return ApiResponse.onSuccess(uploadedUrls);
+//    }
     @Operation(summary = "프로필 이미지 변경 API", description = "프로필 이미지를 변경 합니다.")
     @PostMapping(value = "/update-profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<String> updateProfileImage(@RequestPart("profileImage") MultipartFile profileImage) throws IOException {

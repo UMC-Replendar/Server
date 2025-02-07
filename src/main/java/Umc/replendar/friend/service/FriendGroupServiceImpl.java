@@ -112,6 +112,7 @@ public class FriendGroupServiceImpl implements FriendGroupService {
         List<FriendRes.FriendGroupListRes> response = FriToDto.toFriendGroupListRes(friendGroups, userId, assignmentRepository);
         return ApiResponse.onSuccess(response);
     }
+    //그룹에 포함 X인 친구 조회
     @Override
     public ApiResponse<List<FriendRes.FriendListRes>> getFriendsNotInGroup(Long userId, Long groupId) {
         // 현재 사용자의 모든 친구 조회
