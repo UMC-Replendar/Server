@@ -1,9 +1,11 @@
-package Umc.replendar.user.controller;
+package Umc.replendar.major.controller;
 
 import Umc.replendar.apiPayload.ApiResponse;
+import Umc.replendar.common.security.JwtTokenProvider;
+import Umc.replendar.major.dto.res.LectureAssignmentRes;
+import Umc.replendar.major.service.MajorService;
 import Umc.replendar.user.dto.req.MajorDtoReq;
 import Umc.replendar.user.dto.res.MajorDtoRes;
-import Umc.replendar.user.service.MajorService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/majors")
+@RequestMapping("/api/major")
 @RequiredArgsConstructor
-public class MajorController {
+public class majorController {
 
+    private final JwtTokenProvider jwtTokenProvider;
     private final MajorService majorService;
 
     @Operation(summary = "학과 검색 API", description = "특정 schoolId 내에서 학과(keyword) 검색")
@@ -34,5 +37,14 @@ public class MajorController {
     ) {
         MajorDtoRes.MajorSimpleRes response = majorService.createMajor(request);
         return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "본인 학과의 학년별 과제 조회 API", description = "특정 학년에 대한 본인 학과의 과제 조회")
+    @GetMapping({"/lectures", "/lectures/{academicYear}"})
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectures(
+            @PathVariable(required = false) Long academicYear) {
+        long id = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.getLectureAssignment(id, academicYear);
     }
 }

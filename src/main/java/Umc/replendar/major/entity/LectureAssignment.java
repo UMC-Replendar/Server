@@ -1,8 +1,10 @@
 package Umc.replendar.major.entity;
 
+import Umc.replendar.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "lecture_assignment")
-public class LectureAssignment {
+public class LectureAssignment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -27,7 +29,7 @@ public class LectureAssignment {
     private String content;
 
     @Column
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
 
     @ManyToOne
     @JoinColumn(name = "lecture_id")

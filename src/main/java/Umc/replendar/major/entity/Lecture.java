@@ -27,8 +27,9 @@ public class Lecture extends BaseEntity {
     @Column(length = 50)
     private String professor;
 
-    @Column(length = 50)
-    private AcademicYear gradle;
+    @Enumerated(EnumType.STRING)
+    @Column
+    private AcademicYear academicYear;
 
     @ManyToOne
     @JoinColumn(name = "major_id")
