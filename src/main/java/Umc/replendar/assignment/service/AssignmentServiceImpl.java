@@ -15,6 +15,10 @@ import Umc.replendar.assignment.repository.AssignmentRepository;
 import Umc.replendar.assignment.repository.ShareRepository;
 import Umc.replendar.friend.repository.FriendRepository;
 import Umc.replendar.global.function.TaskTimer;
+import Umc.replendar.major.entity.LectureAssignment;
+import Umc.replendar.major.entity.UserLectureAssignment;
+import Umc.replendar.major.repository.LectureAssignmentRepository;
+import Umc.replendar.major.repository.UserLectureAssignmentRepository;
 import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
@@ -42,6 +46,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final FriendRepository friendRepository;
     private final AssNotifyCycleRepository assNotifyCycleRepository;
     private final ShareRepository shareRepository;
+    private final LectureAssignmentRepository lectureAssignmentRepository;
+    private final UserLectureAssignmentRepository userLectureAssignmentRepository;
 
     //과제추가 API
     //과제를 추가하면 친구들에게 알림이 가게 구현해야함
@@ -74,6 +80,19 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .originAssId(reqDto.getOriginAssId())
                 .build();
         assignmentRepository.save(assignment);
+
+        //학과 과제 여부 확인하기
+        if(reqDto.getLectureAssignmentId() != null){
+            LectureAssignment lectureAssignment = lectureAssignmentRepository.findById(reqDto.getLectureAssignmentId())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 강의 과제입니다."));
+            UserLectureAssignment userLectureAssignment = UserLectureAssignment.builder()
+                    .user(user)
+                    .lectureAssignment(lectureAssignment)
+                    .assignment(assignment)
+                    .build();
+
+            userLectureAssignmentRepository.save(userLectureAssignment);
+        }
 
         //완료시간에서 알림주기를 계산한 후
         //과제 알림 주기 테이블에 시간과 알림주기를 저장
