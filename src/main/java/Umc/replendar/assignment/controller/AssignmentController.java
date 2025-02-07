@@ -143,9 +143,11 @@ public class AssignmentController {
         return assignmentService.getStoreAssignment(userId,adjustedPageable, Status.UNFINISHED);
     }
 
-
-
-
-
+    //친구 캘린더 조회 api (공개 과제 중 진행 중인 과제 조회)
+    @Operation(summary = "친구의 공개 진행중 과제 조회 API", description = "친구 ID를 통해 공개된 진행중인 과제를 조회합니다.")
+    @GetMapping("/friend/{friendId}/public-assignments")
+    public ApiResponse<List<AssignmentRes.assMonthRes>> getFriendPublicAssignments(@PathVariable Long friendId) {
+        return assignmentService.getFriendPublicAssignments(friendId);
+    }
 
 }

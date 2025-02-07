@@ -410,4 +410,16 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .toList();
     }
 
+    @Override
+    public ApiResponse<List<AssignmentRes.assMonthRes>> getFriendPublicAssignments(Long friendId) {
+        User friend = userRepository.findById(friendId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        List<Assignment> publicAssignments = assignmentRepository.findByUserIdAndVisibilityAndStatus(
+                friendId, GeneralSettings.ON, Status.ONGOING
+        );
+
+        return ApiResponse.onSuccess(AssToDto.toMonthDto(publicAssignments));
+    }
+
 }

@@ -35,4 +35,6 @@ public interface AssignmentService {
     ApiResponse<Page<AssignmentRes.assCompleteRes>> getStoreAssignment(Long userId, Pageable adjustedPageable, Status status);
 
     ApiResponse<Page<AssignmentRes.assCompleteRes>> getCompleteAssignment(Long userId, Pageable adjustedPageable);
+
+    ApiResponse<List<AssignmentRes.assMonthRes>> getFriendPublicAssignments(Long friendId);
 }
