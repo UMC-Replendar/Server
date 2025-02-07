@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 public class LectureAssignmentRes {
 
     @Builder
@@ -20,6 +23,20 @@ public class LectureAssignmentRes {
         private String created_date;
         private String due_date;
         private Check check;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class LectureAssignmentPostRes {
+        private Long LectureAssignmentId;
+        private String title;
+        private String lectureName;
+        private String professor;
+        private AcademicYear academicYear;
+        private String due_date;
+        private String due_time;
+        private String content;
     }
 
 }

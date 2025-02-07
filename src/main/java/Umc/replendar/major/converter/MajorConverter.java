@@ -20,4 +20,17 @@ public class MajorConverter {
                 .build();
 
     }
+
+    public static LectureAssignmentRes.LectureAssignmentPostRes toLectureAssignmentPostRes(LectureAssignment lectureAssignment) {
+        return LectureAssignmentRes.LectureAssignmentPostRes.builder()
+                .LectureAssignmentId(lectureAssignment.getId())
+                .title(lectureAssignment.getTitle())
+                .professor(lectureAssignment.getLecture().getProfessor())
+                .lectureName(lectureAssignment.getLecture().getLectureName())
+                .academicYear(lectureAssignment.getLecture().getAcademicYear())
+                .due_date(lectureAssignment.getDueDate().toString())
+                .due_time("23:55")
+                .content(lectureAssignment.getContent())
+                .build();
+    }
 }

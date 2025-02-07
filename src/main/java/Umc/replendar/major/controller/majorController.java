@@ -47,4 +47,13 @@ public class majorController {
 
         return majorService.getLectureAssignment(id, academicYear);
     }
+
+    @Operation(summary = "학과 과제 생성에 필요한 데이터 조회 API", description = "학과 과제 생성에 필요한 데이터 조회")
+    @GetMapping("/lectures/get/{lectureAssignmentId}")
+    public ApiResponse<LectureAssignmentRes.LectureAssignmentPostRes> getLectureCreateData(@PathVariable Long lectureAssignmentId) {
+        long userId = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.getLectureCreateData(userId, lectureAssignmentId);
+    }
+
 }

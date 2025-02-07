@@ -96,23 +96,18 @@ public class MajorServiceImpl implements MajorService {
                 .toList());
     }
 
+    @Override
+    public ApiResponse<LectureAssignmentRes.LectureAssignmentPostRes> getLectureCreateData(long userId, Long lectureAssignmentId) {
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
 
+        LectureAssignment lectureAssignment = lectureAssignmentRepository.findById(lectureAssignmentId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 강좌 과제 ID입니다."));
 
+        return ApiResponse.onSuccess(MajorConverter.toLectureAssignmentPostRes(lectureAssignment));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 }
