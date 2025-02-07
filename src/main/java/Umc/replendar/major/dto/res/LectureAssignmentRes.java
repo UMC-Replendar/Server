@@ -39,4 +39,14 @@ public class LectureAssignmentRes {
         private String content;
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class LecturesRes {
+        private Long LectureId;
+        private String lectureName;
+        private String professor;
+        private AcademicYear academicYear;
+    }
+
 }

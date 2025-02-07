@@ -2,6 +2,7 @@ package Umc.replendar.major.converter;
 
 import Umc.replendar.activitylog.entity.Check;
 import Umc.replendar.major.dto.res.LectureAssignmentRes;
+import Umc.replendar.major.entity.Lecture;
 import Umc.replendar.major.entity.LectureAssignment;
 
 import java.time.format.DateTimeFormatter;
@@ -31,6 +32,15 @@ public class MajorConverter {
                 .due_date(lectureAssignment.getDueDate().toString())
                 .due_time("23:55")
                 .content(lectureAssignment.getContent())
+                .build();
+    }
+
+    public static LectureAssignmentRes.LecturesRes toLecturesRes(Lecture lecture) {
+        return LectureAssignmentRes.LecturesRes.builder()
+                .LectureId(lecture.getId())
+                .lectureName(lecture.getLectureName())
+                .professor(lecture.getProfessor())
+                .academicYear(lecture.getAcademicYear())
                 .build();
     }
 }

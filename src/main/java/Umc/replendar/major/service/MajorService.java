@@ -15,4 +15,6 @@ public interface MajorService {
     ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignment(long id, Long academicYear);
 
     ApiResponse<LectureAssignmentRes.LectureAssignmentPostRes> getLectureCreateData(long userId, Long lectureAssignmentId);
+
+    ApiResponse<List<LectureAssignmentRes.LecturesRes>> getLectures(long userId, Long academicYear);
 }

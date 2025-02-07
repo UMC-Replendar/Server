@@ -56,4 +56,13 @@ public class majorController {
         return majorService.getLectureCreateData(userId, lectureAssignmentId);
     }
 
+    @Operation(summary = "강좌 목록 조회 API", description = "강좌 목록 조회")
+    @GetMapping({"/lectures/list", "/lectures/list/{academicYear}"})
+    public ApiResponse<List<LectureAssignmentRes.LecturesRes>> getLecture(
+            @PathVariable(required = false) Long academicYear) {
+        long userId = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.getLectures(userId, academicYear);
+    }
+
 }
