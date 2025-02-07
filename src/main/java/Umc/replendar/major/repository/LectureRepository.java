@@ -13,4 +13,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
 
 
     List<Lecture> findAllByMajorIdAndAcademicYear(Long major_id, AcademicYear academicYear);
+
+    List<Lecture> findAllByMajorId(Long id);
 }

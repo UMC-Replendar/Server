@@ -4,8 +4,12 @@ import Umc.replendar.activitylog.entity.Check;
 import Umc.replendar.major.dto.res.LectureAssignmentRes;
 import Umc.replendar.major.entity.Lecture;
 import Umc.replendar.major.entity.LectureAssignment;
+import Umc.replendar.major.entity.UserLectureAssignment;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public class MajorConverter {
     public static LectureAssignmentRes.LectureAssignmentGetRes toLectureAssignmentGetRes(LectureAssignment lectureAssignment, boolean check) {
@@ -43,4 +47,42 @@ public class MajorConverter {
                 .academicYear(lecture.getAcademicYear())
                 .build();
     }
+
+    public static LectureAssignmentRes.LectureNewsRes toLectureNewsRes(UserLectureAssignment userLectureAssignment, List<Long> lectureAssignmentIds) {
+        Check check;
+        if (lectureAssignmentIds.contains(userLectureAssignment.getLectureAssignment().getId())) {
+            check = Check.CHECK;
+        } else {
+            check = Check.UNCHECK;
+        }
+
+        String time = formatTimeAgo(userLectureAssignment.getCreatedAt());
+
+        return LectureAssignmentRes.LectureNewsRes.builder()
+                .friendId(userLectureAssignment.getUser().getId())
+                .assignmentId(userLectureAssignment.getAssignment().getId())
+                .lectureAssignmentId(userLectureAssignment.getLectureAssignment().getId())
+                .time(time)
+                .nickname(userLectureAssignment.getUser().getNickname())
+                .title(userLectureAssignment.getLectureAssignment().getTitle())
+                .check(check)
+                .build();
+    }
+
+    // Helper 메서드: "1시간 전", "2일 전" 등으로 변환
+    private static String formatTimeAgo(LocalDateTime createdAt) {
+        LocalDateTime now = LocalDateTime.now();
+        long minutes = ChronoUnit.MINUTES.between(createdAt, now);
+        long hours = ChronoUnit.HOURS.between(createdAt, now);
+        long days = ChronoUnit.DAYS.between(createdAt, now);
+
+        if (minutes < 60) {
+            return minutes + "분 전";
+        } else if (hours < 24) {
+            return hours + "시간 전";
+        } else {
+            return days + "일 전";
+        }
+    }
+
 }

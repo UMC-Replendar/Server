@@ -8,6 +8,10 @@ import Umc.replendar.user.dto.req.MajorDtoReq;
 import Umc.replendar.user.dto.res.MajorDtoRes;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,5 +68,16 @@ public class majorController {
 
         return majorService.getLectures(userId, academicYear);
     }
+
+    @Operation(summary = "학과 소식 조회 API", description = "학과 소식 조회")
+    @GetMapping("/lectures/news")
+    public ApiResponse<Page<LectureAssignmentRes.LectureNewsRes>> getLectureNews(@RequestParam(defaultValue = "1") int page,
+                                                                                 @PageableDefault(size = 10) Pageable pageable) {
+        long userId = jwtTokenProvider.getUserIdFromToken();
+        Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());
+
+        return majorService.getLectureNews(userId,adjustedPageable);
+    }
+
 
 }

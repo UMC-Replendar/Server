@@ -16,6 +16,8 @@ import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -134,5 +136,32 @@ public class MajorServiceImpl implements MajorService {
         return ApiResponse.onSuccess(lectures.stream()
                 .map(MajorConverter::toLecturesRes)
                 .toList());
+    }
+
+    //학과 조회후 학과에 대한 강좌를 조회하고
+    //강좌에 대한 과제를 조회하고
+    //userLectureAssignment가 강좌에 대한 과제가 맞다면 가져오기
+    //MajorConverter를 이용하여 LectureAssignmentGetRes로 변환하여 반환
+    @Override
+    public ApiResponse<Page<LectureAssignmentRes.LectureNewsRes>> getLectureNews(long userId, Pageable adjustedPageable) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
+
+        List<Long> lectureIds = lectureRepository.findAllByMajorId(user.getMajor().getId()).stream().map(Lecture::getId).toList();
+
+        List<Long> lectureAssignmentIds = lectureAssignmentRepository.findAllByLectureIdInOrderByCreatedAtDesc(lectureIds).stream().map(LectureAssignment::getId).toList();
+
+        Page<UserLectureAssignment> userLectureAssignments = userLectureAssignmentRepository.findAllByLectureAssignmentIdInAndUserIdNotOrderByCreatedAtDesc(
+                lectureAssignmentIds,
+                user.getId(),
+                adjustedPageable
+        );
+
+        //유저가 들은 강좌 과제 ID
+        List<Long> userLecAssId = userLectureAssignmentRepository.findAllByUserId(user.getId()).stream().map(UserLectureAssignment::getLectureAssignment).toList().stream().map(LectureAssignment::getId).toList();
+
+        Page<LectureAssignmentRes.LectureNewsRes> lectureNewsRes = userLectureAssignments.map(userLectureAssignment -> MajorConverter.toLectureNewsRes(userLectureAssignment, userLecAssId ));
+
+        return ApiResponse.onSuccess(lectureNewsRes);
     }
 }

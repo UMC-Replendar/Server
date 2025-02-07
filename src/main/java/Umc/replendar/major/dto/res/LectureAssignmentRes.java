@@ -49,4 +49,17 @@ public class LectureAssignmentRes {
         private AcademicYear academicYear;
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class LectureNewsRes {
+        private Long friendId;
+        private Long assignmentId;
+        private Long lectureAssignmentId;
+        private String time;
+        private String nickname;
+        private String title;
+        private Check check;
+    }
+
 }
