@@ -86,7 +86,7 @@ public class AssToDto {
         //UserId가 친구 Id일경우
         if(isFriend){
             return AssignmentRes.assShareRes.builder()
-                    .userId(friendship.getUser().getId())
+                    .friendId(friendship.getUser().getId())
                     .nickName(friendship.getUser().getNickname())
                     .name(friendship.getUser().getName())
                     .friendNote(friendship.getFriendNote())
@@ -95,7 +95,7 @@ public class AssToDto {
 
         //friendId가 친구 id일경우
         return AssignmentRes.assShareRes.builder()
-                .userId(friendship.getFriend().getId())
+                .friendId(friendship.getFriend().getId())
                 .nickName(friendship.getFriend().getNickname())
                 .name(friendship.getFriend().getName())
                 .friendNote(friendship.getUserNote())
