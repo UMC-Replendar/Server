@@ -53,6 +53,7 @@ public class AmazonS3Util {
             String existingKey = profilePath + "/" + existingProfileImage.getUuid() + "_" + existingProfileImage.getOriginalFilename();
             amazonS3Client.deleteObject(bucket, existingKey);  // S3에서 삭제
             profileImageRepository.delete(existingProfileImage);  // DB에서 삭제
+            profileImageRepository.flush();//즉시 DB에 반영
         }
 
         // 새 이미지 업로드

@@ -21,7 +21,8 @@ public class FriendRes {
         private String nickname;     // 친구 닉네임
         private String name;         // 친구 이름
         private int ongoingAssignments; // 진행 중인 과제 개수
-        private Buddy buddyStatus;
+        private Buddy buddyStatus; //친한 친구 설정 상태
+        private String friendNote;
     }
 
     @Data
