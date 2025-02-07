@@ -2,6 +2,7 @@ package Umc.replendar.assignment.entity;
 
 import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.global.BaseEntity;
+import Umc.replendar.major.entity.UserLectureAssignment;
 import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
@@ -68,13 +69,8 @@ public class Assignment extends BaseEntity {
     private LocalDateTime completionTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 15, nullable = false)
+    @Column
     private Active favorite;
-
-    @PrePersist
-    public void prePersist() {
-        this.favorite = Active.INACTIVE;
-    }
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE)
     private List<ActivityLog> activityLogList = new ArrayList<>();
@@ -88,6 +84,9 @@ public class Assignment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToOne(mappedBy = "assignment", cascade = CascadeType.REMOVE)
+    private UserLectureAssignment userLectureAssignment;
 
     public GeneralSettings setNotification(String reqNotification) {
         switch (reqNotification) {

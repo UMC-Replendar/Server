@@ -6,12 +6,13 @@ import Umc.replendar.common.security.JwtTokenProvider;
 import Umc.replendar.friend.repository.FriendRepository;
 import Umc.replendar.global.util.AmazonS3Util;
 import Umc.replendar.global.util.CookieUtil;
+import Umc.replendar.major.entity.Major;
 import Umc.replendar.user.converter.UserConverter;
 import Umc.replendar.user.dto.req.UserDtoReq;
 import Umc.replendar.user.dto.res.KakaoUserInfoResponseDto;
 import Umc.replendar.user.dto.res.UserDtoRes;
 import Umc.replendar.user.entity.*;
-import Umc.replendar.user.repository.MajorRepository;
+import Umc.replendar.major.repository.MajorRepository;
 import Umc.replendar.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -232,5 +233,14 @@ public class UserService {
                 .not_completedTasksCount(notCompletedTasksCount)
                 .important_taskCount(importantTaskCount)
                 .build();
+    }
+
+    public void logout(HttpServletRequest request, HttpServletResponse response, String accessToken) {
+        Long userId = jwtTokenProvider.getUserIdInToken(accessToken);
+        System.out.println("userId : " +userId);
+
+//        Long expiration = jwtTokenProvider.expireToken(accessToken);
+        // Cookie 에 있는 RefreshToken 의 데이터를 value 0, 만료 0 으로 초기화
+        CookieUtil.addCookie(response, "refreshToken", null, 0);
     }
 }

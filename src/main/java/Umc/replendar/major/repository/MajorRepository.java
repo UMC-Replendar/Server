@@ -1,8 +1,7 @@
-package Umc.replendar.user.repository;
+package Umc.replendar.major.repository;
 
 
-import Umc.replendar.user.entity.Major;
-import Umc.replendar.user.entity.School;
+import Umc.replendar.major.entity.Major;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

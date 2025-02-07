@@ -1,6 +1,6 @@
 package Umc.replendar.user.dto.res;
 
-import Umc.replendar.user.entity.School;
+import Umc.replendar.major.entity.School;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

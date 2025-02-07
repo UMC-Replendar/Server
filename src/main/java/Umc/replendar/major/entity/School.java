@@ -1,4 +1,4 @@
-package Umc.replendar.user.entity;
+package Umc.replendar.major.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,18 +14,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Major {
+public class School {
+
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 30)
-    private String majorName;
+    private String schoolName;
 
-    @ManyToOne
-    @JoinColumn(name = "school_id")
-    private School school;
-
-    @OneToMany(mappedBy = "major", cascade = CascadeType.REMOVE)
-    private List<User> users = new ArrayList<>();
+    @OneToMany(mappedBy = "school", cascade = CascadeType.REMOVE)
+    private List<Major> majorList = new ArrayList<>();
 }
