@@ -43,4 +43,5 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     boolean existsByUserAndOriginAssId(User user, Long originAssId);
 
     List<Assignment> findAllByUser(User user);
+    List<Assignment> findByUserIdAndVisibilityAndStatus(Long friendId, GeneralSettings visibility, Status status);
 }
