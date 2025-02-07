@@ -17,7 +17,6 @@ public class AssignmentReq {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CreateReqDto{
-        Long userId;
         String title;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
         LocalDateTime endDate;
@@ -30,6 +29,7 @@ public class AssignmentReq {
         Active favorite;
 
         Long originAssId;
+        Long lectureAssignmentId;
     }
 
     @Getter

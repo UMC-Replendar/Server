@@ -1,6 +1,6 @@
 package Umc.replendar.user.dto.res;
 
-import Umc.replendar.user.entity.Major;
+import Umc.replendar.major.entity.Major;
 import lombok.*;
 
 public class MajorDtoRes {

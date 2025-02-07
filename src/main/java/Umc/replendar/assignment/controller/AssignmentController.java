@@ -30,7 +30,6 @@ public class AssignmentController {
     @PostMapping("")
     public ApiResponse<String> createAssignment(@RequestBody AssignmentReq.CreateReqDto reqDto){
         Long userId = jwtTokenProvider.getUserIdFromToken();
-        System.out.println(reqDto.getUserId());
         return assignmentService.createAssignment(userId,reqDto);
     }
 
@@ -81,7 +80,6 @@ public class AssignmentController {
     @Operation(summary = "과제 보관할 때 API",description = "과제 보관할 때 API")
     @PostMapping("/store")
     public ApiResponse<String> storeAssignment(@RequestBody AssignmentReq.CreateReqDto reqDto){
-        System.out.println(reqDto.getUserId());
         Long userId = jwtTokenProvider.getUserIdFromToken();
         return assignmentService.storeAssignment(reqDto,userId);
     }

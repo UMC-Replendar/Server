@@ -3,8 +3,8 @@ package Umc.replendar.user.service;
 
 import Umc.replendar.user.dto.req.SchoolDtoReq;
 import Umc.replendar.user.dto.res.SchoolDtoRes;
-import Umc.replendar.user.entity.School;
-import Umc.replendar.user.repository.SchoolRepository;
+import Umc.replendar.major.entity.School;
+import Umc.replendar.major.repository.SchoolRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

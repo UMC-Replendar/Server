@@ -5,6 +5,8 @@ import Umc.replendar.assignment.entity.NotifyLog;
 import Umc.replendar.assignment.entity.Share;
 import Umc.replendar.friend.entity.friendship;
 import Umc.replendar.global.BaseEntity;
+import Umc.replendar.major.entity.Major;
+import Umc.replendar.major.entity.UserLectureAssignment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -75,6 +77,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<NotifyLog> notifyLogList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<UserLectureAssignment> lectureAssignmentList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "major_id")
