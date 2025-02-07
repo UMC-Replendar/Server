@@ -69,13 +69,8 @@ public class Assignment extends BaseEntity {
     private LocalDateTime completionTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 15, nullable = false)
+    @Column
     private Active favorite;
-
-    @PrePersist
-    public void prePersist() {
-        this.favorite = Active.INACTIVE;
-    }
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE)
     private List<ActivityLog> activityLogList = new ArrayList<>();

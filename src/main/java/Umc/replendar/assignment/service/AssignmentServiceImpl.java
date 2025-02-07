@@ -148,6 +148,19 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .build();
             assignmentRepository.save(frAssignment);
 
+            //학과 과제일 경우 학과 과제로도 등록
+            if(reqDto.getLectureAssignmentId() != null){
+                LectureAssignment lectureAssignment = lectureAssignmentRepository.findById(reqDto.getLectureAssignmentId())
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 강의 과제입니다."));
+                UserLectureAssignment userLectureAssignment = UserLectureAssignment.builder()
+                        .user(friendUser)
+                        .lectureAssignment(lectureAssignment)
+                        .assignment(frAssignment)
+                        .build();
+
+                userLectureAssignmentRepository.save(userLectureAssignment);
+            }
+
             //활동 로그 추가
             ActivityLog activityLog = ActivityLog.builder()
                     .user(friendUser)
