@@ -1,12 +1,10 @@
-package Umc.replendar.user.repository;
+package Umc.replendar.major.repository;
 
-import Umc.replendar.user.entity.School;
-import Umc.replendar.user.entity.User;
+import Umc.replendar.major.entity.School;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface SchoolRepository extends JpaRepository<School, Long> {

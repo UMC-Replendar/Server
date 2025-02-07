@@ -5,6 +5,7 @@ import Umc.replendar.assignment.entity.NotifyLog;
 import Umc.replendar.assignment.entity.Share;
 import Umc.replendar.friend.entity.friendship;
 import Umc.replendar.global.BaseEntity;
+import Umc.replendar.major.entity.Major;
 import jakarta.persistence.*;
 import lombok.*;
 
