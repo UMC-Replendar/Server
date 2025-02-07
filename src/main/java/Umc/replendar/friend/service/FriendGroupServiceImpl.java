@@ -112,6 +112,7 @@ public class FriendGroupServiceImpl implements FriendGroupService {
         List<FriendRes.FriendGroupListRes> response = FriToDto.toFriendGroupListRes(friendGroups, userId, assignmentRepository);
         return ApiResponse.onSuccess(response);
     }
+    //그룹에 포함 X인 친구 조회
     @Override
     public ApiResponse<List<FriendRes.FriendListRes>> getFriendsNotInGroup(Long userId, Long groupId) {
         // 현재 사용자의 모든 친구 조회
@@ -125,7 +126,14 @@ public class FriendGroupServiceImpl implements FriendGroupService {
         // 그룹에 속하지 않은 친구들 필터링
         List<FriendRes.FriendListRes> availableFriends = allFriends.stream()
                 .filter(friend -> !friendsInGroup.contains(friend)) // 그룹에 없는 친구만 포함
-                .map(friend -> FriToDto.toFriendListRes(friend, userId, 0)) // 과제 개수는 0으로 설정
+                .map(friend -> {
+                    String friendNote;
+                    if (friend.getUser().getId().equals(userId)) {
+                        friendNote = friend.getUserNote();
+                    } else {
+                        friendNote = friend.getFriendNote();
+                    }
+                    return FriToDto.toFriendListRes(friend, userId, 0, friendNote);}) // 과제 개수는 0으로 설정
                 .collect(Collectors.toList());
 
         return ApiResponse.onSuccess(availableFriends);

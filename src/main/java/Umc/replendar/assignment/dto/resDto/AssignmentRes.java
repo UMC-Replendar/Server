@@ -60,8 +60,8 @@ public class AssignmentRes {
     @AllArgsConstructor
     @Builder
     public static class assShareRes {
-        private Long userId;
-        private String nickName;
+        private Long friendId;
+        private String nickname;
         private String name;
         private String friendNote;
     }

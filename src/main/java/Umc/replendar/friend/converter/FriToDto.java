@@ -14,14 +14,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FriToDto {
-    public static FriendRes.FriendListRes toFriendListRes(friendship friendship, Long userId, int ongoingAssignments) {
+    public static FriendRes.FriendListRes toFriendListRes(friendship friendship, Long userId, int ongoingAssignments, String friendNote) {
+        User friend = friendship.getFriendForUser(userId);
         return FriendRes.FriendListRes.builder()
                 .friendshipId(friendship.getId())  // 친구관계 ID
-                .friendId(friendship.getFriendForUser(userId).getId())  // 친구 ID
-                .nickname(friendship.getFriendForUser(userId).getNickname())  // 친구의 닉네임
-                .name(friendship.getFriendForUser(userId).getName())  // 친구의 이름
+                .friendId(friend.getId())  // 친구 ID
+                .nickname(friend.getNickname())  // 친구의 닉네임
+                .name(friend.getName())  // 친구의 이름
                 .ongoingAssignments(ongoingAssignments)  // 진행 중인 과제 수
                 .buddyStatus(friendship.getBuddyStatusForUser(userId))  // 해당 사용자의 Buddy 상태
+                .friendNote(friendNote)                      // 친구 메모 추가
                 .build();
     }
     public static FriendRes.FriendSearchRes toFriendSearchRes(User user) {
@@ -48,7 +50,9 @@ public class FriToDto {
                                             Status.ONGOING,
                                             GeneralSettings.ON
                                     );
-                                    return toFriendListRes(friendship, userId, ongoingAssignments);
+                                    String friendNote = friendship.getUser().getId().equals(userId) ?
+                                            friendship.getUserNote() : friendship.getFriendNote();
+                                    return toFriendListRes(friendship, userId, ongoingAssignments, friendNote);
                                 })
                                 .sorted(Comparator.comparing(
                                                 (FriendRes.FriendListRes f) -> f.getBuddyStatus() == Buddy.YES ? 0 : 1)
