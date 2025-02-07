@@ -234,4 +234,13 @@ public class UserService {
                 .important_taskCount(importantTaskCount)
                 .build();
     }
+
+    public void logout(HttpServletRequest request, HttpServletResponse response, String accessToken) {
+        Long userId = jwtTokenProvider.getUserIdInToken(accessToken);
+        System.out.println("userId : " +userId);
+
+//        Long expiration = jwtTokenProvider.expireToken(accessToken);
+        // Cookie 에 있는 RefreshToken 의 데이터를 value 0, 만료 0 으로 초기화
+        CookieUtil.addCookie(response, "refreshToken", null, 0);
+    }
 }

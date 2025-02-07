@@ -1,6 +1,7 @@
 package Umc.replendar.user.controller;
 
 import Umc.replendar.apiPayload.ApiResponse;
+import Umc.replendar.apiPayload.code.status.SuccessStatus;
 import Umc.replendar.common.security.JwtTokenProvider;
 import Umc.replendar.user.dto.req.UserDtoReq;
 import Umc.replendar.user.dto.res.UserDtoRes;
@@ -85,6 +86,16 @@ public class UserController {
     public ApiResponse<UserDtoRes.myPageRes> myPage() {
         Long userId = jwtTokenProvider.getUserIdFromToken();
         return ApiResponse.onSuccess(userService.getMyProfile(userId));
+    }
+
+    @Operation(summary = "로그아웃 API", description = "로그아웃")
+    @PostMapping("/logout")
+    public ApiResponse<SuccessStatus> logout(
+            @RequestHeader(value = "Authorization", required = false) String accessToken,
+            HttpServletRequest request, HttpServletResponse response) {
+
+        userService.logout(request, response, accessToken);
+        return ApiResponse.onSuccess(SuccessStatus._OK);
     }
 
 }
