@@ -1,5 +1,6 @@
 package Umc.replendar.major.entity;
 
+import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.global.BaseEntity;
 import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
@@ -25,5 +26,9 @@ public class UserLectureAssignment extends BaseEntity {
         @ManyToOne
         @JoinColumn(name = "lectureAssignment_id")
         private LectureAssignment lectureAssignment;
+
+        @OneToOne
+        @JoinColumn(name = "assignment_id")
+        private Assignment assignment;
 
 }

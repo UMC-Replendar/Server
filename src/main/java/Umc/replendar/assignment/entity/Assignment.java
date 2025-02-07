@@ -2,6 +2,7 @@ package Umc.replendar.assignment.entity;
 
 import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.global.BaseEntity;
+import Umc.replendar.major.entity.UserLectureAssignment;
 import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
 import jakarta.persistence.*;
@@ -88,6 +89,9 @@ public class Assignment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToOne(mappedBy = "assignment", cascade = CascadeType.REMOVE)
+    private UserLectureAssignment userLectureAssignment;
 
     public GeneralSettings setNotification(String reqNotification) {
         switch (reqNotification) {
