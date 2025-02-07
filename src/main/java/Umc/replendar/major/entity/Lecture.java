@@ -5,6 +5,9 @@ import Umc.replendar.user.entity.AcademicYear;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -30,4 +33,8 @@ public class Lecture extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "major_id")
     private Major major;
+
+    @OneToMany(mappedBy = "lecture" , cascade = CascadeType.REMOVE)
+    private List<LectureAssignment> lectureAssignmentList = new ArrayList<>();
+
 }

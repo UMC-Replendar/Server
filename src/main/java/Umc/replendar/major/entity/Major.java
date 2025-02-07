@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "major")
 public class Major {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -29,4 +30,7 @@ public class Major {
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.REMOVE)
     private List<User> users = new ArrayList<>();
+
+    @OneToMany(mappedBy = "major", cascade = CascadeType.REMOVE)
+    private List<Lecture> lectures = new ArrayList<>();
 }
