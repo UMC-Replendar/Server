@@ -21,7 +21,7 @@ public class FriendGroupController {
 
     @Operation(summary = "친구 그룹 생성 API", description = "새로운 친구 그룹을 생성합니다.")
     @PostMapping("")
-    public ApiResponse<String> createFriendGroup(@RequestBody FriendReq.CreateGroupDto reqDto) {
+    public ApiResponse<FriendRes.FriendGroupCreatRes> createFriendGroup(@RequestBody FriendReq.CreateGroupDto reqDto) {
         Long userId = jwtTokenProvider.getUserIdFromToken();
         return friendGroupService.createFriendGroup(userId, reqDto);
     }

@@ -51,4 +51,10 @@ public class FriendRes {
         private String note;
     }
 
+    @Data
+    @AllArgsConstructor
+    @Builder
+    public static class FriendGroupCreatRes {
+        private Long groupId;
+    }
 }
