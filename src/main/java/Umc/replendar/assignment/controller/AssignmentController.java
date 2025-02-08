@@ -145,7 +145,8 @@ public class AssignmentController {
     @Operation(summary = "친구의 캘린더(일정) 조회 API", description = "친구 ID를 통해 공개된 진행중인 과제를 조회합니다.")
     @GetMapping("/friend/{friendId}/public-assignments")
     public ApiResponse<List<AssignmentRes.assMonthRes>> getFriendPublicAssignments(@PathVariable Long friendId) {
-        return assignmentService.getFriendPublicAssignments(friendId);
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return assignmentService.getFriendPublicAssignments(userId, friendId);
     }
 
 }

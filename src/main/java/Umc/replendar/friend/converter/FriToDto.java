@@ -59,4 +59,10 @@ public class FriToDto {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    public static FriendRes.FriendGroupCreatRes toFriendGroupCreatRes(FriendGroup friendGroup) {
+        return FriendRes.FriendGroupCreatRes.builder()
+                .groupId(friendGroup.getId())
+                .build();
+    }
 }
