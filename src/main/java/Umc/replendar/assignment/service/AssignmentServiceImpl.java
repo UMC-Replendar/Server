@@ -443,9 +443,19 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public ApiResponse<List<AssignmentRes.assMonthRes>> getFriendPublicAssignments(Long friendId) {
+    public ApiResponse<List<AssignmentRes.assMonthRes>> getFriendPublicAssignments(Long userId, Long friendId) {
         User friend = userRepository.findById(friendId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        // 친구 관계인지 확인
+        boolean isFriendExists = friendRepository.existsByUserAndFriend(
+                userRepository.findById(Math.min(userId, friendId)).get(),
+                userRepository.findById(Math.max(userId, friendId)).get()
+        );
+
+        if (!isFriendExists) {
+            return ApiResponse.onFailure("FRIEND_ALREADY_EXISTS", "등록된 친구가 아닙니다.", null);
+        }
 
         List<Assignment> publicAssignments = assignmentRepository.findByUserIdAndVisibilityAndStatus(
                 friendId, GeneralSettings.ON, Status.ONGOING
