@@ -2,6 +2,7 @@ package Umc.replendar.major.service;
 
 import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.major.converter.MajorConverter;
+import Umc.replendar.major.dto.req.LectureReq;
 import Umc.replendar.major.dto.res.LectureAssignmentRes;
 import Umc.replendar.major.entity.*;
 import Umc.replendar.major.repository.LectureAssignmentRepository;
@@ -163,5 +164,83 @@ public class MajorServiceImpl implements MajorService {
         Page<LectureAssignmentRes.LectureNewsRes> lectureNewsRes = userLectureAssignments.map(userLectureAssignment -> MajorConverter.toLectureNewsRes(userLectureAssignment, userLecAssId ));
 
         return ApiResponse.onSuccess(lectureNewsRes);
+    }
+
+    @Override
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long userId, String registration, String sort) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
+        AcademicYear year = user.getAcademicYear();
+        List<Lecture> lectures = lectureRepository.findAllByMajorIdAndAcademicYear(user.getMajor().getId(), year);
+        List<Long> lectureIds = lectures.stream()
+                .map(Lecture::getId)
+                .toList();
+
+        if(sort.equals("desc")) {
+            switch (registration) {
+                case "professor":
+                    List<LectureAssignment> lectureAssignments = lectureAssignmentRepository.findAllByLectureIdInOrderByLectureProfessorDesc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
+                case "lectureName":
+                    List<LectureAssignment> lectureAssignments1 = lectureAssignmentRepository.findAllByLectureIdInOrderByLectureLectureNameDesc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments1.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
+                case "title":
+                    List<LectureAssignment> lectureAssignments2 = lectureAssignmentRepository.findAllByLectureIdInOrderByTitleDesc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments2.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
+                case "dueDate":
+                    List<LectureAssignment> lectureAssignments3 = lectureAssignmentRepository.findAllByLectureIdInOrderByDueDateDesc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments3.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
+            }
+        }else{
+            switch (registration) {
+                case "professor":
+                    List<LectureAssignment> lectureAssignments = lectureAssignmentRepository.findAllByLectureIdInOrderByLectureProfessorAsc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
+                case "lectureName":
+                    List<LectureAssignment> lectureAssignments1 = lectureAssignmentRepository.findAllByLectureIdInOrderByLectureLectureNameAsc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments1.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
+                case "title":
+                    List<LectureAssignment> lectureAssignments2 = lectureAssignmentRepository.findAllByLectureIdInOrderByTitleAsc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments2.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
+                case "dueDate":
+                    List<LectureAssignment> lectureAssignments3 = lectureAssignmentRepository.findAllByLectureIdInOrderByDueDateAsc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments3.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public ApiResponse<String> createLectureAssignment(long userId, LectureReq.LectureAssignmentPostReq request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
+        Lecture lecture = lectureRepository.findById(request.getLectureId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 강좌 ID입니다."));
+
+        LectureAssignment lectureAssignment = LectureAssignment.builder()
+                                .lecture(lecture)
+                                .title(request.getTitle())
+                                .dueDate(request.getEndDate())
+                                .content(request.getContent()).build();
+        lectureAssignmentRepository.save(lectureAssignment);
+
+        return ApiResponse.onSuccess("과제 생성 성공");
     }
 }
