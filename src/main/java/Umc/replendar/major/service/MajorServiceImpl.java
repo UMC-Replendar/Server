@@ -2,6 +2,7 @@ package Umc.replendar.major.service;
 
 import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.major.converter.MajorConverter;
+import Umc.replendar.major.dto.req.LectureReq;
 import Umc.replendar.major.dto.res.LectureAssignmentRes;
 import Umc.replendar.major.entity.*;
 import Umc.replendar.major.repository.LectureAssignmentRepository;
@@ -224,5 +225,22 @@ public class MajorServiceImpl implements MajorService {
         }
 
         return null;
+    }
+
+    @Override
+    public ApiResponse<String> createLectureAssignment(long userId, LectureReq.LectureAssignmentPostReq request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
+        Lecture lecture = lectureRepository.findById(request.getLectureId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 강좌 ID입니다."));
+
+        LectureAssignment lectureAssignment = LectureAssignment.builder()
+                                .lecture(lecture)
+                                .title(request.getTitle())
+                                .dueDate(request.getEndDate())
+                                .content(request.getContent()).build();
+        lectureAssignmentRepository.save(lectureAssignment);
+
+        return ApiResponse.onSuccess("과제 생성 성공");
     }
 }
