@@ -164,4 +164,25 @@ public class MajorServiceImpl implements MajorService {
 
         return ApiResponse.onSuccess(lectureNewsRes);
     }
+
+    @Override
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long userId, String registration) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
+        AcademicYear year = user.getAcademicYear();
+        List<Lecture> lectures = lectureRepository.findAllByMajorIdAndAcademicYear(user.getMajor().getId(), year);
+        List<Long> lectureIds = lectures.stream()
+                .map(Lecture::getId)
+                .toList();
+
+        switch (registration) {
+            case "registration":
+                List<LectureAssignment> lectureAssignments = lectureAssignmentRepository.findAllByLectureIdInOrderByDesc(lectureIds);
+                return ApiResponse.onSuccess(lectureAssignments.stream().map(
+                        lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                        .toList());
+        }
+
+        return null;
+    }
 }

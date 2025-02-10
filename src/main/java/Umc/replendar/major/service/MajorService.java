@@ -21,4 +21,6 @@ public interface MajorService {
     ApiResponse<List<LectureAssignmentRes.LecturesRes>> getLectures(long userId, Long academicYear);
 
     ApiResponse<Page<LectureAssignmentRes.LectureNewsRes>> getLectureNews(long userId, Pageable pageable);
+
+    ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long id, String type);
 }
