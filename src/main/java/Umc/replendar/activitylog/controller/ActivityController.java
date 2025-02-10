@@ -32,7 +32,7 @@ public class ActivityController {
 
     @Operation(summary = "히스토리 필터 - 친구소식 조회 API", description = "히스토리 필터 - 친구소식 조회 API")
     @GetMapping("/friend")
-    public ApiResponse<Page<ActivityLogRes.getHistoryRes>> getActivityFriendLog(@RequestParam(defaultValue = "1") int page,
+    public ApiResponse<Page<ActivityLogRes.getHistoryRes2>> getActivityFriendLog(@RequestParam(defaultValue = "1") int page,
                                                              @PageableDefault(size = 10) Pageable pageable) {
         Long userId = jwtTokenProvider.getUserIdFromToken();
         Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());

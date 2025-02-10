@@ -70,7 +70,7 @@ public class MajorConverter {
     }
 
     // Helper 메서드: "1시간 전", "2일 전" 등으로 변환
-    private static String formatTimeAgo(LocalDateTime createdAt) {
+    public static String formatTimeAgo(LocalDateTime createdAt) {
         LocalDateTime now = LocalDateTime.now();
         long minutes = ChronoUnit.MINUTES.between(createdAt, now);
         long hours = ChronoUnit.HOURS.between(createdAt, now);

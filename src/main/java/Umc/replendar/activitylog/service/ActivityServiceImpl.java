@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static Umc.replendar.assignment.converter.AssToDto.toShareOkDto;
+import static Umc.replendar.major.converter.MajorConverter.formatTimeAgo;
 
 @Service
 @Transactional
@@ -126,20 +127,20 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public ApiResponse<Page<ActivityLogRes.getHistoryRes>> getActivityFriendLog(Long userId, Pageable adjustedPageable) {
+    public ApiResponse<Page<ActivityLogRes.getHistoryRes2>> getActivityFriendLog(Long userId, Pageable adjustedPageable) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다"));
 
         Page<ActivityLog> activityLogs = activityLogRepository.findAllByUserOrderByCreatedAtDesc(user,adjustedPageable);
 
         List<Assignment> userAssignments = assignmentRepository.findAllByUser(user);
 
-        Page<ActivityLogRes.getHistoryRes> activityLogToDto = activityLogs.map(log -> {
+        Page<ActivityLogRes.getHistoryRes2> activityLogToDto = activityLogs.map(log -> {
             // 등록 여부 확인 (originAssId와 비교)
             boolean isRegistered = userAssignments.stream()
                     .anyMatch(assignment -> assignment.getOriginAssId() != null &&
                             assignment.getOriginAssId().equals(log.getAssignment().getId()));
 
-            return ActivityLogRes.getHistoryRes.builder()
+            return ActivityLogRes.getHistoryRes2.builder()
                     .date(log.getCreatedAt().toLocalDate().toString())
                     .time(log.getCreatedAt().toLocalTime().toString())
                     .check(log.getIsCheck())
@@ -147,6 +148,7 @@ public class ActivityServiceImpl implements ActivityService {
                     .assId(log.getAssignment().getId())
                     .content(logConverter.activityLogHistoryDto(log).getContent())
                     .createdAt(log.getCreatedAt())
+                    .timeStamp(formatTimeAgo(log.getCreatedAt()))
                     .type("과제")
                     .isRegistered(isRegistered)  // 등록 여부 추가
                     .build();
