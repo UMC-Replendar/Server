@@ -182,7 +182,11 @@ public class MajorServiceImpl implements MajorService {
                     return ApiResponse.onSuccess(lectureAssignments.stream().map(
                                     lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
                             .toList());
-                case "registration":
+                case "lectureName":
+                    List<LectureAssignment> lectureAssignments1 = lectureAssignmentRepository.findAllByLectureIdInOrderByLectureLectureNameDesc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments1.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
             }
         }else{
             switch (registration) {
@@ -191,7 +195,11 @@ public class MajorServiceImpl implements MajorService {
                     return ApiResponse.onSuccess(lectureAssignments.stream().map(
                                     lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
                             .toList());
-                case "registration":
+                case "lectureName":
+                    List<LectureAssignment> lectureAssignments1 = lectureAssignmentRepository.findAllByLectureIdInOrderByLectureLectureNameAsc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments1.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
             }
         }
 

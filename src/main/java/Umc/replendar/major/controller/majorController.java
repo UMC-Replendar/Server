@@ -54,12 +54,20 @@ public class majorController {
 
     //교수명, 강좌명, 과제명 , 마감일 만들기
     //교수명
-    @Operation(summary = "학과 과제 조회 정렬 기준 - 교수명 API", description = "교수명으로 정렬")
-    @GetMapping("/lectures/sort/registration")
-    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLecturesSortByRegistration(@RequestParam String sort) {
+    @Operation(summary = "학과 과제 조회 - 정렬 기준 - 교수명 API", description = "교수명으로 정렬")
+    @GetMapping("/lectures/sort/professor")
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLecturesSortByProfessor(@RequestParam String sort) {
         long id = jwtTokenProvider.getUserIdFromToken();
 
         return majorService.getLectureAssignmentSort(id, "professor", sort);
+    }
+
+    @Operation(summary = "학과 과제 조회 - 정렬 기준 - 강좌명 API", description = "강좌명으로 정렬")
+    @GetMapping("/lectures/sort/registration")
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLecturesSortByLectureName(@RequestParam String sort) {
+        long id = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.getLectureAssignmentSort(id, "lectureName", sort);
     }
 
 

@@ -17,4 +17,8 @@ public interface LectureAssignmentRepository extends JpaRepository<LectureAssign
     List<LectureAssignment> findAllByLectureIdInOrderByLectureProfessorDesc(List<Long> lectureIds);
 
     List<LectureAssignment> findAllByLectureIdInOrderByLectureProfessorAsc(List<Long> lectureIds);
+
+    List<LectureAssignment> findAllByLectureIdInOrderByLectureLectureNameDesc(List<Long> lectureIds);
+
+    List<LectureAssignment> findAllByLectureIdInOrderByLectureLectureNameAsc(List<Long> lectureIds);
 }
