@@ -4,12 +4,15 @@ import Umc.replendar.activitylog.dto.res.ActivityLogRes;
 import Umc.replendar.activitylog.entity.Action;
 import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.activitylog.entity.Check;
+import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.assignment.entity.NotifyLog;
 import Umc.replendar.friend.entity.FriendRequest;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static Umc.replendar.assignment.entity.NotifyCycle.DAY3;
+import static Umc.replendar.major.converter.MajorConverter.formatTimeAgo;
 
 public class logConverter {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -41,6 +44,25 @@ public class logConverter {
                 .type("과제")
                 .build();
     }
+    public static ActivityLogRes.getHistoryRes2 activityLogFriendHistoryDto(ActivityLog log, List<Assignment> userAssignments) {
+        boolean isRegistered = userAssignments.stream()
+                .anyMatch(assignment -> assignment.getOriginAssId() != null &&
+                        assignment.getOriginAssId().equals(log.getAssignment().getId()));
+
+        return ActivityLogRes.getHistoryRes2.builder()
+                .date(log.getCreatedAt().format(DATE_FORMATTER))
+                .time(log.getCreatedAt().format(TIME_FORMATTER))
+                .check(log.getIsCheck())
+                .friendId(log.getFriend().getId())
+                .assId(log.getAssignment().getId())
+                .content(activityLogHistoryDto(log).getContent())
+                .createdAt(log.getCreatedAt())
+                .timeStamp(formatTimeAgo(log.getCreatedAt()))
+                .type("과제")
+                .isRegistered(isRegistered)
+                .build();
+    }
+
 
     public static ActivityLogRes.getHistoryRes notifyLogHistoryDto(NotifyLog notifyLog) {
 
