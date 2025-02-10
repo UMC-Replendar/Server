@@ -134,25 +134,9 @@ public class ActivityServiceImpl implements ActivityService {
 
         List<Assignment> userAssignments = assignmentRepository.findAllByUser(user);
 
-        Page<ActivityLogRes.getHistoryRes2> activityLogToDto = activityLogs.map(log -> {
-            // 등록 여부 확인 (originAssId와 비교)
-            boolean isRegistered = userAssignments.stream()
-                    .anyMatch(assignment -> assignment.getOriginAssId() != null &&
-                            assignment.getOriginAssId().equals(log.getAssignment().getId()));
-
-            return ActivityLogRes.getHistoryRes2.builder()
-                    .date(log.getCreatedAt().toLocalDate().toString())
-                    .time(log.getCreatedAt().toLocalTime().toString())
-                    .check(log.getIsCheck())
-                    .friendId(log.getFriend().getId())
-                    .assId(log.getAssignment().getId())
-                    .content(logConverter.activityLogHistoryDto(log).getContent())
-                    .createdAt(log.getCreatedAt())
-                    .timeStamp(formatTimeAgo(log.getCreatedAt()))
-                    .type("과제")
-                    .isRegistered(isRegistered)  // 등록 여부 추가
-                    .build();
-        });
+        Page<ActivityLogRes.getHistoryRes2> activityLogToDto = activityLogs.map(log ->
+                logConverter.activityLogFriendHistoryDto(log, userAssignments)
+        );
 
         return ApiResponse.onSuccess(activityLogToDto);
     }
