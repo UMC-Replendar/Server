@@ -70,6 +70,23 @@ public class majorController {
         return majorService.getLectureAssignmentSort(id, "lectureName", sort);
     }
 
+    @Operation(summary = "학과 과제 조회 - 정렬 기준 - 과제명 API", description = "과제명으로 정렬")
+    @GetMapping("/lectures/sort/assignment")
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLecturesSortByTitle(@RequestParam String sort) {
+        long id = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.getLectureAssignmentSort(id, "title", sort);
+    }
+
+    @Operation(summary = "학과 과제 조회 - 정렬 기준 - 마감일 API", description = "마감일로 정렬")
+    @GetMapping("/lectures/sort/due")
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLecturesSortByDueDate(@RequestParam String sort) {
+        long id = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.getLectureAssignmentSort(id, "dueDate", sort);
+    }
+
+
 
     @Operation(summary = "학과 과제 생성에 필요한 데이터 조회 API", description = "학과 과제 생성에 필요한 데이터 조회")
     @GetMapping("/lectures/get/{lectureAssignmentId}")
