@@ -2,6 +2,7 @@ package Umc.replendar.major.controller;
 
 import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.common.security.JwtTokenProvider;
+import Umc.replendar.major.dto.req.LectureReq;
 import Umc.replendar.major.dto.res.LectureAssignmentRes;
 import Umc.replendar.major.service.MajorService;
 import Umc.replendar.user.dto.req.MajorDtoReq;
@@ -43,13 +44,49 @@ public class majorController {
         return ApiResponse.onSuccess(response);
     }
 
-    @Operation(summary = "본인 학과의 학년별 과제 조회 API", description = "특정 학년에 대한 본인 학과의 과제 조회")
+
+
+    @Operation(summary = "학과 과제 조회 - 정렬 기준 - 학년별 API, 기본", description = "특정 학년에 대한 본인 학과의 과제 조회")
     @GetMapping({"/lectures", "/lectures/{academicYear}"})
     public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectures(
             @PathVariable(required = false) Long academicYear) {
         long id = jwtTokenProvider.getUserIdFromToken();
 
         return majorService.getLectureAssignment(id, academicYear);
+    }
+
+    //교수명, 강좌명, 과제명 , 마감일 만들기
+    //교수명
+    @Operation(summary = "학과 과제 조회 - 정렬 기준 - 교수명 API", description = "교수명으로 정렬")
+    @GetMapping("/lectures/sort/professor")
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLecturesSortByProfessor(@RequestParam String sort) {
+        long id = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.getLectureAssignmentSort(id, "professor", sort);
+    }
+
+    @Operation(summary = "학과 과제 조회 - 정렬 기준 - 강좌명 API", description = "강좌명으로 정렬")
+    @GetMapping("/lectures/sort/registration")
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLecturesSortByLectureName(@RequestParam String sort) {
+        long id = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.getLectureAssignmentSort(id, "lectureName", sort);
+    }
+
+    @Operation(summary = "학과 과제 조회 - 정렬 기준 - 과제명 API", description = "과제명으로 정렬")
+    @GetMapping("/lectures/sort/assignment")
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLecturesSortByTitle(@RequestParam String sort) {
+        long id = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.getLectureAssignmentSort(id, "title", sort);
+    }
+
+    @Operation(summary = "학과 과제 조회 - 정렬 기준 - 마감일 API", description = "마감일로 정렬")
+    @GetMapping("/lectures/sort/due")
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLecturesSortByDueDate(@RequestParam String sort) {
+        long id = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.getLectureAssignmentSort(id, "dueDate", sort);
     }
 
     @Operation(summary = "학과 과제 생성에 필요한 데이터 조회 API", description = "학과 과제 생성에 필요한 데이터 조회")
@@ -77,6 +114,14 @@ public class majorController {
         Pageable adjustedPageable = PageRequest.of(page - 1, pageable.getPageSize(), pageable.getSort());
 
         return majorService.getLectureNews(userId,adjustedPageable);
+    }
+
+    @Operation(summary = "학과 과제 생성 API", description = "학과 과제 생성")
+    @PostMapping("/lectures")
+    public ApiResponse<String> createLectureAssignment(@RequestBody LectureReq.LectureAssignmentPostReq request) {
+        long userId = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.createLectureAssignment(userId, request);
     }
 
 

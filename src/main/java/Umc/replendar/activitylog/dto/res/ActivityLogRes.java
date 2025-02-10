@@ -33,6 +33,22 @@ public class ActivityLogRes {
         private boolean isRegistered;
     }
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class getHistoryRes2 {
+        String date;
+        String time;
+        Check check;
+        Long friendId;
+        Long assId;
+        String content;
+        LocalDateTime createdAt;
+        String timeStamp;
+        String type;
+        private boolean isRegistered;
+    }
+
 //    @Data
 //    @Builder
 //    @AllArgsConstructor

@@ -2,10 +2,12 @@ package Umc.replendar.major.dto.res;
 
 import Umc.replendar.activitylog.entity.Check;
 import Umc.replendar.user.entity.AcademicYear;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
