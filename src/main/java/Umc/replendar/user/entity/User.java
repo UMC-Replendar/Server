@@ -4,6 +4,7 @@ import Umc.replendar.activitylog.entity.ActivityLog;
 import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.assignment.entity.NotifyLog;
 import Umc.replendar.assignment.entity.Share;
+import Umc.replendar.friend.entity.FriendGroup;
 import Umc.replendar.friend.entity.FriendRequest;
 import Umc.replendar.friend.entity.friendship;
 import Umc.replendar.global.BaseEntity;
@@ -91,6 +92,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Assignment> assignments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<FriendGroup> friendGroups = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "major_id")
