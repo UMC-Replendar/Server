@@ -59,38 +59,38 @@ public class User extends BaseEntity {
 //    private String password;
 
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private ProfileImage profileImage;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<friendship> friendshipUserList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "friend", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<friendship> friendFriendshipList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<ActivityLog> activityLogList = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ActivityLog> activityLogs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "friend", cascade = CascadeType.REMOVE)
-    private List<ActivityLog> activityLogFriendList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Share> shareLogList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<NotifyLog> notifyLogList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<UserLectureAssignment> lectureAssignmentList = new ArrayList<>();
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ActivityLog> friendActivityLogs = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Assignment> assignmentList = new ArrayList<>();
+    private List<Share> shares = new ArrayList<>();
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<NotifyLog> notifyLogs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<UserLectureAssignment> userLectureAssignments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<FriendRequest> sentRequests = new ArrayList<>();
 
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<FriendRequest> receivedRequests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Assignment> assignments = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "major_id")
