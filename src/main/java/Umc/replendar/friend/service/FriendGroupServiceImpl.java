@@ -33,7 +33,7 @@ public class FriendGroupServiceImpl implements FriendGroupService {
 
     // 친구 그룹 생성
     @Override
-    public ApiResponse<String> createFriendGroup(Long userId, FriendReq.CreateGroupDto reqDto) {
+    public ApiResponse<FriendRes.FriendGroupCreatRes> createFriendGroup(Long userId, FriendReq.CreateGroupDto reqDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
@@ -49,9 +49,11 @@ public class FriendGroupServiceImpl implements FriendGroupService {
                 .name(reqDto.getGroupName())
                 .user(user)
                 .build();
-        friendGroupRepository.save(friendGroup);
+        FriendGroup savedGroup = friendGroupRepository.save(friendGroup);
 
-        return ApiResponse.onSuccess("친구 그룹이 생성되었습니다.");
+        FriendRes.FriendGroupCreatRes resDto = FriToDto.toFriendGroupCreatRes(savedGroup);
+
+        return ApiResponse.onSuccess(resDto);
     }
 
     // 친구 그룹 삭제
@@ -126,14 +128,7 @@ public class FriendGroupServiceImpl implements FriendGroupService {
         // 그룹에 속하지 않은 친구들 필터링
         List<FriendRes.FriendListRes> availableFriends = allFriends.stream()
                 .filter(friend -> !friendsInGroup.contains(friend)) // 그룹에 없는 친구만 포함
-                .map(friend -> {
-                    String friendNote;
-                    if (friend.getUser().getId().equals(userId)) {
-                        friendNote = friend.getUserNote();
-                    } else {
-                        friendNote = friend.getFriendNote();
-                    }
-                    return FriToDto.toFriendListRes(friend, userId, 0, friendNote);}) // 과제 개수는 0으로 설정
+                .map(friend ->FriToDto.toFriendListRes(friend, userId, 0)) // 과제 개수는 0으로 설정
                 .collect(Collectors.toList());
 
         return ApiResponse.onSuccess(availableFriends);

@@ -141,13 +141,7 @@ public class FriendServiceImpl implements FriendService {
         List<FriendRes.FriendListRes> friendList = friendships.stream()
                 .map(friend -> {
                     int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend.getFriendForUser(userId), Status.ONGOING, GeneralSettings.ON);
-                    String friendNote;
-                    if (friend.getUser().getId().equals(userId)) {
-                        friendNote = friend.getUserNote();
-                    } else {
-                        friendNote = friend.getFriendNote();
-                    }
-                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments, friendNote);
+                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments);
                 })
                 .sorted(Comparator.comparing((FriendRes.FriendListRes f) -> f.getBuddyStatus() == Buddy.YES ? 0 : 1)
                         .thenComparing(FriendRes.FriendListRes::getNickname))
@@ -166,13 +160,7 @@ public class FriendServiceImpl implements FriendService {
         List<FriendRes.FriendListRes> friendList = friendships.stream()
                 .map(friend -> {
                     int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend.getFriendForUser(userId), Status.ONGOING, GeneralSettings.ON);
-                    String friendNote;
-                    if (friend.getUser().getId().equals(userId)) {
-                        friendNote = friend.getUserNote();
-                    } else {
-                        friendNote = friend.getFriendNote();
-                    }
-                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments, friendNote);
+                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments);
                 })
                 .sorted(Comparator.comparing((FriendRes.FriendListRes f) -> f.getBuddyStatus() == Buddy.YES ? 0 : 1)
                         .thenComparing(FriendRes.FriendListRes::getNickname))

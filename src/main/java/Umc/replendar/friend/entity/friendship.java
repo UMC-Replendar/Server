@@ -65,4 +65,14 @@ public class friendship extends BaseEntity {
         throw new IllegalArgumentException("해당 사용자는 친구 관계에 포함되지 않습니다.");
     }
 
+    // 사용자 ID에 따른 친구 노트(메모)를 반환하는 메서드
+    public String getNoteForUser(Long userId) {
+        if (this.user.getId().equals(userId)) {
+            return this.userNote;
+        } else if (this.friend.getId().equals(userId)) {
+            return this.friendNote;
+        }
+        throw new IllegalArgumentException("해당 사용자는 친구 관계에 포함되지 않습니다.");
+    }
+
 }

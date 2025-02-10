@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FriToDto {
-    public static FriendRes.FriendListRes toFriendListRes(friendship friendship, Long userId, int ongoingAssignments, String friendNote) {
+    public static FriendRes.FriendListRes toFriendListRes(friendship friendship, Long userId, int ongoingAssignments) {
         User friend = friendship.getFriendForUser(userId);
         return FriendRes.FriendListRes.builder()
                 .friendshipId(friendship.getId())  // 친구관계 ID
@@ -23,7 +23,7 @@ public class FriToDto {
                 .name(friend.getName())  // 친구의 이름
                 .ongoingAssignments(ongoingAssignments)  // 진행 중인 과제 수
                 .buddyStatus(friendship.getBuddyStatusForUser(userId))  // 해당 사용자의 Buddy 상태
-                .friendNote(friendNote)                      // 친구 메모 추가
+                .friendNote(friendship.getNoteForUser(userId))  // 친구 노트(메모)
                 .build();
     }
     public static FriendRes.FriendSearchRes toFriendSearchRes(User user) {
@@ -50,9 +50,7 @@ public class FriToDto {
                                             Status.ONGOING,
                                             GeneralSettings.ON
                                     );
-                                    String friendNote = friendship.getUser().getId().equals(userId) ?
-                                            friendship.getUserNote() : friendship.getFriendNote();
-                                    return toFriendListRes(friendship, userId, ongoingAssignments, friendNote);
+                                    return toFriendListRes(friendship, userId, ongoingAssignments);
                                 })
                                 .sorted(Comparator.comparing(
                                                 (FriendRes.FriendListRes f) -> f.getBuddyStatus() == Buddy.YES ? 0 : 1)
@@ -60,5 +58,11 @@ public class FriToDto {
                                 .collect(Collectors.toList()))
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public static FriendRes.FriendGroupCreatRes toFriendGroupCreatRes(FriendGroup friendGroup) {
+        return FriendRes.FriendGroupCreatRes.builder()
+                .groupId(friendGroup.getId())
+                .build();
     }
 }

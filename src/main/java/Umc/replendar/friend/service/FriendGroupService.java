@@ -7,7 +7,7 @@ import Umc.replendar.friend.dto.resDto.FriendRes;
 import java.util.List;
 
 public interface FriendGroupService {
-    ApiResponse<String> createFriendGroup(Long userId, FriendReq.CreateGroupDto reqDto);
+    ApiResponse<FriendRes.FriendGroupCreatRes> createFriendGroup(Long userId, FriendReq.CreateGroupDto reqDto);
     ApiResponse<String> deleteFriendGroup(Long userId, Long groupId);
     ApiResponse<String> addFriendToGroup(Long userId, Long groupId, FriendReq.AddFriendToGroupDto reqDto);
     ApiResponse<String> removeFriendFromGroup(Long userId, Long groupId, Long friendshipId);
