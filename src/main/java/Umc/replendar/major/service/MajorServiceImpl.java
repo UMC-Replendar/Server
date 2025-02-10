@@ -166,7 +166,7 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
-    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long userId, String registration) {
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long userId, String registration, String sort) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
         AcademicYear year = user.getAcademicYear();
@@ -175,12 +175,24 @@ public class MajorServiceImpl implements MajorService {
                 .map(Lecture::getId)
                 .toList();
 
-        switch (registration) {
-            case "registration":
-                List<LectureAssignment> lectureAssignments = lectureAssignmentRepository.findAllByLectureIdInOrderByDesc(lectureIds);
-                return ApiResponse.onSuccess(lectureAssignments.stream().map(
-                        lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
-                        .toList());
+        if(sort.equals("desc")) {
+            switch (registration) {
+                case "professor":
+                    List<LectureAssignment> lectureAssignments = lectureAssignmentRepository.findAllByLectureIdInOrderByLectureProfessorDesc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
+                case "registration":
+            }
+        }else{
+            switch (registration) {
+                case "professor":
+                    List<LectureAssignment> lectureAssignments = lectureAssignmentRepository.findAllByLectureIdInOrderByLectureProfessorAsc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
+                case "registration":
+            }
         }
 
         return null;
