@@ -43,7 +43,7 @@ public class majorController {
         return ApiResponse.onSuccess(response);
     }
 
-    @Operation(summary = "본인 학과의 학년별 과제 조회 API", description = "특정 학년에 대한 본인 학과의 과제 조회")
+    @Operation(summary = "학과 과제 조회 - 정렬 기준 - 학년별 API, 기본", description = "특정 학년에 대한 본인 학과의 과제 조회")
     @GetMapping({"/lectures", "/lectures/{academicYear}"})
     public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectures(
             @PathVariable(required = false) Long academicYear) {
@@ -85,8 +85,6 @@ public class majorController {
 
         return majorService.getLectureAssignmentSort(id, "dueDate", sort);
     }
-
-
 
     @Operation(summary = "학과 과제 생성에 필요한 데이터 조회 API", description = "학과 과제 생성에 필요한 데이터 조회")
     @GetMapping("/lectures/get/{lectureAssignmentId}")

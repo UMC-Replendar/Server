@@ -192,7 +192,11 @@ public class MajorServiceImpl implements MajorService {
                     return ApiResponse.onSuccess(lectureAssignments2.stream().map(
                                     lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
                             .toList());
-                case ""
+                case "dueDate":
+                    List<LectureAssignment> lectureAssignments3 = lectureAssignmentRepository.findAllByLectureIdInOrderByDueDateDesc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments3.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
             }
         }else{
             switch (registration) {
@@ -209,6 +213,11 @@ public class MajorServiceImpl implements MajorService {
                 case "title":
                     List<LectureAssignment> lectureAssignments2 = lectureAssignmentRepository.findAllByLectureIdInOrderByTitleAsc(lectureIds);
                     return ApiResponse.onSuccess(lectureAssignments2.stream().map(
+                                    lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
+                            .toList());
+                case "dueDate":
+                    List<LectureAssignment> lectureAssignments3 = lectureAssignmentRepository.findAllByLectureIdInOrderByDueDateAsc(lectureIds);
+                    return ApiResponse.onSuccess(lectureAssignments3.stream().map(
                                     lectureAssignment -> MajorConverter.toLectureAssignmentGetRes(lectureAssignment, userLectureAssignmentRepository.existsByUserAndLectureAssignment(user, lectureAssignment)))
                             .toList());
             }
