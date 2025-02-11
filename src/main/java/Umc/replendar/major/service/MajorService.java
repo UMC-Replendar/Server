@@ -3,6 +3,7 @@ package Umc.replendar.major.service;
 import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.major.dto.req.LectureReq;
 import Umc.replendar.major.dto.res.LectureAssignmentRes;
+import Umc.replendar.major.dto.res.MajorRes;
 import Umc.replendar.user.dto.req.MajorDtoReq;
 import Umc.replendar.user.dto.res.MajorDtoRes;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,9 @@ public interface MajorService {
 
     ApiResponse<Page<LectureAssignmentRes.LectureNewsRes>> getLectureNews(long userId, Pageable pageable);
 
-    ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long id, String type, String sort);
+    ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long id, String type, String sort, Long academicYear, Long majorId);
 
     ApiResponse<String> createLectureAssignment(long userId, LectureReq.LectureAssignmentPostReq request);
+
+    ApiResponse<List<MajorRes.MajorRes2>> getMajor(long userId);
 }

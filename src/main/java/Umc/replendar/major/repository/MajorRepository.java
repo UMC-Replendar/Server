@@ -17,4 +17,6 @@ public interface MajorRepository extends JpaRepository<Major, Long> {
 
     // 중복 확인
     boolean existsBySchoolIdAndMajorName(Long schoolId, String majorName);
+
+    List<Major> findAllBySchoolId(Long id);
 }
