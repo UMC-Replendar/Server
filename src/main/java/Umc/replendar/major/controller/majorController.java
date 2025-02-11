@@ -4,6 +4,7 @@ import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.common.security.JwtTokenProvider;
 import Umc.replendar.major.dto.req.LectureReq;
 import Umc.replendar.major.dto.res.LectureAssignmentRes;
+import Umc.replendar.major.dto.res.MajorRes;
 import Umc.replendar.major.service.MajorService;
 import Umc.replendar.user.dto.req.MajorDtoReq;
 import Umc.replendar.user.dto.res.MajorDtoRes;
@@ -43,7 +44,6 @@ public class majorController {
         MajorDtoRes.MajorSimpleRes response = majorService.createMajor(request);
         return ApiResponse.onSuccess(response);
     }
-
 
 
     @Operation(summary = "학과 과제 조회 - 정렬 기준 - 학년별 API, 기본", description = "특정 학년에 대한 본인 학과의 과제 조회")
@@ -122,6 +122,14 @@ public class majorController {
         long userId = jwtTokenProvider.getUserIdFromToken();
 
         return majorService.createLectureAssignment(userId, request);
+    }
+
+    @Operation(summary = "학과 조회", description = "본인 학교 학과 조회")
+    @GetMapping("/get/major")
+    public ApiResponse<List<MajorRes.MajorRes2>> getMajor() {
+        long userId = jwtTokenProvider.getUserIdFromToken();
+
+        return majorService.getMajor(userId);
     }
 
 

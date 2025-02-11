@@ -4,6 +4,7 @@ import Umc.replendar.apiPayload.ApiResponse;
 import Umc.replendar.major.converter.MajorConverter;
 import Umc.replendar.major.dto.req.LectureReq;
 import Umc.replendar.major.dto.res.LectureAssignmentRes;
+import Umc.replendar.major.dto.res.MajorRes;
 import Umc.replendar.major.entity.*;
 import Umc.replendar.major.repository.LectureAssignmentRepository;
 import Umc.replendar.major.repository.LectureRepository;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -186,7 +188,14 @@ public class MajorServiceImpl implements MajorService {
         if(majorId == null){
             realMajorId = user.getMajor().getId();
         }else{
+            if(majorRepository.findById(majorId).isEmpty()){
+                throw new IllegalArgumentException("존재하지 않는 학과 ID입니다.");
+            }
+            if(!Objects.equals(user.getMajor().getSchool().getId(), majorRepository.findById(majorId).get().getSchool().getId())){
+                throw new IllegalArgumentException("사용자의 학교와 다른 학과입니다.");
+            }
             realMajorId = majorId;
+
         }
 
         List<Lecture> lectures = lectureRepository.findAllByMajorIdAndAcademicYear(realMajorId, year);
@@ -260,5 +269,17 @@ public class MajorServiceImpl implements MajorService {
         lectureAssignmentRepository.save(lectureAssignment);
 
         return ApiResponse.onSuccess("과제 생성 성공");
+    }
+
+    @Override
+    public ApiResponse<List<MajorRes.MajorRes2>> getMajor(long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
+
+        List<Major> majors = majorRepository.findAllBySchoolId(user.getMajor().getSchool().getId());
+
+        return ApiResponse.onSuccess(majors.stream()
+                .map(MajorConverter::majorDtoRes)
+                .toList());
     }
 }
