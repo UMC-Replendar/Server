@@ -23,7 +23,7 @@ public interface MajorService {
 
     ApiResponse<Page<LectureAssignmentRes.LectureNewsRes>> getLectureNews(long userId, Pageable pageable);
 
-    ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long id, String type, String sort);
+    ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long id, String type, String sort, String academicYear, Long majorId);
 
     ApiResponse<String> createLectureAssignment(long userId, LectureReq.LectureAssignmentPostReq request);
 }

@@ -167,11 +167,29 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
-    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long userId, String registration, String sort) {
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long userId, String registration, String sort, String academicYear, Long majorId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
-        AcademicYear year = user.getAcademicYear();
-        List<Lecture> lectures = lectureRepository.findAllByMajorIdAndAcademicYear(user.getMajor().getId(), year);
+        AcademicYear year;
+        Long realMajorId;
+        //학년 선택
+        if (academicYear == null) {
+            year = user.getAcademicYear();
+        }else{
+            try {
+                year = AcademicYear.valueOf("YEAR_" + academicYear);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("올바르지 않은 학년 값입니다: " + academicYear);
+            }
+        }
+        //학과 선택
+        if(majorId == null){
+            realMajorId = user.getMajor().getId();
+        }else{
+            realMajorId = majorId;
+        }
+
+        List<Lecture> lectures = lectureRepository.findAllByMajorIdAndAcademicYear(realMajorId, year);
         List<Long> lectureIds = lectures.stream()
                 .map(Lecture::getId)
                 .toList();
