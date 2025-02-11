@@ -167,7 +167,7 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
-    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long userId, String registration, String sort, String academicYear, Long majorId) {
+    public ApiResponse<List<LectureAssignmentRes.LectureAssignmentGetRes>> getLectureAssignmentSort(long userId, String registration, String sort, Long academicYear, Long majorId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
         AcademicYear year;
