@@ -2,8 +2,10 @@ package Umc.replendar.major.converter;
 
 import Umc.replendar.activitylog.entity.Check;
 import Umc.replendar.major.dto.res.LectureAssignmentRes;
+import Umc.replendar.major.dto.res.MajorRes;
 import Umc.replendar.major.entity.Lecture;
 import Umc.replendar.major.entity.LectureAssignment;
+import Umc.replendar.major.entity.Major;
 import Umc.replendar.major.entity.UserLectureAssignment;
 
 import java.time.LocalDateTime;
@@ -66,6 +68,14 @@ public class MajorConverter {
                 .nickname(userLectureAssignment.getUser().getNickname())
                 .title(userLectureAssignment.getLectureAssignment().getTitle())
                 .check(check)
+                .build();
+    }
+
+    public static MajorRes.MajorRes2 majorDtoRes(Major major) {
+
+        return MajorRes.MajorRes2.builder()
+                .majorId(major.getId())
+                .majorName(major.getMajorName())
                 .build();
     }
 
