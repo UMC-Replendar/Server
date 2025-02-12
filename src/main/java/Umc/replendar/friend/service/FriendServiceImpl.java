@@ -140,10 +140,10 @@ public class FriendServiceImpl implements FriendService {
 
         List<friendship> friendships = friendRepository.findAllByUserIdOrFriendId(userId, userId);
 
-        String profileImageUrl = amazonS3Util.getProfilePath(userId);
-
         List<FriendRes.FriendListRes> friendList = friendships.stream()
                 .map(friend -> {
+                    Long friendId = friend.getFriendForUser(userId).getId();
+                    String profileImageUrl = amazonS3Util.getProfilePath(friendId);
                     int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend.getFriendForUser(userId), Status.ONGOING, GeneralSettings.ON);
                     return FriToDto.toFriendListRes(friend, userId, ongoingAssignments, profileImageUrl);
                 })
@@ -161,10 +161,10 @@ public class FriendServiceImpl implements FriendService {
 
         List<friendship> friendships = friendRepository.findAllByUserIdOrFriendId(userId, userId);
 
-        String profileImageUrl = amazonS3Util.getProfilePath(userId);
-
         List<FriendRes.FriendListRes> friendList = friendships.stream()
                 .map(friend -> {
+                    Long friendId = friend.getFriendForUser(userId).getId();
+                    String profileImageUrl = amazonS3Util.getProfilePath(friendId);
                     int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend.getFriendForUser(userId), Status.ONGOING, GeneralSettings.ON);
                     return FriToDto.toFriendListRes(friend, userId, ongoingAssignments, profileImageUrl);
                 })
