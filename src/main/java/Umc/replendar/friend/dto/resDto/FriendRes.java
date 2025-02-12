@@ -23,6 +23,7 @@ public class FriendRes {
         private int ongoingAssignments; // 진행 중인 과제 개수
         private Buddy buddyStatus; //친한 친구 설정 상태
         private String friendNote;
+        private String profileImageUrl;
     }
 
     @Data

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FriToDto {
-    public static FriendRes.FriendListRes toFriendListRes(friendship friendship, Long userId, int ongoingAssignments) {
+    public static FriendRes.FriendListRes toFriendListRes(friendship friendship, Long userId, int ongoingAssignments, String profileImageUrl) {
         User friend = friendship.getFriendForUser(userId);
         return FriendRes.FriendListRes.builder()
                 .friendshipId(friendship.getId())  // 친구관계 ID
@@ -24,6 +24,7 @@ public class FriToDto {
                 .ongoingAssignments(ongoingAssignments)  // 진행 중인 과제 수
                 .buddyStatus(friendship.getBuddyStatusForUser(userId))  // 해당 사용자의 Buddy 상태
                 .friendNote(friendship.getNoteForUser(userId))  // 친구 노트(메모)
+                .profileImageUrl(profileImageUrl)
                 .build();
     }
     public static FriendRes.FriendSearchRes toFriendSearchRes(User user) {
@@ -50,7 +51,7 @@ public class FriToDto {
                                             Status.ONGOING,
                                             GeneralSettings.ON
                                     );
-                                    return toFriendListRes(friendship, userId, ongoingAssignments);
+                                    return toFriendListRes(friendship, userId, ongoingAssignments, null);
                                 })
                                 .sorted(Comparator.comparing(
                                                 (FriendRes.FriendListRes f) -> f.getBuddyStatus() == Buddy.YES ? 0 : 1)
