@@ -13,6 +13,7 @@ import Umc.replendar.friend.entity.FriendRequest;
 import Umc.replendar.friend.entity.RequestStatus;
 import Umc.replendar.friend.repository.FriendRepository;
 import Umc.replendar.friend.repository.FriendRequestRepository;
+import Umc.replendar.global.util.AmazonS3Util;
 import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class FriendServiceImpl implements FriendService {
     private final UserRepository userRepository;
     private final AssignmentRepository assignmentRepository;
     private final FriendRequestRepository friendRequestRepository;
+    private final AmazonS3Util amazonS3Util;
 
 // 친구 요청 생성
     @Override
@@ -138,10 +140,12 @@ public class FriendServiceImpl implements FriendService {
 
         List<friendship> friendships = friendRepository.findAllByUserIdOrFriendId(userId, userId);
 
+        String profileImageUrl = amazonS3Util.getProfilePath(userId);
+
         List<FriendRes.FriendListRes> friendList = friendships.stream()
                 .map(friend -> {
                     int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend.getFriendForUser(userId), Status.ONGOING, GeneralSettings.ON);
-                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments);
+                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments, profileImageUrl);
                 })
                 .sorted(Comparator.comparing((FriendRes.FriendListRes f) -> f.getBuddyStatus() == Buddy.YES ? 0 : 1)
                         .thenComparing(FriendRes.FriendListRes::getNickname))
@@ -157,10 +161,12 @@ public class FriendServiceImpl implements FriendService {
 
         List<friendship> friendships = friendRepository.findAllByUserIdOrFriendId(userId, userId);
 
+        String profileImageUrl = amazonS3Util.getProfilePath(userId);
+
         List<FriendRes.FriendListRes> friendList = friendships.stream()
                 .map(friend -> {
                     int ongoingAssignments = assignmentRepository.countByUserAndStatusAndVisibility(friend.getFriendForUser(userId), Status.ONGOING, GeneralSettings.ON);
-                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments);
+                    return FriToDto.toFriendListRes(friend, userId, ongoingAssignments, profileImageUrl);
                 })
                 .sorted(Comparator.comparing((FriendRes.FriendListRes f) -> f.getBuddyStatus() == Buddy.YES ? 0 : 1)
                         .thenComparing(FriendRes.FriendListRes::getNickname))

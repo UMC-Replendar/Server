@@ -128,7 +128,7 @@ public class FriendGroupServiceImpl implements FriendGroupService {
         // 그룹에 속하지 않은 친구들 필터링
         List<FriendRes.FriendListRes> availableFriends = allFriends.stream()
                 .filter(friend -> !friendsInGroup.contains(friend)) // 그룹에 없는 친구만 포함
-                .map(friend ->FriToDto.toFriendListRes(friend, userId, 0)) // 과제 개수는 0으로 설정
+                .map(friend ->FriToDto.toFriendListRes(friend, userId, 0,null)) // 과제 개수는 0으로 설정
                 .collect(Collectors.toList());
 
         return ApiResponse.onSuccess(availableFriends);
