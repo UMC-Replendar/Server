@@ -27,6 +27,8 @@ public class ActivityLogRes {
         String date;
         String time;
         Check check;
+        Long friendRequestId;      // 친구 요청 ID (친구 요청인 경우)
+        Long senderId;             // 친구 요청을 보낸 사람 ID (친구 요청인 경우)
         Long friendId;
         Long assId;
         String content;

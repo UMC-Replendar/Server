@@ -64,24 +64,6 @@ public class logConverter {
                 .build();
     }
 
-    public static ActivityLogRes.FriendActivityHistoryRes friendRequestHistoryDto2(FriendRequest fr) {
-        // 친구 요청 대기중 이면 UNCHECK , 친구 요청 수락 or 거절 하면 CHECK
-        Check check = fr.getStatus() == RequestStatus.PENDING ? Check.UNCHECK : Check.CHECK;
-
-        return ActivityLogRes.FriendActivityHistoryRes.builder()
-                .friendRequestId(fr.getId())  // 친구 요청 ID
-                .date(fr.getCreatedAt().format(DATE_FORMATTER))
-                .time(fr.getCreatedAt().format(TIME_FORMATTER))
-                .check(check)
-                .senderId(fr.getSender().getId()) // 친구 요청 보낸 사람 ID
-                .content(fr.getSender().getNickname() + "님이 친구 요청을 보냈습니다.")
-                .createdAt(fr.getCreatedAt())
-                .timeStamp(formatTimeAgo(fr.getCreatedAt()))
-                .type("친구요청")
-                .build();
-    }
-
-
     public static ActivityLogRes.getHistoryRes notifyLogHistoryDto(NotifyLog notifyLog) {
 
         String content = "";
@@ -113,18 +95,31 @@ public class logConverter {
         Check check = fr.getStatus() == RequestStatus.PENDING ? Check.UNCHECK : Check.CHECK;
 
         return ActivityLogRes.getHistoryRes.builder()
+                .friendRequestId(fr.getId())  // 친구 요청 ID
                 .date(fr.getCreatedAt().format(DATE_FORMATTER))
                 .time(fr.getCreatedAt().format(TIME_FORMATTER))
                 .check(check)
-                .friendId(fr.getSender().getId())
+                .senderId(fr.getSender().getId()) // 친구 요청 보낸 사람 ID
                 .content(fr.getSender().getNickname()+"님이 친구 요청을 보냈습니다.")
                 .createdAt(fr.getCreatedAt())
                 .type("친구요청")
                 .build();
     }
 
+    public static ActivityLogRes.FriendActivityHistoryRes friendRequestHistoryDto2(FriendRequest fr) {
+        // 친구 요청 대기중 이면 UNCHECK , 친구 요청 수락 or 거절 하면 CHECK
+        Check check = fr.getStatus() == RequestStatus.PENDING ? Check.UNCHECK : Check.CHECK;
 
-
-
-
+        return ActivityLogRes.FriendActivityHistoryRes.builder()
+                .friendRequestId(fr.getId())  // 친구 요청 ID
+                .date(fr.getCreatedAt().format(DATE_FORMATTER))
+                .time(fr.getCreatedAt().format(TIME_FORMATTER))
+                .check(check)
+                .senderId(fr.getSender().getId()) // 친구 요청 보낸 사람 ID
+                .content(fr.getSender().getNickname() + "님이 친구 요청을 보냈습니다.")
+                .createdAt(fr.getCreatedAt())
+                .timeStamp(formatTimeAgo(fr.getCreatedAt()))
+                .type("친구요청")
+                .build();
+    }
 }
