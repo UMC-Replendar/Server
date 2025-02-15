@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static Umc.replendar.assignment.converter.AssToDto.toShareOkDto;
@@ -127,18 +128,40 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public ApiResponse<Page<ActivityLogRes.getHistoryRes2>> getActivityFriendLog(Long userId, Pageable adjustedPageable) {
+    public ApiResponse<Page<ActivityLogRes.FriendActivityHistoryRes>> getActivityFriendLog(Long userId, Pageable adjustedPageable) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다"));
 
+        // 기존 활동 로그 조회 (과제 관련)
         Page<ActivityLog> activityLogs = activityLogRepository.findAllByUserOrderByCreatedAtDesc(user,adjustedPageable);
 
+        // 받은 친구 요청 조회
+        Page<FriendRequest> friendRequests = friendRequestRepository.findAllByReceiverOrderByCreatedAtDesc(user, adjustedPageable);
+
+        // 과제 히스토리 변환
         List<Assignment> userAssignments = assignmentRepository.findAllByUser(user);
+        List<ActivityLogRes.FriendActivityHistoryRes> activityLogToDto = activityLogs.stream()
+                .map(log -> logConverter.activityLogFriendHistoryDto(log, userAssignments))
+                .toList();
 
-        Page<ActivityLogRes.getHistoryRes2> activityLogToDto = activityLogs.map(log ->
-                logConverter.activityLogFriendHistoryDto(log, userAssignments)
-        );
+        // 친구 요청 히스토리 변환
+        List<ActivityLogRes.FriendActivityHistoryRes> friendRequestDto = friendRequests.stream()
+                .map(fr -> logConverter.friendRequestHistoryDto2(fr))
+                .toList();
 
-        return ApiResponse.onSuccess(activityLogToDto);
+        // 리스트 합치기
+        List<ActivityLogRes.FriendActivityHistoryRes> combinedList = new ArrayList<>();
+        combinedList.addAll(activityLogToDto);
+        combinedList.addAll(friendRequestDto);
+
+        // 최신순 정렬 (createdAt 기준)
+        combinedList.sort(Comparator.comparing(ActivityLogRes.FriendActivityHistoryRes::getCreatedAt).reversed());
+
+        // 리스트를 Page<T>로 변환하여 반환
+        int start = (int) adjustedPageable.getOffset();
+        int end = Math.min((start + adjustedPageable.getPageSize()), combinedList.size());
+        List<ActivityLogRes.FriendActivityHistoryRes> pagedList = combinedList.subList(start, end);
+
+        return ApiResponse.onSuccess(new PageImpl<>(pagedList, adjustedPageable, combinedList.size()));
     }
 
     @Override
