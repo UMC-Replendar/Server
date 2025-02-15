@@ -7,6 +7,7 @@ import Umc.replendar.activitylog.entity.Check;
 import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.assignment.entity.NotifyLog;
 import Umc.replendar.friend.entity.FriendRequest;
+import Umc.replendar.friend.entity.RequestStatus;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -44,12 +45,12 @@ public class logConverter {
                 .type("과제")
                 .build();
     }
-    public static ActivityLogRes.getHistoryRes2 activityLogFriendHistoryDto(ActivityLog log, List<Assignment> userAssignments) {
+    public static ActivityLogRes.FriendActivityHistoryRes activityLogFriendHistoryDto(ActivityLog log, List<Assignment> userAssignments) {
         boolean isRegistered = userAssignments.stream()
                 .anyMatch(assignment -> assignment.getOriginAssId() != null &&
                         assignment.getOriginAssId().equals(log.getAssignment().getId()));
 
-        return ActivityLogRes.getHistoryRes2.builder()
+        return ActivityLogRes.FriendActivityHistoryRes.builder()
                 .date(log.getCreatedAt().format(DATE_FORMATTER))
                 .time(log.getCreatedAt().format(TIME_FORMATTER))
                 .check(log.getIsCheck())
@@ -60,6 +61,23 @@ public class logConverter {
                 .timeStamp(formatTimeAgo(log.getCreatedAt()))
                 .type("과제")
                 .isRegistered(isRegistered)
+                .build();
+    }
+
+    public static ActivityLogRes.FriendActivityHistoryRes friendRequestHistoryDto2(FriendRequest fr) {
+        // 친구 요청 대기중 이면 UNCHECK , 친구 요청 수락 or 거절 하면 CHECK
+        Check check = fr.getStatus() == RequestStatus.PENDING ? Check.UNCHECK : Check.CHECK;
+
+        return ActivityLogRes.FriendActivityHistoryRes.builder()
+                .friendRequestId(fr.getId())  // 친구 요청 ID
+                .date(fr.getCreatedAt().format(DATE_FORMATTER))
+                .time(fr.getCreatedAt().format(TIME_FORMATTER))
+                .check(check)
+                .senderId(fr.getSender().getId()) // 친구 요청 보낸 사람 ID
+                .content(fr.getSender().getNickname() + "님이 친구 요청을 보냈습니다.")
+                .createdAt(fr.getCreatedAt())
+                .timeStamp(formatTimeAgo(fr.getCreatedAt()))
+                .type("친구요청")
                 .build();
     }
 
@@ -91,18 +109,8 @@ public class logConverter {
     }
 
     public static ActivityLogRes.getHistoryRes friendRequestHistoryDto(FriendRequest fr){
-        Check check = null;
-        switch (fr.getStatus()){
-            case PENDING:
-                check = Check.UNCHECK;
-                break;
-            case ACCEPTED:
-                check = Check.CHECK;
-                break;
-            case REJECTED:
-                check = Check.CHECK;
-                break;
-        }
+        // 친구 요청 대기중 이면 UNCHECK , 친구 요청 수락 or 거절 하면 CHECK
+        Check check = fr.getStatus() == RequestStatus.PENDING ? Check.UNCHECK : Check.CHECK;
 
         return ActivityLogRes.getHistoryRes.builder()
                 .date(fr.getCreatedAt().format(DATE_FORMATTER))
@@ -114,6 +122,9 @@ public class logConverter {
                 .type("친구요청")
                 .build();
     }
+
+
+
 
 
 }

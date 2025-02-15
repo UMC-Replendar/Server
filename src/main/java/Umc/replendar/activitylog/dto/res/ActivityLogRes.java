@@ -1,6 +1,7 @@
 package Umc.replendar.activitylog.dto.res;
 
 import Umc.replendar.activitylog.entity.Check;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class ActivityLogRes {
     @Data
     @Builder
     @AllArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL) //-> 와우!!
     public static class getHistoryRes {
         String date;
         String time;
@@ -36,17 +38,20 @@ public class ActivityLogRes {
     @Data
     @Builder
     @AllArgsConstructor
-    public static class getHistoryRes2 {
+    @JsonInclude(JsonInclude.Include.NON_NULL) //-> 와우!!
+    public static class FriendActivityHistoryRes {
+        Long friendRequestId;      // 친구 요청 ID (친구 요청인 경우)
+        Long senderId;             // 친구 요청을 보낸 사람 ID (친구 요청인 경우)
+        Long friendId;             // 친구 ID (과제 활동인 경우)
+        Long assId;                // 과제 ID (과제 활동인 경우)
+        Check check;
         String date;
         String time;
-        Check check;
-        Long friendId;
-        Long assId;
         String content;
         LocalDateTime createdAt;
-        String timeStamp;
-        String type;
-        private boolean isRegistered;
+        String timeStamp;          // (예: "5분 전")
+        String type;               // (친구요청 / 과제)
+        Boolean isRegistered;      // 과제 등록 여부 (과제 활동인 경우)
     }
 
 //    @Data
