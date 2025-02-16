@@ -23,6 +23,10 @@ public class TaskTimer {
     //시간 빼주는 함수
     public static String taskTimer(LocalDateTime targetTime) {
 
+        if (targetTime == null) {
+            return null; // 혹은 적절한 기본값 반환
+        }
+
         LocalDateTime now = LocalDateTime.now();
 
         // 남은 초를 기준으로 계산

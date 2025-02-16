@@ -18,7 +18,7 @@ public class ActivityLogRes {
         Long logId;
         Check check;
     }
-
+    //히스토리 조회
     @Data
     @Builder
     @AllArgsConstructor
@@ -36,7 +36,7 @@ public class ActivityLogRes {
         String type;
         //private boolean isRegistered;
     }
-
+    //히스토리 조회(친구 소식)
     @Data
     @Builder
     @AllArgsConstructor
@@ -55,11 +55,4 @@ public class ActivityLogRes {
         String type;               // (친구요청 / 과제)
         Boolean isRegistered;      // 과제 등록 여부 (과제 활동인 경우)
     }
-
-//    @Data
-//    @Builder
-//    @AllArgsConstructor
-//    public static class getActivityLogRes {
-//
-//    }
 }

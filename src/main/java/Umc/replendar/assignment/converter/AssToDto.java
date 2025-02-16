@@ -40,6 +40,7 @@ public class AssToDto {
                         .due_datetime(taskTimer((assignment.getDueDate())))
                         .due_date(assignment.getDueDate().format(DATE_FORMATTER))
                         .due_time(assignment.getDueDate().format(TIME_FORMATTER))
+                        .completion_time(taskTimer((assignment.getCompletionTime())))
                         .memo(assignment.getMemo())
                         .notification(assignment.getNotification())
                         .visibility(assignment.getVisibility())
