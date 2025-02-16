@@ -27,4 +27,6 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
 
     Page<FriendRequest> findAllByReceiverOrderByCreatedAtDesc(User user, Pageable adjustedPageable);
 
+    List<FriendRequest> findAllByReceiverOrderByCreatedAtDesc(User user);
+
 }

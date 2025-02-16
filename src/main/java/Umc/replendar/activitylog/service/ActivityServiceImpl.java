@@ -106,9 +106,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public Page<ActivityLogRes.getHistoryRes> getActivityLog(Long userId, Pageable adjustedPageable) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다"));
-        Page<ActivityLog> activityLogs = activityLogRepository.findAllByUserOrderByCreatedAtDesc(user,adjustedPageable);
-        Page<FriendRequest> friendRequests = friendRequestRepository.findAllByReceiverOrderByCreatedAtDesc(user,adjustedPageable);
-        Page<NotifyLog> notifyLogs = notifyLogRepository.findAllByUserOrderByCreatedAtDesc(user,adjustedPageable);
+        List<ActivityLog> activityLogs = activityLogRepository.findAllByUserOrderByCreatedAtDesc(user);
+        List<FriendRequest> friendRequests = friendRequestRepository.findAllByReceiverOrderByCreatedAtDesc(user);
+        List<NotifyLog> notifyLogs = notifyLogRepository.findAllByUserOrderByCreatedAtDesc(user);
 
         List<ActivityLogRes.getHistoryRes> activityLogToDto = activityLogs.stream().map(logConverter::activityLogHistoryDto).toList();
         List<ActivityLogRes.getHistoryRes> friendRequestDto = friendRequests.stream().map(logConverter::friendRequestHistoryDto).toList();
@@ -118,6 +118,9 @@ public class ActivityServiceImpl implements ActivityService {
         combinedList.addAll(activityLogToDto);
         combinedList.addAll(friendRequestDto);
         combinedList.addAll(notifyLogDto);
+
+        //시간순 정렬
+        combinedList.sort(Comparator.comparing(ActivityLogRes.getHistoryRes::getCreatedAt).reversed());
 
         // ✅ 리스트를 Page<T>로 변환하여 반환
         int start = (int) adjustedPageable.getOffset();
