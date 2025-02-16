@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,7 @@ public class AssignmentRes {
             private String due_date;
             private String due_time;
             private String due_datetime;
-            private String completion_time;
+            private LocalDateTime completion_time;
             private String memo;
             private Active favorite;
             private GeneralSettings notification;
