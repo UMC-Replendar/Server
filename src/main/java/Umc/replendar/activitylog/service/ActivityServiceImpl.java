@@ -135,10 +135,10 @@ public class ActivityServiceImpl implements ActivityService {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾지 못했습니다"));
 
         // 기존 활동 로그 조회 (과제 관련)
-        Page<ActivityLog> activityLogs = activityLogRepository.findAllByUserOrderByCreatedAtDesc(user,adjustedPageable);
+        List<ActivityLog> activityLogs = activityLogRepository.findAllByUserOrderByCreatedAtDesc(user);
 
         // 받은 친구 요청 조회
-        Page<FriendRequest> friendRequests = friendRequestRepository.findAllByReceiverOrderByCreatedAtDesc(user, adjustedPageable);
+        List<FriendRequest> friendRequests = friendRequestRepository.findAllByReceiverOrderByCreatedAtDesc(user);
 
         // 과제 히스토리 변환
         List<Assignment> userAssignments = assignmentRepository.findAllByUser(user);
