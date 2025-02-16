@@ -75,6 +75,7 @@ public class AssignmentRes {
             private String due_date;
             private String due_time;
             private String due_datetime;
+            private String completion_time;
             private String memo;
             private Active favorite;
             private GeneralSettings notification;
