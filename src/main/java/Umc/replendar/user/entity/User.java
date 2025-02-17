@@ -96,6 +96,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<FriendGroup> friendGroups = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<GuestBook> guestbooks = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "major_id")
     private Major major;
