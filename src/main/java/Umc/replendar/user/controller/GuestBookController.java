@@ -29,7 +29,7 @@ public class GuestBookController {
 
     @GetMapping
     @Operation(summary = "방명록 전체 조회 API", description = "방명록을 전체 조회")
-    public List<GuestBookDtoRes> getAllGuestBooks() {
-        return guestBookService.getAllGuestBooks();
+    public ApiResponse<List<GuestBookDtoRes>> getAllGuestBooks() {
+        return ApiResponse.onSuccess(guestBookService.getAllGuestBooks());
     }
 }
