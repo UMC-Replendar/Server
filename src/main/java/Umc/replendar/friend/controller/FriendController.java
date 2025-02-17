@@ -77,5 +77,11 @@ public class FriendController {
         return friendService.getFriendNote(userId, friendId);
     }
 
+    @Operation(summary = "과제 공유 리스트 조회 API", description = "친구에게 공유할 과제 리스트를 조회합니다")
+    @PostMapping("/share/assignment")
+    public ApiResponse<String> getShareList(@RequestBody FriendReq.shareAssignmentDto reqDto) {
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return friendService.getShareList(userId, reqDto);
+    }
 }
 
