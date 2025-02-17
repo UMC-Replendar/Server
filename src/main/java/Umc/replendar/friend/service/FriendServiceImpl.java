@@ -1,9 +1,16 @@
 package Umc.replendar.friend.service;
 
+import Umc.replendar.activitylog.entity.Action;
+import Umc.replendar.activitylog.entity.ActivityLog;
+import Umc.replendar.activitylog.entity.Check;
+import Umc.replendar.activitylog.repository.ActivityLogRepository;
 import Umc.replendar.apiPayload.ApiResponse;
+import Umc.replendar.assignment.entity.Assignment;
 import Umc.replendar.assignment.entity.GeneralSettings;
+import Umc.replendar.assignment.entity.Share;
 import Umc.replendar.assignment.entity.Status;
 import Umc.replendar.assignment.repository.AssignmentRepository;
+import Umc.replendar.assignment.repository.ShareRepository;
 import Umc.replendar.friend.converter.FriToDto;
 import Umc.replendar.friend.dto.reqDto.FriendReq;
 import Umc.replendar.friend.dto.resDto.FriendRes;
@@ -14,6 +21,7 @@ import Umc.replendar.friend.entity.RequestStatus;
 import Umc.replendar.friend.repository.FriendRepository;
 import Umc.replendar.friend.repository.FriendRequestRepository;
 import Umc.replendar.global.util.AmazonS3Util;
+import Umc.replendar.user.entity.Active;
 import Umc.replendar.user.entity.User;
 import Umc.replendar.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +42,10 @@ public class FriendServiceImpl implements FriendService {
     private final AssignmentRepository assignmentRepository;
     private final FriendRequestRepository friendRequestRepository;
     private final AmazonS3Util amazonS3Util;
+    private final ShareRepository shareRepository;
+    private final ActivityLogRepository activityLogRepository;
 
-// 친구 요청 생성
+    // 친구 요청 생성
     @Override
     public ApiResponse<Long> sendFriendRequest(FriendReq.FriendRequestDto reqDto) {
         User sender = userRepository.findById(reqDto.getUserId())
@@ -276,5 +286,76 @@ public class FriendServiceImpl implements FriendService {
         }
 
         return ApiResponse.onSuccess(new FriendRes.FriendNoteRes(note));
+    }
+
+    //과제 공유하기
+    //과제 먼저 찾기
+    //친구 조회 후 친구이름으로 과제 등록하기(이 때 친구가 과제를 수락 안할걸로 처리를 해야함)
+
+    @Override
+    public ApiResponse<String> getShareList(Long userId, FriendReq.shareAssignmentDto reqDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        // 과제 공유 리스트 조회
+        List<Assignment> assignments = assignmentRepository.findAllById(reqDto.getAssignmentIds());
+
+        boolean hasInvalidAssignment = assignments.stream()
+                .anyMatch(assignment -> !assignment.getUser().getId().equals(userId));
+        if (hasInvalidAssignment) {
+            throw new IllegalArgumentException("사용자가 소유한 과제가 아닙니다.");
+        }
+
+        //과제의 status가 ongoing이 아니면 에러발생
+        //anyMatch는 하나라도 만족하면 true 반환
+        boolean hasInvalidStatus = assignments.stream()    //false 반환
+                .anyMatch(assignment -> !assignment.getStatus().equals(Status.ONGOING));
+        if (hasInvalidStatus) {
+            throw new IllegalArgumentException("진행중인 과제만 공유할 수 있습니다.");
+        }
+
+
+
+        User friend = userRepository.findById(reqDto.getFriendId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 친구입니다."));
+
+        // 이미 친구 관계인지 확인
+        friendRepository.findFriendByUserAndFriend(user.getId(),friend.getId()).orElseThrow(() -> new IllegalArgumentException("친구 관계가 존재하지 않습니다."));
+
+        // 친구에게 과제 공유
+        assignments.forEach(assignment -> {
+            if(shareRepository.existsByAssignmentAndUser(assignment, friend)){
+                throw new IllegalArgumentException("이전에 과제 공유를 했었던 친구입니다.");
+            }
+            Assignment assignmentFr = Assignment.builder()
+                    .user(friend)
+                    .originAssId(assignment.getId())
+                    .visibility(GeneralSettings.OFF)
+                    .notification(GeneralSettings.OFF)
+                    .status(Status.WAIT)
+                    .favorite(Active.INACTIVE)
+                    .title(assignment.getTitle())
+                    .dueDate(assignment.getDueDate())
+                    .memo(assignment.getMemo())
+                    .build();
+
+            Assignment assignment1 = assignmentRepository.save(assignmentFr);
+
+            //과제 공유를 하면 기록으로 유저 올려주기
+            shareRepository.save(Share.builder()
+                    .assignment(assignment)
+                    .user(friend)
+                    .build());
+
+            activityLogRepository.save(ActivityLog.builder()
+                            .user(friend)
+                            .friend(user)
+                            .assignment(assignment1)
+                            .action(Action.SHARE)
+                            .isCheck(Check.UNCHECK)
+                            .build());
+            });
+
+       return ApiResponse.onSuccess("친구에게 과제를 공유했습니다.");
     }
 }

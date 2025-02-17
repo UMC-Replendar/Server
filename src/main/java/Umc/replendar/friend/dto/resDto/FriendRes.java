@@ -58,4 +58,5 @@ public class FriendRes {
     public static class FriendGroupCreatRes {
         private Long groupId;
     }
+
 }
