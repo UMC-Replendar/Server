@@ -25,7 +25,6 @@ public class MajorConverter {
                 .due_date(lectureAssignment.getDueDate().toString())
                 .check(check ? Check.CHECK : Check.UNCHECK)
                 .build();
-
     }
 
     public static LectureAssignmentRes.LectureAssignmentPostRes toLectureAssignmentPostRes(LectureAssignment lectureAssignment) {
