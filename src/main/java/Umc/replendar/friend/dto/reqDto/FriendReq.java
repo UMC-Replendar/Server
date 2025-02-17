@@ -67,4 +67,12 @@ public class FriendReq {
         private String note;
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class shareAssignmentDto {
+        private Long friendId;
+        private List<Long> assignmentIds;
+    }
+
 }

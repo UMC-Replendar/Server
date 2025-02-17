@@ -20,4 +20,5 @@ public interface FriendService {
     ApiResponse<String> updateFriendNote(Long userId, FriendReq.FriendNoteReqDto reqDto);
     ApiResponse<FriendRes.FriendNoteRes> getFriendNote(Long userId, Long friendId);
 
+    ApiResponse<String> getShareList(Long userId, FriendReq.shareAssignmentDto reqDto);
 }
