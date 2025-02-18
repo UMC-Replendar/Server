@@ -3,6 +3,7 @@ package Umc.replendar.common;
 import Umc.replendar.activitylog.entity.Check;
 import Umc.replendar.assignment.entity.GeneralSettings;
 import Umc.replendar.assignment.entity.NotifyLog;
+import Umc.replendar.assignment.entity.Status;
 import Umc.replendar.assignment.repository.AssNotifyCycleRepository;
 import Umc.replendar.assignment.repository.NotifyLogRepository;
 import lombok.AllArgsConstructor;
@@ -23,15 +24,16 @@ public class ScheduleService {
     public void createdNotifyLog() {
         assNotifyCycleRepository.findAllByScheduledAtBeforeAndNotifyCheck(LocalDateTime.now(), GeneralSettings.OFF)
                 .forEach(assNotifyCycle -> {
+                    if(assNotifyCycle.getAssignment().getStatus().equals(Status.ONGOING)) {
+                        notifyLogRepository.save(NotifyLog.builder()
+                                .user(assNotifyCycle.getAssignment().getUser())
+                                .assNotifyCycle(assNotifyCycle)
+                                .isCheck(Check.UNCHECK)
+                                .build());
 
-                    notifyLogRepository.save(NotifyLog.builder()
-                            .user(assNotifyCycle.getAssignment().getUser())
-                            .assNotifyCycle(assNotifyCycle)
-                            .isCheck(Check.UNCHECK)
-                            .build());
-
-                    assNotifyCycle.setNotifyCheck(GeneralSettings.ON);
-                    assNotifyCycleRepository.save(assNotifyCycle);
+                        assNotifyCycle.setNotifyCheck(GeneralSettings.ON);
+                        assNotifyCycleRepository.save(assNotifyCycle);
+                    }
                 });
     }
 }
