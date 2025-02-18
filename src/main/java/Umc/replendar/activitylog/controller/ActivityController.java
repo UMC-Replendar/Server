@@ -50,31 +50,31 @@ public class ActivityController {
 
 
     @Operation(summary = "과제 활동 로그 공유 수락 응답 API", description = "과제 활동 로그 공유 수락 응답 API")
-    @PatchMapping("/share/accept/{logId}")
-    public ApiResponse<AssignmentRes.assLogRes> shareAcceptLog(@PathVariable Long logId) {
+    @PatchMapping("/share/accept/{activityLogId}")
+    public ApiResponse<AssignmentRes.assLogRes> shareAcceptLog(@PathVariable Long activityLogId) {
         Long userId = jwtTokenProvider.getUserIdFromToken();
-        return activityService.shareActivityLog(logId, userId);
+        return activityService.shareActivityLog(activityLogId, userId);
     }
 
     @Operation(summary = "과제 활동 로그 공유 거절 응답 API", description = "과제 활동 로그 공유 거절 응답 API")
-    @PatchMapping("/share/reject/{logId}")
-    public ApiResponse<ActivityLogRes.shareActivity> shareRejectLog(@PathVariable Long logId) {
+    @PatchMapping("/share/reject/{activityLogId}")
+    public ApiResponse<ActivityLogRes.shareActivity> shareRejectLog(@PathVariable Long activityLogId) {
         Long userId = jwtTokenProvider.getUserIdFromToken();
-        return activityService.shareRejectLog(logId, userId);
+        return activityService.shareRejectLog(activityLogId, userId);
     }
 
     @Operation(summary = "과제 활동 로그 읽음 처리 API", description = "과제 활동 로그 읽음 처리 API")
-    @PatchMapping("/{logId}")
-    public ApiResponse<String> checkAssLog(@PathVariable Long logId) {
+    @PatchMapping("/{activityLogId}")
+    public ApiResponse<String> checkAssLog(@PathVariable Long activityLogId) {
         Long userId = jwtTokenProvider.getUserIdFromToken();
-        return activityService.checkLog(logId, userId);
+        return activityService.checkLog(activityLogId, userId);
     }
 
     @Operation(summary = "과제 알림 로그 읽음 처리 API", description = "과제 알림 로그 읽음 처리 API")
-    @PatchMapping("/notify/{logId}")
-    public ApiResponse<String> checkNotifyLog(@PathVariable Long logId) {
+    @PatchMapping("/notify/{assignmentNotifyId}")
+    public ApiResponse<String> checkNotifyLog(@PathVariable Long assignmentNotifyId) {
         Long userId = jwtTokenProvider.getUserIdFromToken();
-        return activityService.checkNotifyLog(logId, userId);
+        return activityService.checkNotifyLog(assignmentNotifyId, userId);
     }
 
 
