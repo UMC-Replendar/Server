@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -89,7 +90,7 @@ public class MajorServiceImpl implements MajorService {
             throw new IllegalArgumentException("사용자의 학과 정보가 존재하지 않습니다.");
         }
 
-        List<Lecture> lectures = lectureRepository.findAllByMajorIdAndAcademicYear(user.getMajor().getId(), year);
+        List<Lecture> lectures = lectureRepository.findAllByMajorIdAndAcademicYearOrAcademicYear(user.getMajor().getId(), year, AcademicYear.YEAR_ALL);
 
         List<Long> lectureIds = lectures.stream()
                 .map(Lecture::getId)
@@ -173,7 +174,7 @@ public class MajorServiceImpl implements MajorService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
         AcademicYear year;
-        Long realMajorId;
+        List<Long> realMajorId = new ArrayList<>();
         //학년 선택
         if (academicYear == null) {
             year = user.getAcademicYear();
@@ -186,7 +187,7 @@ public class MajorServiceImpl implements MajorService {
         }
         //학과 선택
         if(majorId == null){
-            realMajorId = user.getMajor().getId();
+            realMajorId.add(user.getMajor().getId());
         }else{
             if(majorRepository.findById(majorId).isEmpty()){
                 throw new IllegalArgumentException("존재하지 않는 학과 ID입니다.");
@@ -194,11 +195,10 @@ public class MajorServiceImpl implements MajorService {
             if(!Objects.equals(user.getMajor().getSchool().getId(), majorRepository.findById(majorId).get().getSchool().getId())){
                 throw new IllegalArgumentException("사용자의 학교와 다른 학과입니다.");
             }
-            realMajorId = majorId;
-
+            realMajorId.add(majorId);
         }
 
-        List<Lecture> lectures = lectureRepository.findAllByMajorIdAndAcademicYear(realMajorId, year);
+        List<Lecture> lectures = lectureRepository.findAllByMajorIdInAndAcademicYearOrAcademicYear(realMajorId, year, AcademicYear.YEAR_ALL);
         List<Long> lectureIds = lectures.stream()
                 .map(Lecture::getId)
                 .toList();

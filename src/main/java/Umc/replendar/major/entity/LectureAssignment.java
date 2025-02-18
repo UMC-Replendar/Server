@@ -22,11 +22,14 @@ public class LectureAssignment extends BaseEntity {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 30)
+    @Column(length = 50)
     private String title;
 
-    @Column(length = 100)
+    @Column(length = 254)
     private String content;
+
+    @Column(length = 50)
+    private String answer;
 
     @Column
     private LocalDate dueDate;

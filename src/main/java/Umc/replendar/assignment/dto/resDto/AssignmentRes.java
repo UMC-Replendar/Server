@@ -43,6 +43,8 @@ public class AssignmentRes {
         private List<Map<Long,String>> shareFriend;
         private Active favorite;
 
+        private String content;
+        private String answer;
 //        private NotifyCycle notifyCycle;
     }
 

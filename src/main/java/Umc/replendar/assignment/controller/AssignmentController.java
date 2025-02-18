@@ -54,7 +54,8 @@ public class AssignmentController {
     @Operation(summary = "과제 상세 조회 API",description = "과제 상세 조회 API")
     @GetMapping("/{assId}")
     public ApiResponse<AssignmentRes.assDetailRes> getAssignmentDetail(@PathVariable Long assId){
-        return assignmentService.getAssDetail(assId);
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return assignmentService.getAssDetail(assId,userId);
     }
 
     @Operation(summary = "과제 달별로 조회 API",description = "과제 달별로 조회 API")
