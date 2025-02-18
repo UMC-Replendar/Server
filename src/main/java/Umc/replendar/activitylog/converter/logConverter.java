@@ -42,7 +42,8 @@ public class logConverter {
                 .assId(activityLog.getAssignment().getId())
                 .content(content)
                 .createdAt(activityLog.getCreatedAt())
-                .type("과제")
+                .activityLogId(activityLog.getId())
+                .type("과제 공유")
                 .build();
     }
     public static ActivityLogRes.FriendActivityHistoryRes activityLogFriendHistoryDto(ActivityLog log, List<Assignment> userAssignments) {
@@ -59,7 +60,7 @@ public class logConverter {
                 .content(activityLogHistoryDto(log).getContent())
                 .createdAt(log.getCreatedAt())
                 .timeStamp(formatTimeAgo(log.getCreatedAt()))
-                .type("과제")
+                .type("과제 활동 로그")
                 .isRegistered(isRegistered)
                 .build();
     }
@@ -84,9 +85,10 @@ public class logConverter {
                 .time(notifyLog.getCreatedAt().format(TIME_FORMATTER))
                 .check(notifyLog.getIsCheck())
                 .assId(notifyLog.getAssNotifyCycle().getAssignment().getId())
-                .content(notifyLog.getAssNotifyCycle().getAssignment().getTitle() + "과제 마감까지" + content + "남았습니다.")
+                .assignmentNotifyId(notifyLog.getId())
+                .content(notifyLog.getAssNotifyCycle().getAssignment().getTitle() + "과제 마감까지" + content + " 남았습니다.")
                 .createdAt(notifyLog.getCreatedAt())
-                .type("알림")
+                .type("과제 시간 알림")
                 .build();
     }
 
