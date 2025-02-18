@@ -103,6 +103,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .assignment(assignment)
                     .notifyCycle(notifyCycle)
                     .scheduledAt(TaskTimer.notifyCycle(assignment.getDueDate(), notifyCycle))
+                    .notifyCheck(GeneralSettings.OFF)
                     .build();
             assNotifyCycleRepository.save(assNotifyCycle);
         }
@@ -404,6 +405,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .assignment(assignment)
                     .notifyCycle(notifyCycle)
                     .scheduledAt(TaskTimer.notifyCycle(assignment.getDueDate(), notifyCycle))
+                    .notifyCheck(GeneralSettings.OFF)
                     .build();
             assNotifyCycleRepository.save(assNotifyCycle);
         }
