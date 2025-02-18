@@ -22,14 +22,18 @@ public class logConverter {
 
     public static ActivityLogRes.getHistoryRes activityLogHistoryDto(ActivityLog activityLog) {
         String content = "";
+        String action = "";
         switch (activityLog.getAction()){
             case SHARE:
+                action = "과제 공유";
                 content = activityLog.getFriend().getNickname()+"님이 "+ activityLog.getAssignment().getTitle()+" 과제를 공유하였습니다.";
                 break;
             case COMPLETE:
+                action = "과제 완료";
                 content = activityLog.getFriend().getNickname()+"님이 "+ activityLog.getAssignment().getTitle()+" 과제를 완료하였습니다.";
                 break;
             case ADD_ASS:
+                action = "과제 추가";
                 content = activityLog.getFriend().getNickname()+"님이 "+ activityLog.getAssignment().getTitle()+" 과제를 추가하였습니다.";
                 break;
         }
@@ -43,7 +47,7 @@ public class logConverter {
                 .content(content)
                 .createdAt(activityLog.getCreatedAt())
                 .activityLogId(activityLog.getId())
-                .type("과제 공유")
+                .type(action)
                 .build();
     }
     public static ActivityLogRes.FriendActivityHistoryRes activityLogFriendHistoryDto(ActivityLog log, List<Assignment> userAssignments) {
@@ -86,7 +90,7 @@ public class logConverter {
                 .check(notifyLog.getIsCheck())
                 .assId(notifyLog.getAssNotifyCycle().getAssignment().getId())
                 .assignmentNotifyId(notifyLog.getId())
-                .content(notifyLog.getAssNotifyCycle().getAssignment().getTitle() + "과제 마감까지" + content + " 남았습니다.")
+                .content(notifyLog.getAssNotifyCycle().getAssignment().getTitle() + " 과제 마감까지 " + content + " 남았습니다.")
                 .createdAt(notifyLog.getCreatedAt())
                 .type("과제 시간 알림")
                 .build();
@@ -104,7 +108,7 @@ public class logConverter {
                 .senderId(fr.getSender().getId()) // 친구 요청 보낸 사람 ID
                 .content(fr.getSender().getNickname()+"님이 친구 요청을 보냈습니다.")
                 .createdAt(fr.getCreatedAt())
-                .type("친구요청")
+                .type("친구 요청")
                 .build();
     }
 
@@ -121,7 +125,7 @@ public class logConverter {
                 .content(fr.getSender().getNickname() + "님이 친구 요청을 보냈습니다.")
                 .createdAt(fr.getCreatedAt())
                 .timeStamp(formatTimeAgo(fr.getCreatedAt()))
-                .type("친구요청")
+                .type("친구 요청")
                 .build();
     }
 }
