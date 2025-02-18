@@ -25,6 +25,9 @@ public class AssNotifyCycle {
     @Enumerated(EnumType.STRING)
     private NotifyCycle notifyCycle;
 
+    @Enumerated(EnumType.STRING)
+    private GeneralSettings notifyCheck;
+
     @ManyToOne
     @JoinColumn(name = "assignment_id")
     private Assignment assignment;

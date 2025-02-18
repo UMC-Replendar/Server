@@ -18,4 +18,6 @@ public interface UserLectureAssignmentRepository extends JpaRepository<UserLectu
     Page<UserLectureAssignment> findAllByLectureAssignmentIdInAndUserIdNotOrderByCreatedAtDesc(List<Long> lectureAssignmentIds, Long userId, Pageable adjustedPageable);
 
     List<UserLectureAssignment> findAllByUserId(Long id);
+
+    UserLectureAssignment findByAssignmentId(Long id);
 }

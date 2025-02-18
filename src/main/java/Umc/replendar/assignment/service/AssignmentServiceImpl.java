@@ -13,6 +13,7 @@ import Umc.replendar.assignment.entity.*;
 import Umc.replendar.assignment.repository.AssNotifyCycleRepository;
 import Umc.replendar.assignment.repository.AssignmentRepository;
 import Umc.replendar.assignment.repository.ShareRepository;
+import Umc.replendar.friend.entity.friendship;
 import Umc.replendar.friend.repository.FriendRepository;
 import Umc.replendar.global.function.TaskTimer;
 import Umc.replendar.major.entity.LectureAssignment;
@@ -31,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static Umc.replendar.assignment.converter.AssToDto.*;
 
@@ -101,6 +103,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .assignment(assignment)
                     .notifyCycle(notifyCycle)
                     .scheduledAt(TaskTimer.notifyCycle(assignment.getDueDate(), notifyCycle))
+                    .notifyCheck(GeneralSettings.OFF)
                     .build();
             assNotifyCycleRepository.save(assNotifyCycle);
         }
@@ -255,7 +258,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     //과제 상세보기
     @Override
-    public ApiResponse<AssignmentRes.assDetailRes> getAssDetail(Long assId) {
+    public ApiResponse<AssignmentRes.assDetailRes> getAssDetail(Long assId, Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
         Assignment assignment = assignmentRepository.findById(assId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과제입니다."));
         List<Long> shareFriendList = shareRepository.findAllByAssignment(assignment).stream()
                 .map(share -> share.getUser().getId()).toList();
@@ -267,7 +273,37 @@ public class AssignmentServiceImpl implements AssignmentService {
                 map(shareFriend -> userRepository.findById(shareFriend).
                         orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."))).toList();
 
-        return ApiResponse.of(SuccessStatus._OK,AssToDto.toDetailDto(assignment, notifyCycleList, shareFriendEntityList));
+        if(!userId.equals(assignment.getUser().getId())){
+            Optional<friendship> friendship = friendRepository.findFriendByUserAndFriend(user.getId(), assignment.getUser().getId());
+
+            if (friendship.isEmpty()) {
+                throw new IllegalArgumentException("해당 과제에 접근할 수 있는 권한이 없습니다. (친구가 아닙니다)");
+            }
+        }
+
+        if (assignment.getUser() == null) {
+            throw new IllegalArgumentException("과제에 연결된 사용자가 존재하지 않습니다.");
+        }
+
+        //남이 이걸 본다면 공개여부가 off여야 함
+        //내가 이걸 본다면 공개여부와 상관없이 볼수있어야함
+        if(!assignment.getVisibility().equals(GeneralSettings.OFF) && !userId.equals(assignment.getUser().getId())){
+            throw new IllegalArgumentException("이 과제는 비공개 상태입니다.");
+        }
+
+        UserLectureAssignment u = userLectureAssignmentRepository.findByAssignmentId(assignment.getId());
+        if (u != null && u.getLectureAssignment() != null &&
+                u.getLectureAssignment().getLecture() != null &&
+                "REPLENDAR교수".equals(u.getLectureAssignment().getLecture().getProfessor())) {
+
+            return ApiResponse.of(SuccessStatus._OK, AssToDto.toDetailDto(
+                    assignment, notifyCycleList, shareFriendEntityList,
+                    u.getLectureAssignment().getContent(), u.getLectureAssignment().getAnswer()));
+        }
+
+        return ApiResponse.of(SuccessStatus._OK, AssToDto.toDetailDto(
+                assignment, notifyCycleList, shareFriendEntityList,
+                (u != null && u.getLectureAssignment() != null) ? u.getLectureAssignment().getContent() : null, null));
     }
 
     //과제 월별로 조회
@@ -369,6 +405,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .assignment(assignment)
                     .notifyCycle(notifyCycle)
                     .scheduledAt(TaskTimer.notifyCycle(assignment.getDueDate(), notifyCycle))
+                    .notifyCheck(GeneralSettings.OFF)
                     .build();
             assNotifyCycleRepository.save(assNotifyCycle);
         }

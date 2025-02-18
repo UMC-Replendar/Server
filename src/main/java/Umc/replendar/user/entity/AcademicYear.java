@@ -8,7 +8,10 @@ public enum AcademicYear {
     YEAR_2(2),
     YEAR_3(3),
     YEAR_4(4),
-    YEAR_5(5);
+    YEAR_5(5),
+    YEAR_6(6),
+    YEAR_ALL(0);
+
 
     private final int value;
 

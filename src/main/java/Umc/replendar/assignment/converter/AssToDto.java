@@ -51,7 +51,7 @@ public class AssToDto {
         );
     }
 
-    public static AssignmentRes.assDetailRes toDetailDto(Assignment assignment, List<String> notifyCycleList, List<User> shareUserList){
+    public static AssignmentRes.assDetailRes toDetailDto(Assignment assignment, List<String> notifyCycleList, List<User> shareUserList, String content, String answer){
         List<Map<Long,String>> shareFriendList2 = shareUserList.stream().map(
                 user -> Map.of(user.getId(), user.getNickname())
         ).toList();
@@ -65,6 +65,8 @@ public class AssToDto {
                 .shareFriend(shareFriendList2)
                 .memo(assignment.getMemo())
                 .favorite(assignment.getFavorite())
+                .content(content)
+                .answer(answer)
                 .build();
     }
 
