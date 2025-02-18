@@ -22,15 +22,17 @@ public class ActivityLogRes {
     @Data
     @Builder
     @AllArgsConstructor
-    @JsonInclude(JsonInclude.Include.NON_NULL) //-> 와우!!
+//    @JsonInclude(JsonInclude.Include.NON_NULL) //-> 와우!!
     public static class getHistoryRes {
+        Long assignmentNotifyId;   // 과제 알림 ID (과제 알림인 경우)
+        Long friendRequestId;      // 친구 요청 ID (친구 요청인 경우)
+        Long senderId;             // 친구 요청을 보낸 사람 ID (친구 요청인 경우)
+        Long assId;                // 과제 ID (과제 활동인 경우)
+        Long friendId;             // 친구 ID (친구 요청인 경우)
+        Long activityLogId;        // 활동 로그 ID (활동 로그인 경우)
         String date;
         String time;
         Check check;
-        Long friendRequestId;      // 친구 요청 ID (친구 요청인 경우)
-        Long senderId;             // 친구 요청을 보낸 사람 ID (친구 요청인 경우)
-        Long friendId;
-        Long assId;
         String content;
         LocalDateTime createdAt;
         String type;
