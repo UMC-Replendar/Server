@@ -206,6 +206,19 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignment.setFavorite(reqDto.getFavorite());
         assignmentRepository.save(assignment);
 
+        //완료시간에서 알림주기를 계산한 후
+        //과제 알림 주기 테이블에 시간과 알림주기를 저장
+        assNotifyCycleRepository.deleteAllByAssignment(assignment);
+        for(NotifyCycle notifyCycle : reqDto.getNotifyCycle()){
+            AssNotifyCycle assNotifyCycle = AssNotifyCycle.builder()
+                    .assignment(assignment)
+                    .notifyCycle(notifyCycle)
+                    .scheduledAt(TaskTimer.notifyCycle(assignment.getDueDate(), notifyCycle))
+                    .notifyCheck(GeneralSettings.OFF)
+                    .build();
+            assNotifyCycleRepository.save(assNotifyCycle);
+        }
+
         //수정 시 공유할 친구 삭제는 불가능함
         //추가만 가능하기에 이전에 공유했던 친구에게 공유가 중첩되면 안되기에 중첩되는 사람을 필터 후 새로운 사람에게만 과제 공유
         reqDto.getShareIds().removeAll(
@@ -247,10 +260,15 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     //활동로그에서 해당 과제가 다 삭제되는지 확인해야함 - 삭제됨
     @Override
-    public ApiResponse<String> deleteAssignment(Long assId) {
+    public ApiResponse<String> deleteAssignment(Long assId, Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
         Assignment assignment = assignmentRepository.findById(assId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과제입니다."));
 
+        if(!user.getId().equals(assignment.getUser().getId())){
+            return ApiResponse.onFailure("INVALID_REQUEST", "본인의 과제만 삭제할 수 있습니다.", null);
+        }
         assignmentRepository.delete(assignment);
 
         return ApiResponse.onSuccess("과제가 삭제되었습니다.");

@@ -18,7 +18,7 @@ public interface AssignmentService {
 
     ApiResponse<String> updateAssignment(AssignmentReq.updateReqDto reqDto);
 
-    ApiResponse<String> deleteAssignment(Long assId);
+    ApiResponse<String> deleteAssignment(Long assId, Long userId);
 
     ApiResponse<AssignmentRes.assDetailRes> getAssDetail(Long assId,Long userId);
 
