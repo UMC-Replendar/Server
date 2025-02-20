@@ -48,7 +48,8 @@ public class AssignmentController {
     @Operation(summary = "과제 삭제 API",description = "과제 삭제 API")
     @DeleteMapping("")
     public ApiResponse<String> deleteAssignment(@RequestParam Long assId) {
-        return assignmentService.deleteAssignment(assId);
+        Long userId = jwtTokenProvider.getUserIdFromToken();
+        return assignmentService.deleteAssignment(assId, userId);
     }
 
     @Operation(summary = "과제 상세 조회 API",description = "과제 상세 조회 API")
